@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=2.0, user-scalable=yes" />
+    <title>AL SHIFAA HOSPITAL</title>
+    <script src="/static/js/jquery-1.12.4.min.js"></script>
+    <link rel="icon" href="/static/images/logo-ico.png" type="image/ico">
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="/static/css/style.min.css" rel="stylesheet">
+    <link href="/static/css/myStyle.css" rel="stylesheet">
+</head>
+
+
+<body>
+    <div class="lyear-layout-web">
+
+        <div class="lyear-layout-container">
+
+
+            {% if user.language == 1 %}
+
+                <!--左侧导航-->
+                <aside class="lyear-layout-sidebar">
+
+                    <!-- logo -->
+                    <div id="logo" class="sidebar-header">
+
+                        <a href="{% url 'indexBooking' %}"><img src="/static/images/logo.png" title="shifaa" alt="shifaa" /></a>
+
+                    </div>
+
+                    <div class="lyear-layout-sidebar-scroll">
+
+                        <nav class="sidebar-main">
+                            <ul class="nav nav-drawer">
+
+                                <div class="form-group has-success">
+
+                                    <div class="col-xs-12">
+                                        <form action="{% url 'searchBookingPatient' %}" method="post">
+                                            {% csrf_token %}
+                                            <input class="form-control forthNormalText" type="text" name="search" placeholder="بحث" autofocus required dir="rtl">
+                                        </form>
+                                    </div>
+
+                                </div>
+
+                                <br>
+
+                                {% for department in departments %}
+                                    <li class="nav-item">
+
+                                        <a href="{% url 'departmentBookingOperation' department.id %}" class="forthBigMenu" style="color: darkblue"><i class="mdi mdi-hotel"></i>{{ department.arabic_name }} : {{ department.count }}</a>
+
+                                    </li>
+                                {% endfor %}
+
+                                <li class="nav-item"><a href="#" style="color: #AE4C4C; font-size: 18px; font-weight: bolder"><br></a></li>
+
+                            </ul>
+                        </nav>
+
+                    </div>
+
+                </aside>
+                <!--End 左侧导航-->
+
+                <!--头部信息-->
+                <header class="lyear-layout-header">
+
+                    <nav class="navbar navbar-default">
+                        <div class="topbar">
+                            <div class="topbar-left">
+                                <div class="lyear-aside-toggler">
+                                    <span class="lyear-toggler-bar"></span>
+                                    <span class="lyear-toggler-bar"></span>
+                                    <span class="lyear-toggler-bar"></span>
+                                </div>
+
+                                <li class="dropdown" style="text-align: right; list-style: none">
+                                    <a href="#" id="myTabDrop1" class="dropdown-toggle navbar-page-title forthBigTitle" data-toggle="dropdown" aria-controls="myTabDrop1-contents" aria-expanded="false">&nbsp;&nbsp;{{ user.authorityDepartment.arabic_name }} - الحجز<span class="caret"></span></a>
+
+                                    <ul class="dropdown-menu forthNormalText" id="myTabDrop1-contents">
+                                        {% for template in user.template.all %}
+                                            <li><a href="/{{ template.url_name }}">{{ template.arabic_name }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+
+
+                                <span class="navbar-page-title">
+                                <a href="{% url 'allBookingPatients' %}" class="forthBigTitle">الحجز</a>&nbsp;&nbsp;&nbsp;
+                                <a href="{% url 'newPatientBooking' %}" class="forthBigTitle">مريض جديد</a>
+                                </span>
+
+
+
+                            </div>
+
+                            <ul class="topbar-right">
+                                <li class="dropdown dropdown-profile">
+                                    <a href="javascript:void(0)" data-toggle="dropdown">
+                                        <i class="mdi mdi-account mdi-18px"></i>
+                                        <span class="smallText">{{ user.arabic_name }}<span class="caret"></span></span>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <li> <a href="{% url 'userProfile' %}" class="forthBigTitle"><i class="mdi mdi-account"></i>الملف الشخصي</a> </li>
+                                        <li class="divider"></li>
+                                        <li> <a href="{% url 'logout' %}" class="forthBigTitle"><i class="mdi mdi-logout-variant"></i>خروج</a> </li>
+                                    </ul>
+                                </li>
+
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <!--切换语言-->
+                                <li class="dropdown dropdown-profile smallText">
+                                    <a href="javascript:void(0)" data-toggle="dropdown">
+                                        <span style="color: #205072">
+                                            {% if user.language == 1 %}
+                                                اللغة العربية
+                                            {% elif user.language == 2 %}
+                                                English
+                                            {% endif %}
+                                        <span class="caret"></span></span>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <li> <a href="{% url 'arabic' %}">اللغة العربية</a></li>
+                                        <li> <a href="{% url 'english' %}">English</a></li>
+                                    </ul>
+                                </li>
+                                <!--切换语言-->
+                            </ul>
+
+                        </div>
+                    </nav>
+
+                </header>
+                <!--End 头部信息-->
+
+            {% elif user.language == 2 %}
+
+                <!--左侧导航-->
+                <aside class="lyear-layout-sidebar">
+
+                    <!-- logo -->
+                    <div id="logo" class="sidebar-header">
+
+                        <a href="{% url 'indexBooking' %}"><img src="/static/images/logo.png" title="shifaa" alt="shifaa" /></a>
+
+                    </div>
+
+                    <div class="lyear-layout-sidebar-scroll">
+
+                        <nav class="sidebar-main">
+                            <ul class="nav nav-drawer">
+
+                                <div class="form-group has-success">
+
+                                    <div class="col-xs-12">
+                                        <form action="{% url 'searchBookingPatient' %}" method="post">
+                                            {% csrf_token %}
+                                            <input class="form-control forthNormalText" type="text" name="search" placeholder="بحث" autofocus required dir="rtl">
+                                        </form>
+                                    </div>
+
+                                </div>
+
+                                <br>
+
+                                {% for department in departments %}
+                                    <li class="nav-item">
+
+                                        <a href="{% url 'departmentBookingOperation' department.id %}" style="font-family: Calibri; color: darkblue; font-size: 18px; font-weight: bolder"><i class="mdi mdi-hotel"></i>{{ department.name }}: {{ department.count }}</a>
+
+                                    </li>
+                                {% endfor %}
+
+                                <li class="nav-item"><a href="#" style="color: #AE4C4C; font-size: 18px; font-weight: bolder"><br><br></a></li>
+                            </ul>
+                        </nav>
+
+                    </div>
+
+                </aside>
+                <!--End 左侧导航-->
+
+                <!--头部信息-->
+                <header class="lyear-layout-header">
+
+                    <nav class="navbar navbar-default">
+                        <div class="topbar">
+                            <div class="topbar-left">
+                                <div class="lyear-aside-toggler">
+                                    <span class="lyear-toggler-bar"></span>
+                                    <span class="lyear-toggler-bar"></span>
+                                    <span class="lyear-toggler-bar"></span>
+                                </div>
+
+                                <li class="dropdown" style="text-align: right; list-style: none">
+                                    <a href="#" id="myTabDrop1" class="dropdown-toggle navbar-page-title forthBigTitle" data-toggle="dropdown" aria-controls="myTabDrop1-contents" aria-expanded="false">&nbsp;&nbsp;{{ user.authorityDepartment.name }} - Booking <span class="caret"></span></a>
+
+                                    <ul class="dropdown-menu" id="myTabDrop1-contents">
+                                        {% for template in user.template.all %}
+                                            <li><a href="/{{ template.url_name }}">{{ template.name }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+
+                                {% for menu in user.authorityMenu.all %}
+
+                                    {% if menu.menu_category.name == 'Booking Menu' %}
+                                        <span class="navbar-page-title">
+                                            <a href="/{{ menu.url_name }}" class="forthBigTitle">{{ menu.name }}</a>
+                                        </span>
+                                    {% endif %}
+
+                                {% endfor %}
+
+
+                            </div>
+
+                            <ul class="topbar-right">
+                                <li class="dropdown dropdown-profile">
+                                    <a href="javascript:void(0)" data-toggle="dropdown">
+                                        <i class="mdi mdi-account mdi-18px"></i>
+                                        <span>{{ user.name }}<span class="caret"></span></span>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <li> <a href="{% url 'userProfile' %}" class="forthBigTitle"><i class="mdi mdi-account"></i> User Profile</a> </li>
+                                        <li class="divider"></li>
+                                        <li> <a href="{% url 'logout' %}" class="forthBigTitle"><i class="mdi mdi-logout-variant"></i>Logout</a> </li>
+                                    </ul>
+                                </li>
+
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <!--切换语言-->
+                                <li class="dropdown dropdown-profile smallText">
+                                    <a href="javascript:void(0)" data-toggle="dropdown">
+                                        <span style="color: #205072">
+                                            {% if user.language == 1 %}
+                                                اللغة العربية
+                                            {% elif user.language == 2 %}
+                                                English
+                                            {% endif %}
+                                        <span class="caret"></span></span>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <li> <a href="{% url 'arabic' %}">اللغة العربية</a></li>
+                                        <li> <a href="{% url 'english' %}">English</a></li>
+                                    </ul>
+                                </li>
+                                <!--切换语言-->
+                            </ul>
+
+                        </div>
+                    </nav>
+
+                </header>
+                <!--End 头部信息-->
+
+            {% endif %}
+
+
+            <!--页面主要内容-->
+            <main class="lyear-layout-content">
+
+                <div class="container-fluid">
+
+                    <div class="row">
+
+                        <div class="col-lg-12">
+                            <div class="card">
+
+                                {% block home %}
+
+
+
+                                {% endblock home %}
+
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </main>
+            <!--End 页面主要内容-->
+
+        </div>
+
+    </div>
+
+    <script type="text/javascript" src="/static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/js/perfect-scrollbar.min.js"></script>
+    <script type="text/javascript" src="/static/js/main.min.js"></script>
+
+    <!--折线图插件-->
+    <script type="text/javascript" src="/static/js/highcharts.js"></script>
+
+    <!--图表插件-->
+    <script type="text/javascript" src="/static/js/Chart.js"></script>
+
+    <!--消息提示-->
+    <script src="/static/js/bootstrap-notify.min.js"></script>
+    <script type="text/javascript" src="/static/js/lightyear.js"></script>
+
+
+</body>
+
+
+</html>

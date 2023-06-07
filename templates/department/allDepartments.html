@@ -1,0 +1,466 @@
+{% extends "home/base_admin.html" %}
+
+{% block home %}
+
+
+    <script>
+
+         $(window).unload(function () {
+            var top = $(window).scrollTop();
+
+            $.cookie("scroll_top", top);
+         });
+
+         $(document).ready(function () {
+            var top = $.cookie("scroll_top");
+
+            $('html, body').animate({
+                scrollTop: top
+            }, 100);
+         });
+
+    </script>
+
+    <style type="text/css">
+
+        td{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        th{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+    </style>
+
+
+    {% if user.language == 1 %}
+
+        <div class="card-header">
+            <h2 class="firstBigTitle">
+                <a class="btn btn-info m-r-5" data-toggle="modal" data-target="#addDepartment"><i class="mdi mdi-plus"></i>إضافة قسم</a>
+            </h2>
+        </div>
+
+
+        <div class="card-body">
+            <div class="table-responsive">
+
+                <table class="table table-hover" align="center">
+
+                    <thead>
+                        <tr>
+                            <th colspan="6" class="message">{{ message }}</th>
+                        </tr>
+                        <tr class="forthBigMenu">
+                            <th>#</th>
+                            <th>الاسم الإنكليزية</th>
+                            <th>الاسم العربي</th>
+                            <th>نوع</th>
+                            <th>حالة</th>
+                            <th>عمل</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for department in departments %}
+
+                            <tr class="forthNormalText">
+                                <th>{{ forloop.counter }}</th>
+                                <th>{{ department.name }}</th>
+                                <th>{{ department.arabic_name }}</th>
+
+                                <th>
+                                    {% if department.types == 1 %}
+                                        قسم الجناح
+                                    {% elif department.types == 2 %}
+                                        قسم العيادات
+                                    {% elif department.types == 3 %}
+                                        قسم العامة
+                                    {% elif department.types == 4 %}
+                                        قسم الوظيفية
+                                    {% endif %}
+                                </th>
+
+                                <td>
+                                    {% if department.status %}
+                                        <a href="{% url 'inactiveDepartment' department.id %}">
+                                            <input type="button" class="btn btn-info" value="Active">
+                                            <span></span>
+                                        </a>
+
+                                    {% else %}
+                                        <a href="{% url 'activeDepartment' department.id %}">
+                                            <input type="button" class="btn btn-secondary" value="Inactive">
+                                            <span></span>
+                                        </a>
+                                    {% endif %}
+                                </td>
+
+                                <td>
+
+                                    <a href="#" data-toggle="modal" data-target="#edit{{ department.id }}">
+                                        <i class="mdi mdi-pencil mdi-24px" style="color: #33cccc" title="Edit" data-toggle="tooltip" data-placement="right"></i>
+                                    </a>
+                                </td>
+
+                            </tr>
+
+                            <!-- Edit -->
+                            <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="departmentLabel" id="edit{{ department.id }}">
+                              <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title thirdBigMenu" id="gridSystemModalLabel">تعديل القسم</h4>
+                                  </div>
+                                  <div class="modal-body">
+                                    <div class="row thirdBigTitle">
+                                        <form class="form-horizontal" action="{% url 'editDepartment' department.id %}" method="post">
+                                            {% csrf_token %}
+
+                                            <div class="form-group has-info">
+
+                                                <label class="col-md-3 control-label" for="name" style="color: darkblue; font-size: 18px">الاسم الإنكليزية</label>
+                                                <div class="col-md-7">
+                                                  <input class="form-control" type="text" id="name" name="name" required maxlength="25" value="{{ department.name }}">
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-md-12" style="color: #205072"><hr></div>
+
+                                            <div class="form-group has-info">
+
+                                                <label class="col-md-3 control-label" for="arabic" style="color: darkblue; font-size: 18px">الاسم العربي</label>
+                                                <div class="col-md-7">
+                                                  <input class="form-control" type="text" id="arabic" name="arabic_name" required maxlength="35" dir="rtl" value="{{ department.arabic_name }}">
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-md-12" style="color: #205072"><hr></div>
+
+                                            <div class="form-group has-info">
+
+                                                <label class="col-md-3 control-label" for="arabic" style="color: darkblue; font-size: 18px">نوع القسم</label>
+                                                <div class="col-md-7">
+                                                    <select class="form-control" name="types" required dir="rtl">
+                                                        {% for types in types_arabic %}
+                                                            {% if department.types == forloop.counter %}
+                                                                <option selected value="{{ forloop.counter }}">{{ types }}</option>
+                                                            {% else %}
+                                                                <option value="{{ forloop.counter }}">{{ types }}</option>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-md-12" style="color: #205072"><hr></div>
+
+                                            <div class="form-group">
+                                                <div class="col-md-12 col-md-offset-5">
+                                                    <button class="btn btn-info" type="submit">قبول</button>
+                                                </div>
+                                            </div>
+
+                                        </form>
+
+                                    </div>
+                                  </div>
+
+                                </div>
+                              </div>
+                            </div>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+        </div>
+
+
+        <!-- addDepartment -->
+        <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="departmentLabel" id="addDepartment">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title thirdBigMenu" id="gridSystemModalLabel">قسم الجديد</h4>
+              </div>
+              <div class="modal-body">
+                <div class="row thirdBigTitle">
+                    <form class="form-horizontal" action="{% url 'addDepartment' %}" method="post">
+                        {% csrf_token %}
+
+                        <div class="form-group has-info">
+
+                            <label class="col-md-3 control-label" for="name" style="color: darkblue; font-size: 18px">الاسم الإنكليزية</label>
+                            <div class="col-md-7">
+                              <input class="form-control" type="text" id="name" name="name" required maxlength="25">
+                            </div>
+
+                        </div>
+
+                        <div class="form-group has-info">
+
+                            <label class="col-md-3 control-label" for="arabic" style="color: darkblue; font-size: 18px">الاسم العربي</label>
+                            <div class="col-md-7">
+                              <input class="form-control" type="text" id="arabic" name="arabic_name" required maxlength="35" dir="rtl">
+                            </div>
+
+                        </div>
+
+                        <div class="form-group has-info">
+
+                            <label class="col-md-3 control-label" for="arabic" style="color: darkblue; font-size: 18px">نوع القسم</label>
+                            <div class="col-md-7">
+                                <select class="form-control" name="types" required dir="rtl">
+                                    <option></option>
+                                    {% for types in types_arabic %}
+                                        <option value="{{ forloop.counter }}">{{ types }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-12 col-md-offset-5">
+                                <button class="btn btn-info" type="submit">قبول</button>
+                            </div>
+                        </div>
+
+                    </form>
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+    {% elif user.language == 2 %}
+
+
+        <div class="card-header">
+            <h2 class="firstBigTitle">
+                <a class="btn btn-info m-r-5" data-toggle="modal" data-target="#addDepartment"><i class="mdi mdi-plus"></i> Department</a>
+            </h2>
+        </div>
+
+
+        <div class="card-body">
+            <div class="table-responsive">
+
+                <table class="table table-hover" align="center">
+
+                    <thead>
+                        <tr>
+                            <th colspan="6" class="message">{{ message }}</th>
+                        </tr>
+                        <tr class="forthBigMenu">
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Arabic Name</th>
+                            <th>Types</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for department in departments %}
+
+                            <tr class="forthNormalText">
+                                <th>{{ forloop.counter }}</th>
+                                <th>{{ department.name }}</th>
+                                <th>{{ department.arabic_name }}</th>
+
+                                <th>
+                                    {% if department.types == 1 %}
+                                        Clinical
+                                    {% elif department.types == 2 %}
+                                        Functional
+                                    {% endif %}
+                                </th>
+
+                                <td>
+                                    {% if department.status %}
+                                        <a href="{% url 'inactiveDepartment' department.id %}">
+                                            <input type="button" class="btn btn-info" value="Active">
+                                            <span></span>
+                                        </a>
+
+                                    {% else %}
+                                        <a href="{% url 'activeDepartment' department.id %}">
+                                            <input type="button" class="btn btn-secondary" value="Inactive">
+                                            <span></span>
+                                        </a>
+                                    {% endif %}
+                                </td>
+
+                                <td>
+
+                                    <a href="#" data-toggle="modal" data-target="#edit{{ department.id }}">
+                                        <i class="mdi mdi-pencil mdi-24px" style="color: #33cccc" title="Edit" data-toggle="tooltip" data-placement="right"></i>
+                                    </a>
+                                </td>
+
+                            </tr>
+
+                            <!-- Edit -->
+                            <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="departmentLabel" id="edit{{ department.id }}">
+                              <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title thirdBigMenu" id="gridSystemModalLabel">Edit Department</h4>
+                                  </div>
+                                  <div class="modal-body">
+                                    <div class="row thirdBigTitle">
+                                        <form class="form-horizontal" action="{% url 'editDepartment' department.id %}" method="post">
+                                            {% csrf_token %}
+
+                                            <div class="form-group has-info">
+
+                                                <label class="col-md-3 control-label" for="name" style="color: darkblue; font-size: 18px">Name</label>
+                                                <div class="col-md-7">
+                                                  <input class="form-control" type="text" id="name" name="name" required maxlength="25" value="{{ department.name }}">
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-md-12" style="color: #205072"><hr></div>
+
+                                            <div class="form-group has-info">
+
+                                                <label class="col-md-3 control-label" for="arabic" style="color: darkblue; font-size: 18px">Arabic Name</label>
+                                                <div class="col-md-7">
+                                                  <input class="form-control" type="text" id="arabic" name="arabic_name" required maxlength="35" dir="rtl" value="{{ department.arabic_name }}">
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-md-12" style="color: #205072"><hr></div>
+
+                                            <div class="form-group has-info">
+
+                                                <label class="col-md-3 control-label" for="arabic" style="color: darkblue; font-size: 18px">نوع القسم</label>
+                                                <div class="col-md-7">
+                                                    <select class="form-control" name="types" required dir="rtl">
+                                                        {% if department.types == 1 %}
+                                                            <option selected value="{{ department.types }}">Clinical</option>
+                                                        {% elif department.types == 2 %}
+                                                            <option selected value="{{ department.types }}">Functional</option>
+                                                        {% endif %}
+                                                        <option value="1">Clinical</option>
+                                                        <option value="2">Functional</option>
+                                                    </select>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-md-12" style="color: #205072"><hr></div>
+
+                                            <div class="form-group">
+                                                <div class="col-md-12 col-md-offset-5">
+                                                    <button class="btn btn-info" type="submit">Submit</button>
+                                                </div>
+                                            </div>
+
+                                        </form>
+
+                                    </div>
+                                  </div>
+
+                                </div>
+                              </div>
+                            </div>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+        </div>
+
+
+        <!-- addDepartment -->
+        <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="departmentLabel" id="addDepartment">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title thirdBigMenu" id="gridSystemModalLabel">Add A New Department</h4>
+              </div>
+              <div class="modal-body">
+                <div class="row">
+                    <form class="form-horizontal" action="{% url 'addDepartment' %}" method="post">
+                        {% csrf_token %}
+
+                        <div class="form-group has-info">
+
+                            <label class="col-md-3 control-label" for="name" style="color: darkblue; font-size: 18px">Name</label>
+                            <div class="col-md-7">
+                              <input class="form-control" type="text" id="name" name="name" required maxlength="25">
+                            </div>
+
+                        </div>
+
+                        <div class="form-group has-info">
+
+                            <label class="col-md-3 control-label" for="arabic" style="color: darkblue; font-size: 18px">Arabic Name</label>
+                            <div class="col-md-7">
+                              <input class="form-control" type="text" id="arabic" name="arabic_name" required maxlength="35" dir="rtl">
+                            </div>
+
+                        </div>
+
+{#                        <div class="form-group has-info">#}
+{##}
+{#                            <label class="col-md-3 control-label" for="arabic" style="color: darkblue; font-size: 18px">Types</label>#}
+{#                            <div class="col-md-7">#}
+{#                                <select class="form-control" name="types" required dir="rtl">#}
+{#                                    <option></option>#}
+{#                                    <option value="1">Clinical</option>#}
+{#                                    <option value="2">Functional</option>#}
+{#                                </select>#}
+{#                            </div>#}
+{##}
+{#                        </div>#}
+
+                        <div class="form-group">
+                            <div class="col-md-12 col-md-offset-5">
+                                <button class="btn btn-info" type="submit">Submit</button>
+                            </div>
+                        </div>
+
+                    </form>
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+
+    {% endif %}
+
+
+{% endblock home %}
+

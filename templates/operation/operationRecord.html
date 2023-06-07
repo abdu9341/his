@@ -1,0 +1,93 @@
+{% extends "home/base_operation.html" %}
+
+{% block home %}
+
+    {{ block.super }}
+
+
+    <style type="text/css">
+
+        td{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        th{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+    </style>
+
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" >
+                <tr style="text-align: center">
+                    <th style="color:blue; width: 175px; text-align: center">Name</th>
+                    <td style="width: 175px; text-align: center">{{patient.basicInfo.name}}</td>
+                    <th style="color:blue; width: 175px; text-align: center">Age</th>
+                    <td style="width: 175px; text-align: center">{{patient.basicInfo.age}}</td>
+                    <th style="color:blue; width: 175px">Blood Group</th>
+                    <td style="width: 175px">{{patient.basicInfo.bloodGroup}}</td>
+                </tr>
+            </table>
+            <br>
+
+            <table class="table" align="center">
+
+                <thead >
+                    <tr>
+                        <th colspan="11"><h1 class="firstBigTitle">Operation Record Details</h1></th>
+                    </tr>
+
+                    <tr class="forthBigTitle">
+                        <th>العمل الجراحي</th>
+                        <th>الطبيب الجراح</th>
+                        <th>الطبيب المساعد</th>
+                        <th>فني عمليات</th>
+                        <th>المخدر</th>
+                        <th>نوع التخدير</th>
+                        <th>نوع العمل</th>
+                        <th>القاعة</th>
+                        <th>وقت البدء</th>
+                        <th>وقت النهاية</th>
+                    </tr>
+                </thead>
+
+                {% if operations %}
+
+                    {% for operation in operations %}
+
+                        <tr class="forthNormalText">
+                            <th>{{ operation.name }}</th>
+                            <td>{{ operation.doctor }}</td>
+                            <td>{{ operation.anesthetist }}</td>
+                            <td>{{ operation.surgicalNurse }}</td>
+                            <td>{{ operation.anesthetist }}</td>
+                            <td>{{ operation.typesNarcosis }}</td>
+                            <td>{{ operation.typesOperation }}</td>
+                            <td>{{ operation.roomNo }}</td>
+                            <td>{{ operation.begin }}</td>
+                            <td>{{ operation.finish }}</td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                {% endif %}
+
+            </table>
+        </div>
+    </div>
+
+
+
+{% endblock home %}
+
+
+
+
+
+

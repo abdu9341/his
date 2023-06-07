@@ -1,0 +1,163 @@
+{% extends "home/base_emergency.html" %}
+
+{% block home %}
+
+    {{ block.super }}
+
+    <style type="text/css">
+
+        td{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        th{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+
+    </style>
+
+
+    {% if user.language == 1 %}
+
+        <div class="card-header" align="center">
+
+            <h2 class="firstBigTitle">معلومات المريض</h2>
+
+        </div>
+
+        <div class="card-body" dir="rtl">
+            <div class="table-responsive">
+
+                <table class="table">
+
+                    <tr>
+                        <th class="thirdBigMenu">اسم المريض</th>
+                        <td class="normalText">{{ patient.basicInfo.name }}</td>
+                        <th class="thirdBigMenu">العمر</th>
+                        <td class="normalText">{{ patient.basicInfo.age }}</td>
+                    </tr>
+
+                    <tr>
+                        <th class="thirdBigMenu">الجنس</th>
+                        <td class="normalText">{{ patient.basicInfo.sex }}</td>
+                        <th class="thirdBigMenu">تاريخ القبول</th>
+                        <td class="normalText">{{patient.enterDate}}</td>
+                    </tr>
+
+                    <tr class="normalText">
+                        <th class="thirdBigMenu">جناح</th>
+                        <td class="normalText">{{patient.sickroom.arabic_name}}</td>
+                        <th class="thirdBigMenu">نوع  اسعاف</th>
+                        {% if patient.typeOfEmergency == 1 %}
+                            <td><label class="control-label btn btn-success">الأخضر</label></td>
+                        {% elif patient.typeOfEmergency == 2 %}
+                            <td><label class="control-label btn btn-yellow">الأصفر</label></td>
+                        {% elif patient.typeOfEmergency == 3 %}
+                            <td><label class="control-label btn btn-danger">الأحمر</label></td>
+                        {% elif patient.typeOfEmergency == 4 %}
+                            <td><label class="control-label btn btn-dark">الأسود</label></td>
+                        {% endif %}
+                    </tr>
+
+                    <tr>
+                        <th class="thirdBigMenu">قسم القبول</th>
+                        <td class="normalText">
+                            {% for department in patient.department.all %}
+                                {{ department.arabic_name }} ,&nbsp;&nbsp;&nbsp;
+                            {% endfor %}
+                        </td>
+                        <th class="thirdBigMenu">العامل </th>
+                        <td class="normalText">{{ patient.operator }}</td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="4">
+                            {% if patient.condition and rights %}
+                                <a href="{% url 'editEmergencyPatientInfo' patient_id patient.patientID %}"><input type="submit" class="btn btn-info forthNormalText" value="تعديل"></a>&nbsp;&nbsp;&nbsp;
+                            {% elif rights %}
+                                <a href="{% url 'reenterEmergencyPatient' patient_id patient.patientID %}"><input type="submit" class="btn btn-info forthNormalText" value="اعادة قبول"></a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+
+    {% elif user.language == 2 %}
+
+        <div class="card-header" align="center">
+
+            <h2 class="firstBigTitle"> Basic Information  </h2>
+
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+
+                <table class="table">
+
+                    <tr>
+                        <th class="thirdBigMenu">Name: </th>
+                        <td class="normalText">{{ patient.basicInfo.name }}</td>
+                        <th class="thirdBigMenu">Age</th>
+                        <td class="normalText">{{ patient.basicInfo.age }}</td>
+                    </tr>
+
+                    <tr>
+                        <th class="thirdBigMenu">Gender</th>
+                        <td class="normalText">{{ patient.basicInfo.sex }}</td>
+                        <th class="thirdBigMenu">Date Of Enter</th>
+                        <td class="normalText">{{patient.enterDate}}</td>
+                    </tr>
+
+                    <tr>
+                        <th class="thirdBigMenu">Ward</th>
+                        <td class="normalText">{{patient.sickroom}}</td>
+                        <th class="thirdBigMenu">Type</th>
+                        {% if patient.typeOfEmergency == 1 %}
+                            <td><label class="control-label btn btn-success">Green</label></td>
+                        {% elif patient.typeOfEmergency == 2 %}
+                            <td><label class="control-label btn btn-yellow">Yellow</label></td>
+                        {% elif patient.typeOfEmergency == 3 %}
+                            <td><label class="control-label btn btn-danger">Red</label></td>
+                        {% elif patient.typeOfEmergency == 4 %}
+                            <td><label class="control-label btn btn-dark">Black</label></td>
+                        {% endif %}
+                    </tr>
+
+                    <tr>
+                        <th class="thirdBigMenu">Department</th>
+                        <td class="normalText">
+                            {% for deparmtnet in departments %}{{ deparmtnet.department.name }} &nbsp;&nbsp;&nbsp;
+                            {% endfor %}
+                        </td>
+                        <th class="thirdBigMenu">Operator </th>
+                        <td class="normalText">{{ patient.operator }}</td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="4">
+                            {% if patient.condition and user.authorityDepartment.name == 'Emergency' %}
+                                <a href="{% url 'editEmergencyPatientInfo' patient_id patient.patientID %}"><input type="submit" class="btn btn-info" value="Edit"></a>&nbsp;&nbsp;&nbsp;
+                            {% elif user.authorityDepartment.name == 'Emergency' %}
+                                <a href="{% url 'reenterEmergencyPatient' patient_id patient.patientID %}"><input type="submit" class="btn btn-info" value="Reenter"></a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+
+    {% endif %}
+
+
+
+
+{% endblock home %}

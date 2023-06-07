@@ -1,0 +1,220 @@
+{% extends "home/base_emergency.html" %}
+
+{% block home %}
+
+    <style type="text/css">
+
+        td{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        th{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+
+        }
+
+    </style>
+
+
+    <div class="card-body">
+
+        {% if user.language == 1 %}
+
+            <form class="form-horizontal" action="{% url 'searchEmergencyPatient' %}" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+
+                    <div class="col-md-3"></div>
+
+                    <label for="search"></label>
+                    <div class="col-md-4 has-info">
+                        <input class="form-control forthNormalText" type="search" id="patientList" name="search" placeholder="بحث" autofocus dir="rtl">
+                        <datalist id="patientList">
+                            {% for patient in patients %}
+                                <option value="{{ patient.basicInfo.name }}">
+                            {% endfor %}
+                        </datalist>
+                    </div>
+
+                    <div class="col-md-2">
+                        <button class="btn btn-info forthNormalText" type="submit">بحث</button>
+                    </div>
+
+                    <div class="col-md-3"></div>
+
+                </div>
+
+            </form>
+
+
+            <div class="table-responsive">
+
+                <table class="table">
+                    <thead >
+
+                        <tr class="forthBigMenu">
+                            <th>#</th>
+                            <th>اسم المريض</th>
+                            <th>رقم المريض</th>
+                            <th>العمر</th>
+                            <th>تاريخ القبول</th>
+                            <th>جناح</th>
+                            <th>الحالة</th>
+
+                        </tr>
+                    </thead>
+
+                    {% for patient in page %}
+
+                        <tr class="forthNormalText">
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <th style="font-family: Calibri; font-size: 16px"><a href="{% url 'emergencyPatientInfo' patient.id patient.patientID %}">{{ patient.basicInfo.name }}</a></th>
+                            <td>{{ patient.patientID }}</td>
+                            <td>{{ patient.basicInfo.age }}</td>
+                            <td>{{ patient.enterDate}}</td>
+                            <td>{{ patient.sickroom.arabic_name }}</td>
+
+                            {% if patient.condition %}
+                                <td><a><i class="mdi mdi-18px mdi-checkbox-marked-circle"></i></a></td>
+                            {% else %}
+                                <td><a><i style="color: red" class="mdi mdi-18px mdi-close-circle"></i></a></td>
+                            {% endif %}
+                        </tr>
+
+                    {% endfor %}
+
+                      <tr><td colspan="7" style="text-align: center" class="message11">{{ message }}</td></tr>
+                         <tr>
+                                <td colspan="7" style="font-size: larger; text-align: center">
+                                    <ul class="pagination pagination-circle">
+                                        {% if page.has_previous %}
+                                            <li class=""><a href="/emergencyPatientList{{ page.previous_page_number }}"><span>«</span></a></li>
+                                        {% endif %}
+
+                                        {% for pindex in page.paginator.page_range %}
+                                            {% if pindex == page.number  %}
+                                                <li class="active"><span>{{ pindex }}</span></li>
+                                            {% elif pindex < 8 %}
+                                                <li><a href="/emergencyPatientList{{ pindex }}">{{ pindex }}</a></li>
+                                            {% endif %}
+                                        {% endfor %}
+
+                                        {% if page.has_next %}
+                                            <li><a href="/emergencyPatientList{{ page.next_page_number }}">»</a></li>
+                                        {% endif %}
+                                    </ul>
+                                </td>
+                          </tr>
+
+                    </table>
+
+            </div>
+
+        {% elif user.language == 2 %}
+
+            <form class="form-horizontal" action="{% url 'searchEmergencyPatient' %}" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+
+                    <div class="col-md-3"></div>
+
+                    <label for="search"></label>
+                    <div class="col-md-4 has-info">
+                        <input class="form-control" type="search" id="patientList" name="search" placeholder="Search" autofocus>
+                        <datalist id="patientList">
+                            {% for patient in patients %}
+                                <option value="{{ patient.basicInfo.name }}">
+                            {% endfor %}
+                        </datalist>
+                    </div>
+
+                    <div class="col-md-2">
+                        <button class="btn btn-info" type="submit">Search</button>
+                    </div>
+
+                    <div class="col-md-3"></div>
+
+                </div>
+
+            </form>
+
+
+            <div class="table-responsive">
+
+                <table class="table">
+                    <thead >
+
+                        <tr class="forthBigMenu">
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Patient ID</th>
+                            <th>Age</th>
+                            <th>Enter Date</th>
+                            <th>Ward</th>
+                            <th>Status</th>
+
+                        </tr>
+                    </thead>
+
+                    {% for patient in page %}
+
+                        <tr class="forthNormalText">
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <th style="font-family: Calibri; font-size: 16px"><a href="{% url 'emergencyPatientInfo' patient.id patient.patientID %}">{{ patient.basicInfo.name }}</a></th>
+                            <td>{{ patient.patientID }}</td>
+                            <td>{{ patient.basicInfo.age }}</td>
+                            <td>{{ patient.enterDate}}</td>
+                            <td>{{ patient.sickroom }}</td>
+
+                            {% if patient.condition %}
+                                <td><a><i class="mdi mdi-18px mdi-checkbox-marked-circle"></i></a></td>
+                            {% else %}
+                                <td><a><i style="color: red" class="mdi mdi-18px mdi-close-circle"></i></a></td>
+                            {% endif %}
+                        </tr>
+
+                    {% endfor %}
+
+                      <tr><td colspan="7" style="text-align: center" class="message11">{{ message }}</td></tr>
+                         <tr>
+                                <td colspan="7" style="font-size: larger; text-align: center">
+                                    <ul class="pagination pagination-circle">
+                                        {% if page.has_previous %}
+                                            <li class=""><a href="/emergencyPatientList{{ page.previous_page_number }}"><span>«</span></a></li>
+                                        {% endif %}
+
+                                        {% for pindex in page.paginator.page_range %}
+                                            {% if pindex == page.number  %}
+                                                <li class="active"><span>{{ pindex }}</span></li>
+                                            {% elif pindex < 8 %}
+                                                <li><a href="/emergencyPatientList{{ pindex }}">{{ pindex }}</a></li>
+                                            {% endif %}
+                                        {% endfor %}
+
+                                        {% if page.has_next %}
+                                            <li><a href="/emergencyPatientList{{ page.next_page_number }}">»</a></li>
+                                        {% endif %}
+                                    </ul>
+                                </td>
+                          </tr>
+
+                    </table>
+
+            </div>
+
+        {% endif %}
+
+
+
+    </div>
+
+
+
+
+{% endblock home %}
+
+

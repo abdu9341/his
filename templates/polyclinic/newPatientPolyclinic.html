@@ -1,0 +1,191 @@
+{% extends "home/base_polyclinic.html" %}
+
+{% block home %}
+
+    {% if user.language == 1 %}
+
+        <div class="card-header" align="center">
+            <h2 class="firstBigTitle">استمارة قبول عيادة </h2>
+        </div>
+
+        <div class="card-body">
+{#            {% if patient_exist %}#}
+{#                <h3 style="color: red">{{ message }}<i class="mdi mdi-hand-pointing-right"></i>#}
+{#                    <a href="/basicInfoPolyclinic/{{ patient_exist.id }}">{{ patient_exist.basicInfo.name }}</a></h3>#}
+{#            {% endif %}#}
+            {% if patient_exist %}
+                <div class="col-md-12" style="text-align: center">
+                    <h3 class="firstBigTitle" style="color: red">{{ message }} &nbsp;&nbsp;
+                        <a href="/basicInfoPolyclinic/{{ patient_exist.id }}">{{ patient_exist.basicInfo.name }}</a>
+                    </h3>
+                    <br><br>
+                </div>
+            {% endif %}
+
+
+            <form class="form-horizontal" action="" method="post">
+                {% csrf_token %}
+
+                <div class="form-group has-info" style="font-size: 24px; font-family: Calibri">
+
+                    <label class="col-md-2 control-label" for="example-name" style="color: darkblue">اسم المريض</label>
+                    <div class="col-md-3">
+                      <input class="form-control input-lg" type="text" id="example-name" name="name" autofocus maxlength="30" required dir="rtl">
+                    </div>
+
+                    <label class="col-md-2 control-label" for="example-age" style="color: darkblue">العمر</label>
+                    <div class="col-md-3">
+                      <input class="form-control input-lg" type="number" step="0.1" id="example-age" name="age" required>
+                    </div>
+
+                </div>
+
+                <div class="form-group has-info" style="font-size: 24px; font-family: Calibri">
+
+                    <label class="col-md-2 control-label" for="example-sex" style="color: darkblue">الجنس</label>
+                    <div class="col-md-3">
+                        <select class="form-control input-lg" id="example-select" name="sex" dir="rtl">
+                            {% for gender in genders %}
+                                <option value="{{gender}}">{{gender}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <label class="col-md-2 control-label" for="example-select" style="color: darkblue">الحالة العائلية</label>
+                    <div class="col-md-3">
+                        <select class="form-control input-lg" id="example-select" name="marriage" dir="rtl">
+                            {% for marriage in marriages %}
+                                <option value="{{ marriage}}">{{marriage}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="form-group has-info" style="font-size: 24px; font-family: Calibri">
+
+                    <label class="col-md-2 control-label" for="example-address" style="color: darkblue">السكن</label>
+                    <div class="col-md-3">
+                      <input class="form-control input-lg" type="text" id="example-address" name="address" required dir="rtl">
+                    </div>
+
+                    <label class="col-md-2 control-label" for="example-select" style="color: darkblue">قسم القبول</label>
+                    <div class="col-md-3">
+                        <select class="form-control input-lg menuSmall" id="example-select" name="department" dir="rtl">
+                            <option></option>
+                            {% for department in departments %}
+                                <option value="{{ department.id }}">{{ department.arabic_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                </div>
+
+                <br>
+
+                <div class="form-group">
+                    <div class="col-md-12 col-md-offset-5">
+                        <button class="btn btn-info forthBigMenu" type="submit">إرسال</button>
+                    </div>
+                </div>
+
+
+            </form>
+
+        </div>
+
+    {% elif user.language == 2 %}
+
+        <div class="card-header" align="center">
+            <h2 class="firstBigTitle">Clinic admission form</h2>
+        </div>
+
+        <div class="card-body">
+            {% if patient_exist %}
+                <h3 style="color: red">{{ message }}<i class="mdi mdi-hand-pointing-right"></i>
+                    <a href="/basicInfoPolyclinic/{{ patient_exist.id }}">{{ patient_exist.basicInfo.name }}</a></h3>
+            {% endif %}
+
+
+            <form class="form-horizontal" action="" method="post">
+                {% csrf_token %}
+
+                <div class="form-group has-info" style="font-size: 24px; font-family: Calibri">
+
+                    <label class="col-md-2 control-label" for="example-name" style="color: darkblue">Name</label>
+                    <div class="col-md-3">
+                      <input class="form-control input-lg" type="text" id="example-name" name="name" autofocus maxlength="30" required>
+                    </div>
+
+                    <label class="col-md-2 control-label" for="example-age" style="color: darkblue">Age</label>
+                    <div class="col-md-3">
+                      <input class="form-control input-lg" type="number" step="0.1" id="example-age" name="age" required>
+                    </div>
+
+                </div>
+
+                <div class="form-group has-info" style="font-size: 24px">
+
+                    <label class="col-md-2 control-label" for="example-sex" style="color: darkblue">Gender</label>
+                    <div class="col-md-3">
+                        <select class="form-control input-lg" id="example-select" name="sex">
+                            {% for gender in genders %}
+                                <option value="{{gender}}">{{gender}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <label class="col-md-2 control-label" for="example-select" style="color: darkblue">Marriage</label>
+                    <div class="col-md-3">
+                        <select class="form-control input-lg" id="example-select" name="marriage">
+                            {% for marriage in marriages %}
+                                <option value="{{ marriage}}">{{marriage}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="form-group has-info" style="font-size: 24px">
+
+                    <label class="col-md-2 control-label" for="example-address" style="color: darkblue">Address</label>
+                    <div class="col-md-3">
+                      <input class="form-control input-lg" type="text" id="example-address" name="address" required>
+                    </div>
+
+                    <label class="col-md-2 control-label" for="example-select" style="color: darkblue">Spaciality</label>
+                    <div class="col-md-3">
+                        <select class="form-control input-lg menuSmall" id="example-select" name="department">
+                            <option></option>
+                            {% for department in departments %}
+                                {% if department.name == 'Internal Cardiology' %}
+                                {% else %}
+                                    <option value="{{ department.id }}">{{ department.arabic_name }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                </div>
+
+                <br>
+
+                <div class="form-group">
+                    <div class="col-md-12 col-md-offset-5">
+                        <button class="btn btn-info btn-lg" type="submit">Submit</button>
+                    </div>
+                </div>
+
+
+            </form>
+
+        </div>
+
+    {% endif %}
+
+
+
+
+
+{% endblock home %}
+

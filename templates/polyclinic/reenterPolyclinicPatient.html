@@ -1,0 +1,164 @@
+
+{% extends "home/base_polyclinic.html" %}
+
+{% block home %}
+
+
+    <style type="text/css">
+
+        td{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+
+        }
+
+        th{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+
+        }
+
+
+    </style>
+
+
+    {% if user.language == 1 %}
+
+        <div class="card-header" align="center">
+            <h2 class="firstBigTitle"> اعادة قبول</h2>
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+
+            <table class="table" dir="rtl">
+                <form action="" method="POST" >
+                    {% csrf_token %}
+                    <tr >
+                        <th class="thirdBigMenu">اسم المريض</th>
+                        <td class="normalText">{{ patient.basicInfo.name }}</td>
+                        <th class="thirdBigMenu">العمر</th>
+                        <td class="normalText">{{ patient.basicInfo.age }}</td>
+                    </tr>
+
+                    <tr>
+                      <th class="thirdBigMenu">الجنس</th>
+                      <td class="normalText">{{ patient.basicInfo.sex }}</td>
+                      <th class="thirdBigMenu">الحالة العائلية</th>
+                      <td class="normalText">{{ patient.basicInfo.marriage }}</td>
+                    </tr>
+
+                    <tr>
+                        <th class="thirdBigMenu">رقم المريض</th>
+                        <td class="normalText">{{patient.patientID}}</td>
+                        <td colspan="2"></td>
+                    </tr>
+
+                    <tr>
+                        <th class="thirdBigMenu">السكن</th>
+                        <td class="has-info"><input type="text" name="address" class="form-control forthNormalText" value="{{ patient.basicInfo.address }}"></td>
+                        <th class="thirdBigMenu">رقم هاتف</th>
+                        <td class="has-info"><input type="text" name="phone" class="form-control" value="{{ patient.basicInfo.phone }}"></td>
+                    </tr>
+
+                    <tr>
+                        <th class="thirdBigMenu">قسم القبول</th>
+                        <td class="secondBigMenu has-info">
+                            <select name="department" class="form-control" required style="font-size: 18px">
+                                <option></option>
+                                {% for department in departments %}
+                                    <option value="{{ department.id }}">{{ department.arabic_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>
+
+                    <tr>
+                        <th colspan="4">
+                            <button class="btn btn-info" style="font-family: Calibri; font-size: 20px" type="submit">اعادة قبول</button >
+                        </th>
+                    </tr>
+
+                </form>
+
+
+            </table>
+
+            </div>
+      </div>
+
+    {% elif user.language == 2 %}
+
+        <div class="card-header" align="center">
+            <h2 class="firstBigTitle">Re-admission</h2>
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+
+            <table class="table">
+                <form action="" method="POST" >
+                    {% csrf_token %}
+                    <tr >
+                        <th class="thirdBigMenu">Name: </th>
+                        <td class="normalText">{{ patient.basicInfo.name }}</td>
+                        <th class="thirdBigMenu">Age</th>
+                        <td class="normalText">{{ patient.basicInfo.age }}</td>
+                    </tr>
+
+                    <tr>
+                      <th class="thirdBigMenu">Gender</th>
+                      <td class="normalText">{{ patient.basicInfo.sex }}</td>
+                      <th class="thirdBigMenu">Marriage</th>
+                      <td class="normalText">{{ patient.basicInfo.marriage }}</td>
+                    </tr>
+
+                    <tr>
+                        <th class="thirdBigMenu">Patient ID</th>
+                        <td class="normalText">{{patient.patientID}}</td>
+                        <td colspan="2"></td>
+                    </tr>
+
+                    <tr>
+                        <th class="thirdBigMenu">Address</th>
+                        <td class="has-info"><input type="text" name="address" class="form-control forthNormalText" value="{{ patient.basicInfo.address }}"></td>
+                        <th class="thirdBigMenu">Phone</th>
+                        <td class="has-info"><input type="text" name="phone" class="form-control" value="{{ patient.basicInfo.phone }}"></td>
+                    </tr>
+
+                    <tr>
+                        <th class="thirdBigMenu">Spaciality</th>
+                        <td class="secondBigMenu has-info">
+                            <select name="department" class="form-control" required style="font-size: 18px">
+                                <option></option>
+                                {% for department in departments %}
+                                    <option value="{{ department.id }}">{{ department.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>
+
+                    <tr>
+                        <th colspan="4">
+                            <button class="btn btn-info forthNormalText" type="submit">Re-admission</button >
+                        </th>
+                    </tr>
+
+                </form>
+
+
+            </table>
+
+            </div>
+      </div>
+
+    {% endif %}
+
+
+
+
+{% endblock home %}

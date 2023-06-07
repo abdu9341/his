@@ -1,0 +1,227 @@
+{% extends "home/base_emergency.html" %}
+
+    {% block home %}
+
+
+    <style type="text/css">
+
+        td{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        th{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+    </style>
+
+    {% if user.language == 1 %}
+
+        <div class="card-header">
+            <h3 class="firstBigTitle">الملف الشخصي</h3>
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+
+                <table class="table table-responsive">
+                    <thead >
+                        <tr class="thirdBigTitle">
+                            <th>الاسم</th>
+                            <th>الحساب</th>
+                            <th>كلمة السر</th>
+                            <th>موقع</th>
+                            <th>الجنس</th>
+                            <th>قم بتغيير كلمة المرور</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr class="normalText">
+                            <td>{{ user.arabic_name }}</td>
+                            <td>{{ user.account }}</td>
+                            <td>{{ user.password }}</td>
+                            <td>{{ user.position.arabic_name }}</td>
+                            <td>
+                                {% if user.sex == 'Male' %}
+                                    الذكر
+                                {% else %}
+                                    أنثى
+                                {% endif %}
+                            </td>
+
+                            <td>
+
+                                <a  data-toggle="modal" data-target=".password">
+                                    <i class="mdi mdi-pencil mdi-24px"></i>
+                                </a>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+                <table class="table table-responsive">
+
+                    <tr>
+                        <th class="thirdBigMenu">القسم</th>
+                        <td class="normalText" style="text-align: left">{{ user.authorityDepartment.arabic_name }}</td>
+                    </tr>
+
+                    <tr>
+                        <th class="thirdBigMenu">جناح</th>
+                        <td class="normalText" style="text-align: left">
+                            {% for ward in user.authorityWard.all %}
+                                {% if  ward.status %}
+                                    {{ ward.arabic_name }} ,
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th class="thirdBigMenu">قائمة</th>
+                        <td class="normalText" style="text-align: left">
+                            {% for menu in user.authorityMenu.all %}
+                                {{ menu.arabic_name }} ,
+                            {% endfor %}
+                        </td>
+                    </tr>
+
+                </table>
+
+            </div>
+        </div>
+
+        <div class="modal fade password" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title thirdBigTitle" id="myLargeModalLabel">كلمة السر</h4>
+                </div>
+
+                <form action="{% url 'changePwdAction' %}" method="post">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="col-md-12 has-info">
+                            <input type="text" name="pwd" class="form-control forthNormalText" placeholder="كلمة السر الجديدة" required>
+                        </div>
+                    </div>
+
+                    <br><br>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-info forthNormalText">إرسال</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    {% elif user.language == 2 %}
+
+        <div class="card-header">
+            <h3 class="firstBigTitle">User Profile</h3>
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+
+                <table class="table table-responsive">
+                    <thead >
+                        <tr class="thirdBigTitle">
+                            <th>Name</th>
+                            <th>Account</th>
+                            <th>Password</th>
+                            <th>Position</th>
+                            <th>Gender</th>
+                            <th>Change Password</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr class="normalText">
+                            <td>{{ user.name }}</td>
+                            <td>{{ user.account }}</td>
+                            <td>{{ user.password }}</td>
+                            <td>{{ user.position.name }}</td>
+                            <td>{{ user.sex }}</td>
+
+                            <td>
+
+                                <a  data-toggle="modal" data-target=".password">
+                                    <i class="mdi mdi-pencil mdi-24px"></i>
+                                </a>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+                <table class="table table-responsive">
+
+                    <tr>
+                        <th class="thirdBigMenu">Department</th>
+                        <td class="normalText" style="text-align: left">{{ user.authorityDepartment.name }}</td>
+                    </tr>
+
+                    <tr>
+                        <th class="thirdBigMenu">Ward</th>
+                        <td class="normalText" style="text-align: left">
+                            {% for ward in user.authorityWard.all %}
+                                {% if  ward.status %}
+                                    {{ ward.name }} ,
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th class="thirdBigMenu">Menu</th>
+                        <td class="normalText" style="text-align: left">
+                            {% for menu in user.authorityMenu.all %}
+                                {{ menu.name }} ,
+                            {% endfor %}
+                        </td>
+                    </tr>
+
+                </table>
+
+            </div>
+        </div>
+
+        <div class="modal fade password" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="myLargeModalLabel">Password</h4>
+                </div>
+
+                <form action="{% url 'changePwdAction' %}" method="post">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="col-md-12 has-info">
+                            <input type="text" name="pwd" class="form-control" placeholder="The new password" required>
+                        </div>
+                    </div>
+
+                    <br><br>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-info">Submit</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    {% endif %}
+
+
+    {% endblock home %}

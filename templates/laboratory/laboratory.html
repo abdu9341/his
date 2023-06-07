@@ -1,0 +1,903 @@
+{% extends "home/base_laboratory.html" %}
+
+    {% block home %}
+
+    <style type="text/css">
+
+        td{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        th{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+
+        }
+    </style>
+
+    <div class="card-body">
+
+        {% if user.language == 1 %}
+
+            <table class="table table-bordered">
+                <tr>
+                    <th class="forthBigMenu">اسم المريض</th>
+                    <td class="forthNormalText">{{patient.basicInfo.name}}</td>
+                    <th class="forthBigMenu">العمر</th>
+                    <td class="forthNormalText">{{patient.basicInfo.age}}</td>
+                    <th class="forthBigMenu">جناح</th>
+                    <td class="forthNormalText">{{patient.sickroom.arabic_name}}</td>
+                </tr>
+            </table>
+
+        {% elif user.language == 2 %}
+
+            <table class="table table-bordered">
+                <tr>
+                    <th class="forthBigMenu">Name</th>
+                    <td class="forthNormalText">{{patient.basicInfo.name}}</td>
+                    <th class="forthBigMenu">Age</th>
+                    <td class="forthNormalText">{{patient.basicInfo.age}}</td>
+                    <th class="forthBigMenu">Ward</th>
+                    <td class="forthNormalText">{{patient.sickroom.name}}</td>
+                </tr>
+            </table>
+
+        {% endif %}
+
+
+
+        <ul id="myTabs" class="nav nav-tabs" role="tablist">
+
+            <li class="active"><a href="#CBC" id="CBC-tab" role="tab" data-toggle="tab" style="color: #ADD8E6; font-weight: bolder">CBC</a></li>
+            <li><a href="#Coagulation" role="tab" id="Coagulation-tab" data-toggle="tab" style="color: #ffc20e; font-weight: bolder">Coagulation</a></li>
+            <li><a href="#Biochemistry" role="tab" id="Biochemistry-tab" data-toggle="tab" style="color: #FF9797; font-weight: bolder">Biochemistry</a></li>
+            <li><a href="#Electrolytes" role="tab" id="Electrolytes-tab" data-toggle="tab" style="color: #0FB25F; font-weight: bolder">Electrolytes</a></li>
+            <li><a href="#ABG" role="tab" id="ABG-tab" data-toggle="tab" style="color: #E6CAFF; font-weight: bolder">ABG</a></li>
+            <li><a href="#Serology" role="tab" id="Serology-tab" data-toggle="tab" style="color: #D9B3B3; font-weight: bolder">Serology</a></li>
+            <li><a href="#UrineAnalysis" role="tab" id="UrineAnalysis-tab" data-toggle="tab" style="color: #fab27b; font-weight: bolder">Urine Analysis</a></li>
+            <li><a href="#CSF" role="tab" id="CSF-tab" data-toggle="tab" style="color: #66CDAA; font-weight: bolder">CSF</a></li>
+            <li><a href="#Antibiotics" role="tab" id="Antibiotics-tab" data-toggle="tab" style="color: #a3d200; font-weight: bolder">Antibiotics</a></li>
+            <li><a href="#Hormones" role="tab" id="Hormones-tab" data-toggle="tab" style="color: lightskyblue; font-weight: bolder">Hormones</a></li>
+
+        </ul>
+
+        <h3>{{ message }}</h3>
+
+        <div id="myTabContent" class="tab-content">
+
+            <div class="tab-pane fade active in has-info" id="CBC">
+                <table class="table table-bordered">
+                    <form action="{% url 'write_cbc' patient.id patient.patientID %}" method="post" name="cbc">
+                        {% csrf_token %}
+
+                        <tr>
+                            <th colspan="6" style="background-color: #ADD8E6; text-align: center">CBC</th>
+                        </tr>
+
+                        <tr>
+                            <th>Blood Group</th>
+                            <th>
+                                <select class="form-control" name="bloodGroup">
+                                    {% for bloodType in bloodTypes %}
+                                        <option value="{{ bloodType }}">{{ bloodType }}</option>
+                                    {% endfor %}
+                                </select>
+                            </th>
+                            <th>RBC</th>
+                            <th><input type="text" class="form-control" name="rbc" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>MCH</th>
+                            <th><input type="text" class="form-control" name="mch" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                        </tr>
+
+                        <tr>
+                            <th>WBC</th>
+                            <th><input type="text" class="form-control" name="wbc" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Hemoglobin</th>
+                            <th><input type="text" class="form-control" name="hemoglobin" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>MCHC</th>
+                            <th><input type="text" class="form-control" name="mchc" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                        </tr>
+
+                        <tr>
+                            <th>LYM</th>
+                            <th><input type="text" class="form-control" name="lym" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Hematocrite</th>
+                            <th><input type="text" class="form-control" name="hematocrite" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>RDW</th>
+                            <th><input type="text" class="form-control" name="rdw" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                        </tr>
+
+                        <tr>
+                            <th>MID</th>
+                            <th><input type="text" class="form-control" name="mid" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>PLT</th>
+                            <th><input type="text" class="form-control" name="plt" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>EsrH1</th>
+                            <th><input type="text" class="form-control" name="esrH1" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                        </tr>
+
+                        <tr>
+                            <th>Gran</th>
+                            <th><input type="text" class="form-control" name="gran" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>MCV</th>
+                            <th><input type="text" class="form-control" name="mcv" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>EsrH2</th>
+                            <th><input type="text" class="form-control" name="esrH2" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                        </tr>
+
+                        <tr>
+                            <td colspan="6" style="text-align: center">
+                                <button type="button" class="btn btn-info forthNormalText" id="button" onclick="submitCBC()">إرسال</button>
+                            </td>
+                        </tr>
+                    </form>
+
+                </table>
+            </div>
+
+            <div class="tab-pane fade has-info" id="Coagulation">
+                <table class="table table-bordered">
+                    <form method="post" action="{% url 'write_coagulation' patient.id patient.patientID %}" name="coagulation">
+                        {% csrf_token %}
+
+                        <tr>
+                            <th colspan="6" style="background-color: #ffc20e; text-align: center">Coagulation</th>
+                        </tr>
+
+                        <tr>
+                            <th>PT</th>
+                            <th><input type="text" class="form-control" name="pt" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>APTT</th>
+                            <th><input type="text" class="form-control" name="aptt" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Clot Time</th>
+                            <th><input type="text" class="form-control" name="clotTime" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                        </tr>
+
+                        <tr>
+                            <th>INR</th>
+                            <th><input type="text" class="form-control" name="inr" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Bleed Time</th>
+                            <th><input type="text" class="form-control" name="bleedTime" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>ACT</th>
+                            <th><input type="text" class="form-control" name="act" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                        </tr>
+
+                        <tr>
+                            <td colspan="6" style="text-align: center">
+                                <button type="button" class="btn btn-info forthNormalText" id="button" onclick="submitCoagulation()">إرسال</button>
+                            </td>
+                        </tr>
+                    </form>
+
+                </table>
+            </div>
+
+            <div class="tab-pane fade has-info" id="Biochemistry">
+                <table class="table table-bordered">
+                    <form action="{% url 'write_biochemistry' patient.id patient.patientID %}" method="post" name="biochemistry">
+                        {% csrf_token %}
+
+                        <tr>
+                            <th colspan="8" style="background-color: #FF9797; text-align: center">Biochemistry</th>
+                        </tr>
+
+                        <tr>
+                            <th>Glucose</th>
+                            <th><input type="text" class="form-control" name="glucose" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>BiliDirect</th>
+                            <th><input type="text" class="form-control" name="biliDirect" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Total Protein</th>
+                            <th><input type="text" class="form-control" name="totalProtein" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Triglycerid</th>
+                            <th><input type="text" class="form-control" name="triglycerid" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                        </tr>
+
+                        <tr>
+                            <th>Urea</th>
+                            <th><input type="text" class="form-control" name="urea" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>BiliIndirect</th>
+                            <th><input type="text" class="form-control" name="biliIndirect" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>CK</th>
+                            <th><input type="text" class="form-control" name="ck" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Cholesterol</th>
+                            <th><input type="text" class="form-control" name="cholesterol" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                        </tr>
+
+                        <tr>
+                            <th>Creatine</th>
+                            <th><input type="text" class="form-control" name="creatine" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>ALP</th>
+                            <th><input type="text" class="form-control" name="alp" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>CK-MB</th>
+                            <th><input type="text" class="form-control" name="ck_mb" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>CRP</th>
+                            <th><input type="text" class="form-control" name="crp" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                        </tr>
+
+                        <tr>
+                            <th>SGPT</th>
+                            <th><input type="text" class="form-control" name="sgpt" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Amylase</th>
+                            <th><input type="text" class="form-control" name="amylase" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Lipase</th>
+                            <th><input type="text" class="form-control" name="lipase" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Aslo</th>
+                            <th><input type="text" class="form-control" name="aslo" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                        </tr>
+
+                        <tr>
+                            <th>SGOT</th>
+                            <th><input type="text" class="form-control" name="sgot" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>LDH</th>
+                            <th><input type="text" class="form-control" name="ldh" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Uric Acid</th>
+                            <th><input type="text" class="form-control" name="uric_acid" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>RF</th>
+                            <th><input type="text" class="form-control" name="rf" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                        </tr>
+
+                        <tr>
+                            <th>BiliTotal</th>
+                            <th><input type="text" class="form-control" name="biliTotal" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Albumin</th>
+                            <th><input type="text" class="form-control" name="albumin" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+
+                        <tr>
+                            <td colspan="8" style="text-align: center">
+                                <button type="button" class="btn btn-info forthNormalText" id="button" onclick="submitBiochemistry()">إرسال</button>
+                            </td>
+                        </tr>
+                    </form>
+
+                </table>
+            </div>
+
+            <div class="tab-pane fade has-info" id="Electrolytes">
+                <table class="table table-bordered">
+                    <form action="{% url 'write_electrolytes' patient.id patient.patientID %}" method="post" name="electrolytes">
+                        {% csrf_token %}
+
+                        <tr>
+                            <th colspan="6" style="background-color: #BBFFBB; text-align: center">Electrolytes</th>
+                        </tr>
+
+                        <tr>
+                            <th>K</th>
+                            <th><input type="text" class="form-control" name="k" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Na</th>
+                            <th><input type="text" class="form-control" name="na" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Cl</th>
+                            <th><input type="text" class="form-control" name="cl" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                        </tr>
+
+                        <tr>
+                            <th>ICa</th>
+                            <th><input type="text" class="form-control" name="ica" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>TCa</th>
+                            <th><input type="text" class="form-control" name="tca" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>NCa</th>
+                            <th><input type="text" class="form-control" name="nca" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                        </tr>
+
+                        <tr>
+                            <th>Iron</th>
+                            <th><input type="text" class="form-control" name="iron" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Mg</th>
+                            <th><input type="text" class="form-control" name="mg" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Phosphorus</th>
+                            <th><input type="text" class="form-control" name="phosphorus" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                        </tr>
+
+                        <tr>
+                            <td colspan="6" style="text-align: center">
+                                <button type="button" class="btn btn-info forthNormalText" id="button" onclick="submitElectrolytes()">إرسال</button>
+                            </td>
+                        </tr>
+                    </form>
+
+                </table>
+            </div>
+
+            <div class="tab-pane fade has-info" id="ABG">
+                <table class="table table-bordered">
+                    <form action="{% url 'write_abg' patient.id patient.patientID %}" method="post" name="abg">
+                        {% csrf_token %}
+
+                        <tr>
+                            <th colspan="6" style="background-color: #E6CAFF; text-align: center">ABG</th>
+                        </tr>
+
+                        <tr>
+                            <th>PH</th>
+                            <th><input type="text" class="form-control" name="ph" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Pc02</th>
+                            <th><input type="text" class="form-control" name="pc02" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>P02</th>
+                            <th><input type="text" class="form-control" name="p02" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                        </tr>
+
+                        <tr>
+                            <th>Na</th>
+                            <th><input type="text" class="form-control" name="na" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>K</th>
+                            <th><input type="text" class="form-control" name="k" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Ca1</th>
+                            <th><input type="text" class="form-control" name="ca1" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                        </tr>
+
+                        <tr>
+                            <th>Glucose</th>
+                            <th><input type="text" class="form-control" name="glucose" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Lac</th>
+                            <th><input type="text" class="form-control" name="lac" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>HC03</th>
+                            <th><input type="text" class="form-control" name="hc03" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                        </tr>
+
+                        <tr>
+                            <th>Beecf</th>
+                            <th><input type="text" class="form-control" name="beecf" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>S02c</th>
+                            <th><input type="text" class="form-control" name="s02c" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Fi02</th>
+                            <th><input type="text" class="form-control" name="fi02" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                        </tr>
+
+                        <tr>
+                            <td colspan="6" style="text-align: center">
+                                <button type="button" class="btn btn-info forthNormalText" id="button" onclick="submitABG()">إرسال</button>
+                            </td>
+                        </tr>
+                    </form>
+
+                </table>
+            </div>
+
+            <div class="tab-pane fade has-info" id="Serology">
+                <table class="table table-bordered">
+                    <form action="{% url 'write_serology' patient.id patient.patientID %}" method="post" name="serology">
+                        {% csrf_token %}
+
+                        <tr>
+                            <th colspan="6" style="background-color: #D9B3B3; text-align: center">Serology</th>
+                        </tr>
+
+                        <tr>
+                            <th>HBS Ag</th>
+                            <th><input type="text" class="form-control" name="hbs_Ag" maxlength="7"></th>
+                            <th>HIV</th>
+                            <th><input type="text" class="form-control" name="hiv" maxlength="7"></th>
+                            <th>HCV</th>
+                            <th><input type="text" class="form-control" name="hcv" maxlength="7"></th>
+                        </tr>
+
+                        <tr>
+                            <th>HCG</th>
+                            <th><input type="text" class="form-control" name="hcg" maxlength="7"></th>
+                            <th>FOB</th>
+                            <th><input type="text" class="form-control" name="fob" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Widal O</th>
+                            <th><input type="text" class="form-control" name="widal_o" maxlength="7"></th>
+                        </tr>
+
+                        <tr>
+                            <th>Widal H</th>
+                            <th><input type="text" class="form-control" name="widal_h" maxlength="7"></th>
+                            <th>Wrigh A</th>
+                            <th><input type="text" class="form-control" name="wrigh_a" maxlength="7"></th>
+                            <th>Wrigh B</th>
+                            <th><input type="text" class="form-control" name="wrigh_b" maxlength="7"></th>
+                        </tr>
+
+                        <tr>
+                            <td colspan="6" style="text-align: center">
+                                <button type="button" class="btn btn-info forthNormalText" id="button" onclick="submitSerology()">إرسال</button>
+                            </td>
+                        </tr>
+                    </form>
+
+                </table>
+            </div>
+
+            <div class="tab-pane fade has-info" id="UrineAnalysis">
+                <table class="table table-bordered">
+                    <form action="{% url 'write_urineAnalysis' patient.id patient.patientID %}" method="post" name="urineAnalysis">
+                        {% csrf_token %}
+
+                        <tr>
+                            <th colspan="8" style="background-color: #fab27b; text-align: center">Urine Analysis</th>
+                        </tr>
+
+                        <tr>
+                            <th>Color</th>
+                            <th>
+                                <select class="form-control" name="color">
+                                    {% for color in colors %}
+                                        <option value="{{ color }}">{{ color }}</option>
+                                    {% endfor %}
+                                </select>
+                            </th>
+                            <th>SpGravity</th>
+                            <th><input type="text" class="form-control" name="spGravity" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Netrit</th>
+                            <th><input type="text" class="form-control" name="netrit" maxlength="7"></th>
+                            <th>WBC</th>
+                            <th><input type="text" class="form-control" name="wbc" maxlength="7"></th>
+                        </tr>
+
+                        <tr>
+                            <th>Urates</th>
+                            <th><input type="text" class="form-control" name="urates" maxlength="7"></th>
+                            <th>Uric Acid</th>
+                            <th><input type="text" class="form-control" name="uric_acid" maxlength="7"></th>
+                            <th>Appearance</th>
+                            <th><input type="text" class="form-control" name="appearance" maxlength="7"></th>
+                            <th>Glucose</th>
+                            <th><input type="text" class="form-control" name="glucose" maxlength="7"></th>
+                        </tr>
+
+                        <tr>
+                            <th>Keton</th>
+                            <th><input type="text" class="form-control" name="keton" maxlength="7"></th>
+                            <th>RBC</th>
+                            <th><input type="text" class="form-control" name="rbc" maxlength="7"></th>
+                            <th>Bacteria</th>
+                            <th><input type="text" class="form-control" name="bacteria" maxlength="7"></th>
+                            <th>Mucus</th>
+                            <th><input type="text" class="form-control" name="mucus" maxlength="7"></th>
+                        </tr>
+
+                        <tr>
+                            <th>PH</th>
+                            <th><input type="text" class="form-control" name="ph" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Blood</th>
+                            <th><input type="text" class="form-control" name="blood" maxlength="7"></th>
+                            <th>Protein</th>
+                            <th><input type="text" class="form-control" name="protein" maxlength="7"></th>
+                            <th>EP.Cells</th>
+                            <th><input type="text" class="form-control" name="epCells" maxlength="7"></th>
+                        </tr>
+
+                        <tr>
+                            <th>OX.Calcium</th>
+                            <th><input type="text" class="form-control" name="ox_calcium" maxlength="7"></th>
+                            <th>Casts</th>
+                            <th><input type="text" class="form-control" name="casts" maxlength="7"></th>
+                            <th>Fungi</th>
+                            <th><input type="text" class="form-control" name="fungi" maxlength="7"></th>
+                            <th>Yeast</th>
+                            <th><input type="text" class="form-control" name="yeast" maxlength="7"></th>
+                        </tr>
+
+                        <tr>
+                            <th>Pus Cell</th>
+                            <th><input type="text" class="form-control" name="pus_cell" maxlength="7"></th>
+                            <th>Triple Phospate</th>
+                            <th><input type="text" class="form-control" name="triple_phospate"></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+
+                        <tr>
+                            <td colspan="8" style="text-align: center">
+                                <button type="button" class="btn btn-info forthNormalText" id="button" onclick="submitUrineAnalysis()">إرسال</button>
+                            </td>
+                        </tr>
+                    </form>
+
+                </table>
+            </div>
+
+            <div class="tab-pane fade has-info" id="CSF">
+                <table class="table table-bordered">
+                    <form action="{% url 'write_csf' patient.id patient.patientID %}" method="post" name="csf">
+                        {% csrf_token %}
+
+                        <tr>
+                            <th colspan="6" style="background-color: #66CDAA; text-align: center">CSF</th>
+                        </tr>
+
+                        <tr>
+                            <th>Color</th>
+                            <th><input type="text" class="form-control" name="color" maxlength="7"></th>
+                            <th>Appearance</th>
+                            <th><input type="text" class="form-control" name="appearance" maxlength="7"></th>
+                            <th>RBC</th>
+                            <th><input type="text" class="form-control" name="rbc" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                        </tr>
+
+                        <tr>
+                            <th>WBC</th>
+                            <th><input type="text" class="form-control" name="wbc" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Glucose</th>
+                            <th><input type="text" class="form-control" name="glucose" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Protein</th>
+                            <th><input type="text" class="form-control" name="protein" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                        </tr>
+
+                        <tr>
+                            <td colspan="6" style="text-align: center">
+                                <button type="button" class="btn btn-info forthNormalText" id="button" onclick="submitCSF()">إرسال</button>
+                            </td>
+                        </tr>
+                    </form>
+
+                </table>
+            </div>
+
+            <div class="tab-pane fade has-info table-responsive" id="Antibiotics">
+                <table class="table table-bordered">
+                    <form action="{% url 'write_antibiotics' patient.id patient.patientID %}" method="post" name="antibiotics">
+                        {% csrf_token %}
+
+                        <tr>
+                            <th colspan="8" style="background-color: #a3d200; text-align: center">Antibiotics</th>
+                        </tr>
+
+                        <tr>
+                            <th>Cephradine</th>
+                            <th><input type="text" class="form-control" name="cephradine" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Ciprofloxacin</th>
+                            <th><input type="text" class="form-control" name="ciprofloxacin" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Gentamicin</th>
+                            <th><input type="text" class="form-control" name="gentamicin" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Nitrofurantoin</th>
+                            <th><input type="text" class="form-control" name="nitrofurantoin" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                        </tr>
+
+                        <tr>
+                            <th>Ofloxacin</th>
+                            <th><input type="text" class="form-control" name="ofloxacin" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Cefoxitin</th>
+                            <th><input type="text" class="form-control" name="cefoxitin" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Cefaclor</th>
+                            <th><input type="text" class="form-control" name="cefaclor" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Amikacin</th>
+                            <th><input type="text" class="form-control" name="amikacin" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                        </tr>
+
+                        <tr>
+                            <th>Doxycycline</th>
+                            <th><input type="text" class="form-control" name="doxycycline" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Ceftriaxone</th>
+                            <th><input type="text" class="form-control" name="ceftriaxone" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Cefadroxil</th>
+                            <th><input type="text" class="form-control" name="cefadroxil" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Cefixime</th>
+                            <th><input type="text" class="form-control" name="cefixime" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                        </tr>
+
+                        <tr>
+                            <th>Amoxicillin</th>
+                            <th><input type="text" class="form-control" name="amoxicillin" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Cefuroxime</th>
+                            <th><input type="text" class="form-control" name="cefuroxime" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Imipenem</th>
+                            <th><input type="text" class="form-control" name="imipenem" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Cefotaxime</th>
+                            <th><input type="text" class="form-control" name="cefotaxime" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                        </tr>
+
+                        <tr>
+                            <th>Ampicillin/Sulbactam</th>
+                            <th><input type="text" class="form-control" name="ampicillin_sulbactam" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Azithromycin</th>
+                            <th><input type="text" class="form-control" name="azithromycin" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Levofloxacin</th>
+                            <th><input type="text" class="form-control" name="levofloxacin" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Neomycin</th>
+                            <th><input type="text" class="form-control" name="neomycin" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                        </tr>
+
+                        <tr>
+                            <th>Amoxicillin/Clavulanic Acid</th>
+                            <th><input type="text" class="form-control" name="amoxicillin_clavulanic_acid" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Pipemidic Acid</th>
+                            <th><input type="text" class="form-control" name="pipemidic_acid" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Meropenem</th>
+                            <th><input type="text" class="form-control" name="meropenem" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Cloxacillin</th>
+                            <th><input type="text" class="form-control" name="cloxacillin" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                        </tr>
+
+                        <tr>
+                            <th>Trimethoprim/Sulphamethoxazole</th>
+                            <th><input type="text" class="form-control" name="trimethoprim_sulphamethoxazole" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Norfloxacin</th>
+                            <th><input type="text" class="form-control" name="norfloxacin" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+
+                        <tr>
+                            <td colspan="8" style="text-align: center">
+                                <button type="button" class="btn btn-info forthNormalText" id="button" onclick="submitAntibiotics()">إرسال</button>
+                            </td>
+                        </tr>
+                    </form>
+
+                </table>
+            </div>
+
+            <div class="tab-pane fade has-info table-responsive" id="Hormones">
+                <table class="table table-bordered">
+                    <form action="{% url 'write_hormones' patient.id patient.patientID %}" method="post" name="hormones">
+                        {% csrf_token %}
+
+                        <tr>
+                            <th colspan="8" style="background-color: lightskyblue; text-align: center;">Hormones</th>
+                        </tr>
+
+                        <tr>
+                            <th>Hba1c</th>
+                            <th><input type="text" class="form-control" name="hba1c" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Tsh</th>
+                            <th><input type="text" class="form-control" name="tsh" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Ft4</th>
+                            <th><input type="text" class="form-control" name="ft4" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>T4</th>
+                            <th><input type="text" class="form-control" name="t4" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                        </tr>
+
+                        <tr>
+                            <th>T3</th>
+                            <th><input type="text" class="form-control" name="t3" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>LH</th>
+                            <th><input type="text" class="form-control" name="lh" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Fsh</th>
+                            <th><input type="text" class="form-control" name="fsh" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Prolactin</th>
+                            <th><input type="text" class="form-control" name="prolactin" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                        </tr>
+
+                        <tr>
+                            <th>Testosterone</th>
+                            <th><input type="text" class="form-control" name="testosterone" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Cortisol</th>
+                            <th><input type="text" class="form-control" name="cortisol" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Vit D</th>
+                            <th><input type="text" class="form-control" name="vit_d" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Ferritin</th>
+                            <th><input type="text" class="form-control" name="ferritin" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                        </tr>
+
+                        <tr>
+                            <th>D Dimer</th>
+                            <th><input type="text" class="form-control" name="d_dimer" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>B Hcg</th>
+                            <th><input type="text" class="form-control" name="b_hcg" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Troponin I</th>
+                            <th><input type="text" class="form-control" name="troponin_i" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Troponin T</th>
+                            <th><input type="text" class="form-control" name="troponin_t" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                        </tr>
+
+                        <tr>
+                            <th>Amh</th>
+                            <th><input type="text" class="form-control" name="amh" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Psa</th>
+                            <th><input type="text" class="form-control" name="psa" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Cea</th>
+                            <th><input type="text" class="form-control" name="cea" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th>Afp</th>
+                            <th><input type="text" class="form-control" name="afp" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                        </tr>
+
+                        <tr>
+                            <th>Toxo Igg Igm</th>
+                            <th><input type="text" class="form-control" name="toxo_igg_igm" onkeyup="value=value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1')"></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+
+                        <tr>
+                            <td colspan="8" style="text-align: center">
+                                <button type="button" class="btn btn-info forthNormalText" id="button" onclick="submitHormones()">إرسال</button>
+                            </td>
+                        </tr>
+                    </form>
+
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script type="text/javascript">
+        // 消息提示示例
+
+        function submitCBC(){
+            {#lightyear.url({% url 'finishedLaboratoryList' %});#}
+            lightyear.notify('Submitted successfully', 'success', 3000);
+            lightyear.loading('show');
+
+
+            // 假设ajax提交操作
+            setTimeout(function() {
+
+                lightyear.loading('hide');
+
+                document.cbc.submit();
+
+            }, 1e3)
+
+        }
+
+        function submitCoagulation(){
+            {#lightyear.url({% url 'finishedLaboratoryList' %});#}
+            lightyear.notify('Submitted successfully', 'success', 3000);
+            lightyear.loading('show');
+
+
+            // 假设ajax提交操作
+            setTimeout(function() {
+
+                lightyear.loading('hide');
+
+                document.coagulation.submit();
+
+            }, 1e3)
+
+        }
+
+        function submitBiochemistry(){
+            {#lightyear.url({% url 'finishedLaboratoryList' %});#}
+            lightyear.notify('Submitted successfully', 'success', 3000);
+            lightyear.loading('show');
+
+
+            // 假设ajax提交操作
+            setTimeout(function() {
+
+                lightyear.loading('hide');
+
+                document.biochemistry.submit();
+
+            }, 1e3)
+
+        }
+
+        function submitElectrolytes(){
+            {#lightyear.url({% url 'finishedLaboratoryList' %});#}
+            lightyear.notify('Submitted successfully', 'success', 3000);
+            lightyear.loading('show');
+
+
+            // 假设ajax提交操作
+            setTimeout(function() {
+
+                lightyear.loading('hide');
+
+                document.electrolytes.submit();
+
+            }, 1e3)
+
+        }
+
+        function submitABG(){
+            {#lightyear.url({% url 'finishedLaboratoryList' %});#}
+            lightyear.notify('Submitted successfully', 'success', 3000);
+            lightyear.loading('show');
+
+
+            // 假设ajax提交操作
+            setTimeout(function() {
+
+                lightyear.loading('hide');
+
+                document.abg.submit();
+
+            }, 1e3)
+
+        }
+
+        function submitSerology(){
+            {#lightyear.url({% url 'finishedLaboratoryList' %});#}
+            lightyear.notify('Submitted successfully', 'success', 3000);
+            lightyear.loading('show');
+
+
+            // 假设ajax提交操作
+            setTimeout(function() {
+
+                lightyear.loading('hide');
+
+                document.serology.submit();
+
+            }, 1e3)
+
+        }
+
+        function submitUrineAnalysis(){
+            {#lightyear.url({% url 'finishedLaboratoryList' %});#}
+            lightyear.notify('Submitted successfully', 'success', 3000);
+            lightyear.loading('show');
+
+
+            // 假设ajax提交操作
+            setTimeout(function() {
+
+                lightyear.loading('hide');
+
+                document.urineAnalysis.submit();
+
+            }, 1e3)
+
+        }
+
+        function submitCSF(){
+            {#lightyear.url({% url 'finishedLaboratoryList' %});#}
+            lightyear.notify('Submitted successfully', 'success', 3000);
+            lightyear.loading('show');
+
+
+            // 假设ajax提交操作
+            setTimeout(function() {
+
+                lightyear.loading('hide');
+
+                document.csf.submit();
+
+            }, 1e3)
+
+        }
+
+        function submitAntibiotics(){
+            {#lightyear.url({% url 'finishedLaboratoryList' %});#}
+            lightyear.notify('Submitted successfully', 'success', 3000);
+            lightyear.loading('show');
+
+
+            // 假设ajax提交操作
+            setTimeout(function() {
+
+                lightyear.loading('hide');
+
+                document.antibiotics.submit();
+
+            }, 1e3)
+
+        }
+
+        function submitHormones(){
+            {#lightyear.url({% url 'finishedLaboratoryList' %});#}
+            lightyear.notify('Submitted successfully', 'success', 3000);
+            lightyear.loading('show');
+
+
+            // 假设ajax提交操作
+            setTimeout(function() {
+
+                lightyear.loading('hide');
+
+                document.hormones.submit();
+
+            }, 1e3)
+
+        }
+
+    </script>
+
+
+
+{% endblock home %}
+
+
+

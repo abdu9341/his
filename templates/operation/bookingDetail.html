@@ -1,0 +1,280 @@
+{% extends "home/base_booking.html" %}
+
+{% block home %}
+
+
+    <script type="text/javascript" language="JavaScript">
+
+        function deleteBooking() {
+            if(confirm("Are you sure to delete ?")){
+                return true
+            }
+            else {
+                return false
+            }
+        }
+
+    </script>
+
+    <style type="text/css">
+
+        td{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        th{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+    </style>
+
+
+    {% if user.language == 1 %}
+
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+
+                        <table class="table" align="center">
+
+                            <thead>
+                                <tr class="forthBigMenu">
+                                    <th>#</th>
+                                    <th>اسم المريض</th>
+                                    <th>العمر</th>
+                                    <th>العمل الجراحي</th>
+                                    <th>الطبيب الجراح</th>
+                                    <th>التاريخ</th>
+                                    <th>مدة(ساعة)</th>
+                                    <th>تعديل</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                {% for booking in bookings %}
+
+                                    <tr class="forthNormalText">
+                                        <th>{{ forloop.counter }}</th>
+                                        <th>{{ booking.patient.basicInfo.name }}</th>
+                                        <th>{{ booking.patient.basicInfo.age }}</th>
+                                        <td>{{ booking.name }}</td>
+                                        <td>{{ booking.timeTable.doctor }}</td>
+                                        <td>{{ booking.date }}</td>
+                                        <td>{{ booking.timeOfOperation }}</td>
+
+                                        <td>
+
+                                            <a href="#" type="button" data-toggle="modal" data-target="#editBooking{{ booking.id }}">
+                                                <i class="mdi mdi-pencil mdi-24px" style="color: #33cccc" title="تعديل" data-toggle="tooltip" data-placement="left"></i>
+                                            </a>
+                                            &nbsp;&nbsp;
+                                            <a href="{% url 'deleteBooking' booking.id %}">
+                                                <i class="mdi mdi-delete mdi-24px" style="color: #33cccc" title="Delete" data-toggle="tooltip" data-placement="right"></i>
+                                            </a>
+                                        </td>
+
+                                    </tr>
+
+                                    <!--Edit booking-->
+                                    <div class="modal fade" id="editBooking{{ booking.id }}" tabindex="-1" role="dialog" aria-labelledby="addRecordModalLabel">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                    <h4 class="modal-title" id="addRecordModalLabel" style="font-family: Calibri; font-size: 20px">تعديل الحجز</h4>
+                                                </div>
+
+                                                <form action="{% url 'editBooking' booking.id %}" method="post">
+                                                    {% csrf_token %}
+
+                                                    <div class="modal-body">
+                                                        <div class="row" style="font-family: Calibri; font-size: 18px">
+                                                            <div class="col-md-2" style="color: #AE4C4C">العمل الجراحي</div>
+                                                            <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                                                <input type="text" name="name" list="nameList" class="form-control" maxlength="35" value="{{ booking.name }}" required>
+                                                                <datalist id="nameList">
+                                                                    {% for operation in operationNames %}
+                                                                        <option value="{{ operation.name }}">
+                                                                    {% endfor %}
+                                                                </datalist>
+                                                            </div>
+
+                                                            <div class="col-md-2" style="color: #AE4C4C">الطبيب الجراح</div>
+                                                            <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                                                <input class="form-control" type="text" list="doctorsList" name="doctor" maxlength="35" value="{{ booking.timeTable.doctor }}" required>
+                                                                <datalist id="doctorsList">
+                                                                    {% for doctor in doctors %}
+                                                                        <option value="{{ doctor.name }}">
+                                                                    {% endfor %}
+                                                                </datalist>
+                                                            </div>
+
+                                                            <div class="col-md-12" style="color: #205072"><hr></div>
+
+                                                            <div class="col-md-2" style="color: #AE4C4C">التاريخ</div>
+                                                            <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                                                <input type="date" name="begin" class="form-control" value="{{ booking.date }}" required>
+                                                            </div>
+
+                                                            <div class="col-md-2" style="color: #AE4C4C">مدة(ساعة)</div>
+                                                            <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                                                <input type="text" name="timeOfOperation" class="form-control" value="{{ booking.timeOfOperation }}" required oninput="setCustomValidity(''); value=value.replace(/[^\d]/g,'')">
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="modal-footer" style="text-align: center">
+                                                        <button type="submit" class="btn btn-info">Submit</button>
+                                                    </div>
+
+                                                </form>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    {% elif user.language == 2 %}
+
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+
+                        <table class="table" align="center">
+
+                            <thead>
+                                <tr class="forthBigMenu">
+                                    <th>#</th>
+                                    <th>اسم المريض</th>
+                                    <th>العمر</th>
+                                    <th>العمل الجراحي</th>
+                                    <th>الطبيب الجراح</th>
+                                    <th>التاريخ</th>
+                                    <th>مدة(ساعة)</th>
+                                    <th>عمل</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                {% for booking in bookings %}
+
+                                    <tr class="forthNormalText">
+                                        <th>{{ forloop.counter }}</th>
+                                        <th>{{ booking.patient.basicInfo.name }}</th>
+                                        <th>{{ booking.patient.basicInfo.age }}</th>
+                                        <td>{{ booking.name }}</td>
+                                        <td>{{ booking.doctor }}</td>
+                                        <td>{{ booking.date }}</td>
+                                        <td>{{ booking.timeOfOperation }}</td>
+
+                                        <td>
+
+                                            <a href="#" type="button" data-toggle="modal" data-target="#editBooking{{ booking.id }}">
+                                                <i class="mdi mdi-pencil mdi-24px" style="color: #33cccc" title="Edit" data-toggle="tooltip" data-placement="left"></i>
+                                            </a>
+                                            &nbsp;&nbsp;
+                                            <a href="{% url 'deleteBooking' booking.id %}">
+                                                <i class="mdi mdi-delete mdi-24px" style="color: #33cccc" title="Delete" data-toggle="tooltip" data-placement="right"></i>
+                                            </a>
+                                        </td>
+
+                                    </tr>
+
+                                    <!--Edit booking-->
+                                    <div class="modal fade" id="editBooking{{ booking.id }}" tabindex="-1" role="dialog" aria-labelledby="addRecordModalLabel">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                    <h4 class="modal-title" id="addRecordModalLabel" style="font-family: Calibri; font-size: 20px">تعديل الحجز</h4>
+                                                </div>
+
+                                                <form action="{% url 'editBooking' booking.id %}" method="post">
+                                                    {% csrf_token %}
+
+                                                    <div class="modal-body">
+                                                        <div class="row" style="font-family: Calibri; font-size: 18px">
+                                                            <div class="col-md-2" style="color: #AE4C4C">العمل الجراحي</div>
+                                                            <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                                                <input type="text" name="name" list="nameList" class="form-control" maxlength="35" value="{{ booking.name }}" required>
+                                                                <datalist id="nameList">
+                                                                    {% for operation in operationNames %}
+                                                                        <option value="{{ operation.name }}">
+                                                                    {% endfor %}
+                                                                </datalist>
+                                                            </div>
+
+                                                            <div class="col-md-2" style="color: #AE4C4C">الطبيب الجراح</div>
+                                                            <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                                                <input class="form-control" type="text" list="doctorsList" name="doctor" maxlength="35" value="{{ booking.timeTable.doctor }}" required>
+                                                                <datalist id="doctorsList">
+                                                                    {% for doctor in doctors %}
+                                                                        <option value="{{ doctor.name }}">
+                                                                    {% endfor %}
+                                                                </datalist>
+                                                            </div>
+
+                                                            <div class="col-md-12" style="color: #205072"><hr></div>
+
+                                                            <div class="col-md-2" style="color: #AE4C4C">التاريخ</div>
+                                                            <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                                                <input type="date" name="begin" class="form-control" value="{{ booking.date }}" required>
+                                                            </div>
+
+                                                            <div class="col-md-2" style="color: #AE4C4C">مدة(ساعة)</div>
+                                                            <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                                                <input type="text" name="timeOfOperation" class="form-control" value="{{ booking.timeOfOperation }}" required oninput="setCustomValidity(''); value=value.replace(/[^\d]/g,'')">
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="modal-footer" style="text-align: center">
+                                                        <button type="submit" class="btn btn-info">Submit</button>
+                                                    </div>
+
+                                                </form>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {% endif %}
+
+
+
+
+
+{% endblock home %}
+

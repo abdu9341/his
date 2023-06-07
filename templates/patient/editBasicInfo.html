@@ -1,0 +1,378 @@
+{% extends "home/base_hospitalized.html" %}
+
+{% block home %}
+
+    {{ block.super }}
+
+    {% if user.language == 1 %}
+
+        <div class="card-header" align="center">
+
+            <h2 class="firstBigTitle">تحرير معلومات المريض</h2>
+
+        </div>
+
+    {% elif user.language == 2 %}
+
+        <div class="card-header" align="center">
+
+            <h2 class="firstBigTitle">Edit Admission Form</h2>
+
+        </div>
+
+    {% endif %}
+
+
+    <div class="card-body">
+
+        {% if user.language == 1 %}
+
+            <div class="col-md-12">
+
+            {% for info in patient_exist %}
+                <h3 style="color: red">{{ message }}<i class="mdi mdi-hand-pointing-right"></i>
+                    <a href="/viewBasicInfo/{{ info.id }}">{{ info.name }}</a></h3>
+            {% endfor %}
+
+        </div>
+
+            <form class="form-horizontal" action="" method="post">
+                {% csrf_token %}
+
+                <div class="form-group has-info">
+
+                    <label class="col-md-2 control-label" for="name" style="font-family: Calibri ;color: darkblue; font-size: 18px">اسم المريض</label>
+                    <div class="col-md-3">
+                        <input class="form-control forthNormalText" type="text" id="name" name="name" value="{{ patient.basicInfo.name }}" maxlength="30" required>
+                    </div>
+
+                    <label class="col-md-2 control-label" for="example-age" style="font-family: Calibri ;color: darkblue; font-size: 18px">العمر</label>
+                    <div class="col-md-3">
+                        <input class="form-control forthNormalText" type="number" step="0.1" id="example-age" name="age" value="{{ patient.basicInfo.age }}" required>
+                    </div>
+
+                </div>
+
+                <div class="form-group has-info">
+
+                    <label class="col-md-2 control-label" for="example-sex" style="font-family: Calibri ;color: darkblue; font-size: 18px">الجنس</label>
+                    <div class="col-md-3">
+                        <select class="form-control forthNormalText" id="example-select" name="sex" required>
+                            {% for gender in genders %}
+                                {% if patient.basicInfo.sex == gender %}
+                                    <option selected value="{{gender}}">{{gender}}</option>
+                                {% else %}
+                                    <option value="{{gender}}">{{gender}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <label class="col-md-2 control-label" for="example-select" style="font-family: Calibri ;color: darkblue; font-size: 18px">الحالة العائلية</label>
+                    <div class="col-md-3">
+                        <select class="form-control forthNormalText" id="example-select" name="marriage" required>
+                            {% for marriage in marriages %}
+                                {% if patient.basicInfo.marriage == marriage %}
+                                    <option selected value="{{ marriage}}">{{marriage}}</option>
+                                {% else %}
+                                    <option value="{{ marriage}}">{{marriage}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="form-group has-info">
+
+                    <label class="col-md-2 control-label" for="example-address" style="font-family: Calibri ;color: darkblue; font-size: 18px">السكن</label>
+                    <div class="col-md-3">
+                        <input class="form-control forthNormalText" type="text" id="example-address" name="address" value="{{ patient.basicInfo.address }}" maxlength="80" required>
+                    </div>
+
+                    <label class="col-md-2 control-label" for="example-phone" style="font-family: Calibri ;color: darkblue; font-size: 18px">رقم هاتف</label>
+                    <div class="col-md-3">
+                        <input class="form-control forthNormalText" type="text" step="0.1" id="example-phone" name="phone" value="{{ patient.basicInfo.phone }}" required>
+                    </div>
+
+                </div>
+
+                <div class="form-group has-info">
+
+{#                    <label class="col-md-2 control-label" for="example-select" style="font-family: Calibri ;color: darkblue; font-size: 18px">زمرة</label>#}
+{#                    <div class="col-md-3">#}
+{#                        <select class="form-control" id="example-select" name="bloodGroup">#}
+{#                            {% for bloodGroup in bloodGroups %}#}
+{#                                {% if patient.basicInfo.bloodGroup == bloodGroup %}#}
+{#                                    <option selected value="{{ bloodGroup }}">{{ bloodGroup }}</option>#}
+{#                                {% else %}#}
+{#                                    <option value="{{ bloodGroup }}">{{ bloodGroup }}</option>#}
+{#                                {% endif %}#}
+{#                            {% endfor %}#}
+{#                        </select>#}
+{#                    </div>#}
+
+                    <label class="col-md-2 control-label" for="example-select" style="font-family: Calibri ;color: darkblue; font-size: 18px">جناح</label>
+                    <div class="col-md-3">
+                        <select class="form-control forthNormalText" id="example-select" name="ward">
+                            <option></option>
+                            {% for ward in wards %}
+                                {% if ward.name == 'Emergency Room' %}
+
+                                {% else %}
+                                    {% if patient.sickroom == ward %}
+                                        <option selected value="{{ ward.id }}">{{ ward.arabic_name }}</option>
+                                    {% else %}
+                                        <option value="{{ ward.id }}">{{ ward.arabic_name }}</option>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="form-group menuSmall">
+
+                    <label class="col-md-2 control-label" for="example-select" style="font-family: Calibri ;color: darkblue; font-size: 18px">قسم القبول : </label>
+                    {% for department in patient.department.all %}
+                        <label class="col-md-2 control-label" for="example-select" style="font-family: Calibri; font-size: 18px">{{ department.arabic_name }} &nbsp;&nbsp;&nbsp;</label>
+                    {% endfor %}
+
+                    <br><br><br>
+
+                    <div class="col-md-12">
+                        <div class="col-md-2"></div>
+
+                        <div class="col-md-10">
+                            {% for department in departments %}
+
+                                {% if forloop.counter <= 5 %}
+                                    <div class="col-md-2 forthNormalText">
+                                        <label for="radio">
+                                            <input type="checkbox" name="department" value="{{ department.id }}">
+                                        </label>
+                                        {{ department.arabic_name }}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+
+                        <div class="col-md-2"></div>
+
+                        <div class="col-md-10">
+                            {% for department in departments %}
+
+                                {% if forloop.counter >= 6 and forloop.counter <= 10 %}
+                                    <div class="col-md-2 forthNormalText">
+                                        <label for="radio"><input type="checkbox" name="department" value="{{ department.id }}">
+                                        </label>
+                                        {{ department.arabic_name }}
+                                    </div>
+
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+
+                        <div class="col-md-2"></div>
+
+                        <div class="col-md-10">
+                            {% for department in departments %}
+
+                                {% if forloop.counter >= 11 %}
+                                    <div class="col-md-2 forthNormalText">
+                                        <label for="radio"><input type="checkbox" name="department" value="{{ department.id }}">
+                                        </label>
+                                        {{ department.arabic_name }}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-12 col-md-offset-5">
+                        <button class="btn btn-info forthBigMenu" type="submit">إرسال</button>
+                    </div>
+                </div>
+
+
+            </form>
+
+        {% elif user.language == 2 %}
+
+            <div class="col-md-12">
+
+            {% for info in patient_exist %}
+                <h3 style="color: red">{{ message }}<i class="mdi mdi-hand-pointing-right"></i>
+                    <a href="/viewBasicInfo/{{ info.id }}">{{ info.name }}</a></h3>
+            {% endfor %}
+
+        </div>
+
+            <form class="form-horizontal" action="" method="post">
+                {% csrf_token %}
+
+                <div class="form-group has-info">
+
+                    <label class="col-md-2 control-label" style="color: darkblue; font-size: 18px">Name</label>
+                    <div class="col-md-3">
+                        <input class="form-control forthNormalText" type="text" name="name" value="{{ patient.basicInfo.name }}" maxlength="30" required>
+                    </div>
+
+                    <label class="col-md-2 control-label" for="example-age" style="color: darkblue; font-size: 18px">Age</label>
+                    <div class="col-md-3">
+                        <input class="form-control" type="number" step="0.1" id="example-age" name="age" value="{{ patient.basicInfo.age }}" required>
+                    </div>
+
+                </div>
+
+                <div class="form-group has-info">
+
+                    <label class="col-md-2 control-label" for="example-sex" style="color: darkblue; font-size: 18px">Gender</label>
+                    <div class="col-md-3">
+                        <select class="form-control" id="example-select" name="sex" required>
+                            {% for gender in genders %}
+                                {% if patient.basicInfo.sex == gender %}
+                                    <option selected value="{{gender}}">{{gender}}</option>
+                                {% else %}
+                                    <option value="{{gender}}">{{gender}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <label class="col-md-2 control-label" for="example-select" style="color: darkblue; font-size: 18px">Marriage</label>
+                    <div class="col-md-3">
+                        <select class="form-control" id="example-select" name="marriage" required>
+                            {% for marriage in marriages %}
+                                {% if patient.basicInfo.marriage == marriage %}
+                                    <option selected value="{{ marriage}}">{{marriage}}</option>
+                                {% else %}
+                                    <option value="{{ marriage}}">{{marriage}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="form-group has-info">
+
+                    <label class="col-md-2 control-label" for="example-address" style="color: darkblue; font-size: 18px">Address</label>
+                    <div class="col-md-3">
+                        <input class="form-control" type="text" id="example-address" name="address" value="{{ patient.basicInfo.address }}" maxlength="80" required>
+                    </div>
+
+                    <label class="col-md-2 control-label" for="example-phone" style="color: darkblue; font-size: 18px">Phone</label>
+                    <div class="col-md-3">
+                        <input class="form-control" type="text" step="0.1" id="example-phone" name="phone" value="{{ patient.basicInfo.phone }}" maxlength="20" required>
+                    </div>
+
+                </div>
+
+                <div class="form-group has-info">
+
+                    <label class="col-md-2 control-label" for="example-select" style="color: darkblue; font-size: 18px">Ward</label>
+                    <div class="col-md-3">
+                        <select class="form-control" id="example-select" name="ward">
+                            <option></option>
+                            {% for ward in wards %}
+                                {% if ward.name == 'Emergency Room' %}
+
+                                {% else %}
+                                    {% if patient.sickroom == ward %}
+                                        <option selected value="{{ ward.id }}">{{ ward.name }}</option>
+                                    {% else %}
+                                        <option value="{{ ward.id }}">{{ ward.name }}</option>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="form-group menuSmall">
+
+                    <label class="col-md-2 control-label" for="example-select" style="color: darkblue; font-size: 18px">Spaciality : </label>
+                    {% for department in patient.department.all %}
+                        <label class="col-md-2 control-label" for="example-select" style="font-family: Calibri; font-size: 18px">{{ department.name }} &nbsp;&nbsp;&nbsp;</label>
+                    {% endfor %}
+
+                    <br><br><br>
+
+                    <div class="col-md-12">
+                        <div class="col-md-2"></div>
+
+                        <div class="col-md-10">
+                            {% for department in departments %}
+
+                                {% if forloop.counter <= 5 %}
+
+                                    <div class="col-md-2 forthNormalText">
+                                        <label for="radio">
+                                            <input type="checkbox" name="department" value="{{ department.id }}">
+                                        </label>
+                                        {{ department.arabic_name }}
+                                    </div>
+
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+
+                        <div class="col-md-2"></div>
+
+                        <div class="col-md-10">
+                            {% for department in departments %}
+
+                                {% if forloop.counter >= 6 and forloop.counter <= 10 %}
+                                    <div class="col-md-2 forthNormalText">
+                                        <label for="radio"><input type="checkbox" name="department" value="{{ department.id }}">
+                                        </label>
+                                        {{ department.arabic_name }}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+
+                        <div class="col-md-2"></div>
+
+                        <div class="col-md-10">
+                            {% for department in departments %}
+
+                                {% if forloop.counter >= 11 %}
+                                    <div class="col-md-2 forthNormalText">
+                                        <label for="radio"><input type="checkbox" name="department" value="{{ department.id }}">
+                                        </label>
+                                        {{ department.arabic_name }}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-12 col-md-offset-5">
+                        <button class="btn btn-info forthBigMenu" type="submit">Submit</button>
+                    </div>
+                </div>
+
+
+            </form>
+
+        {% endif %}
+
+
+    </div>
+
+
+
+{% endblock home %}

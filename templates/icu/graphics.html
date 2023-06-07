@@ -1,0 +1,917 @@
+{% extends "home/base_hospitalized.html" %}
+{% block home %}
+
+    {{ block.super }}
+
+
+<script type="text/javascript" src="/static/js/jquery-1.8.3.min.js"></script>
+{#<script type="text/javascript" src="/static/js/highcharts.js"></script>#}
+<script type="text/javascript" src="/static/js/exporting.js"></script>
+
+<script>
+
+     $(function () {
+
+        {% if dataPressureMax %}
+            $('#Pressure').highcharts({
+
+            chart: {
+
+                type: 'line'
+            },
+
+            title: {
+                text: 'Blood Pressure'
+            },
+
+            toolbox: {
+                show : true,
+                feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                magicType : {show: true, type: ['line', 'bar']},
+                restore : {show: true},
+                saveAsImage : {show: true}
+                 }
+            },
+
+            calculable : true,
+
+
+
+            ubtitle: {
+
+                {#text: 'Source: WorldClimate.com'#}
+            },
+
+           xAxis: {
+
+                   type: "datetime",
+                   categories: {{ dateAll }},
+                {#// tickInterval: 5*60 * 1000,#}
+{#//                   tickWidth: 1000 * 60 * 30, //刻度的宽度#}
+                   labels: {
+                       enable: true,
+                       rotation: 90, //旋转,效果就是影响标签的显示方向
+                       //step: 4,
+                       formatter: function () {
+                           return Highcharts.dateFormat('%d-%H:%M', this.value);
+                           }
+                       },
+                   {#//刻度的宽度#}
+                   lineColor: '#990000',
+                   {#//自定义刻度颜色#}
+                   lineWidth: 1,
+                   {#//自定义x轴宽度#}
+                   gridLineWidth: 1
+                   {#//默认是0，即在图上没有纵轴间隔线#}
+{#//                    dateTimeLabelFormats: { // don't display the dummy year#}
+{#//                      second: '%H:%M:%S',#}
+{#//                    minute: '%e. %b %H:%M',#}
+{#//                    hour: '%b/%e %H:%M'#}
+{#//                        }#}
+               },
+
+            yAxis: {
+
+                title: {
+
+                    text: 'Blood Pressure'
+                }
+
+            },
+
+            tooltip: {
+
+                enabled: false,
+
+                formatter: function() {
+
+                    resualt = 'Title' + ': ' + this.series.name + '<br>' + 'Pressure: ' + this.y + '<br>' + 'Time: ' + this.x
+
+                    return resualt
+                }
+            },
+
+            plotOptions: {
+
+                line: {
+
+                    dataLabels: {
+
+                        enabled: true
+                    },
+
+                    enableMouseTracking: true
+                }
+            },
+
+            series: [
+                {
+                    type: 'line',
+                    color: '#00008B',
+                    name: 'Max Pressure',
+                    data: {{ dataPressureMax }},
+                },
+                {
+                    type: 'line',
+                    color: '#00008B',
+                    name: 'Min Pressure',
+                    data:{{ dataPressureMin }},
+                },
+                {
+                    type: 'line',
+                    color: 'red',
+                    name: 'MAP',
+                    data:{{ dataPressureAverage }},
+                },
+            ]
+
+        });
+        {% endif %}
+
+        {% if pulse %}
+            $('#pulsePressure').highcharts({
+
+            chart: {
+
+                type: 'line'
+            },
+
+            title: {
+                text: 'Pulse'
+            },
+
+            toolbox: {
+                show : true,
+                feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                magicType : {show: true, type: ['line', 'bar']},
+                restore : {show: true},
+                saveAsImage : {show: true}
+                 }
+            },
+
+            calculable : true,
+
+
+
+            ubtitle: {
+
+                {#text: 'Source: WorldClimate.com'#}
+            },
+
+            xAxis: {
+
+                   type: "datetime",
+                   categories: {{ dateAll }},
+                {#// tickInterval: 5*60 * 1000,#}
+{#//                   tickWidth: 1000 * 60 * 30, //刻度的宽度#}
+                   labels: {
+                       enable: true,
+                       rotation: 90, //旋转,效果就是影响标签的显示方向
+                       //step: 4,
+                       formatter: function () {
+                           return Highcharts.dateFormat('%d-%H:%M', this.value);
+                           }
+                       },
+                   {#//刻度的宽度#}
+                   lineColor: '#990000',
+                   {#//自定义刻度颜色#}
+                   lineWidth: 1,
+                   {#//自定义x轴宽度#}
+                   gridLineWidth: 1
+                   {#//默认是0，即在图上没有纵轴间隔线#}
+{#//                    dateTimeLabelFormats: { // don't display the dummy year#}
+{#//                      second: '%H:%M:%S',#}
+{#//                    minute: '%e. %b %H:%M',#}
+{#//                    hour: '%b/%e %H:%M'#}
+{#//                        }#}
+               },
+
+
+            yAxis: {
+
+                title: {
+
+                    text: 'Pulse'
+                }
+
+            },
+
+            tooltip: {  //提示框
+
+                enabled: false,
+
+                formatter: function() {
+
+                    resualt = 'Title' + ': ' + this.series.name + '<br>' + 'Pulse: ' + this.y + '<br>' + 'Time: ' + this.x
+
+                    return resualt
+                }
+            },
+
+            plotOptions: {
+
+                line: {
+
+                    dataLabels: {
+
+                        enabled: true
+                    },
+
+                    enableMouseTracking: true
+                }
+            },
+
+            series: [
+                {
+                    type: 'line',
+                    color: '#8B0000',
+                    name: 'Pulse',
+                    data: {{ dataPulse }},
+
+                }
+            ]
+
+        });
+        {% endif %}
+
+        {% if temperature %}
+            $('#temperature').highcharts({
+
+            chart: {
+
+                type: 'line'
+            },
+
+            title: {
+                text: 'Temperature'
+            },
+
+            toolbox: {
+                show : true,
+                feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                magicType : {show: true, type: ['line', 'bar']},
+                restore : {show: true},
+                saveAsImage : {show: true}
+                 }
+            },
+
+            calculable : true,
+
+
+
+            ubtitle: {
+
+                {#text: 'Source: WorldClimate.com'#}
+            },
+
+            xAxis: {
+
+                   type: "datetime",
+                   categories: {{ dateAll }},
+                {#// tickInterval: 5*60 * 1000,#}
+{#//                   tickWidth: 1000 * 60 * 30, //刻度的宽度#}
+                   labels: {
+                       enable: true,
+                       rotation: 90, //旋转,效果就是影响标签的显示方向
+                       //step: 4,
+                       formatter: function () {
+                           return Highcharts.dateFormat('%d-%H:%M', this.value);
+                           }
+                       },
+                   {#//刻度的宽度#}
+                   lineColor: '#990000',
+                   {#//自定义刻度颜色#}
+                   lineWidth: 1,
+                   {#//自定义x轴宽度#}
+                   gridLineWidth: 1
+                   {#//默认是0，即在图上没有纵轴间隔线#}
+{#//                    dateTimeLabelFormats: { // don't display the dummy year#}
+{#//                      second: '%H:%M:%S',#}
+{#//                    minute: '%e. %b %H:%M',#}
+{#//                    hour: '%b/%e %H:%M'#}
+{#//                        }#}
+               },
+
+            yAxis: {
+
+                title: {
+
+                    text: 'Temperature'
+                }
+
+            },
+
+            tooltip: {
+
+                enabled: false,
+
+                formatter: function() {
+
+                    resualt = 'Title' + ': ' + this.series.name + '<br>' + 'Temperature: ' + this.y + '°C' + '<br>' + 'Time: ' + this.x
+
+                    return resualt
+                }
+            },
+
+            plotOptions: {
+
+                line: {
+
+                    dataLabels: {
+
+                        enabled: true
+                    },
+
+                    enableMouseTracking: true
+                }
+            },
+
+            series: [
+                {
+                    type: 'line',
+                    color: '#006400',
+                    name: 'Temperature',
+                    data: {{ dataTemperature }},
+                },
+            ]
+
+        });
+        {% endif %}
+
+        {% if breathingRate %}
+            $('#breathingRate').highcharts({
+
+            chart: {
+
+                type: 'line'
+            },
+
+            title: {
+                text: 'Breathing Rate'
+            },
+
+            toolbox: {
+                show : true,
+                feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                magicType : {show: true, type: ['line', 'bar']},
+                restore : {show: true},
+                saveAsImage : {show: true}
+                 }
+            },
+
+            calculable : true,
+
+
+
+            ubtitle: {
+
+                {#text: 'Source: WorldClimate.com'#}
+            },
+
+            xAxis: {
+
+                   type: "datetime",
+                   categories: {{ dateAll }},
+                {#// tickInterval: 5*60 * 1000,#}
+{#//                   tickWidth: 1000 * 60 * 30, //刻度的宽度#}
+                   labels: {
+                       enable: true,
+                       rotation: 90, //旋转,效果就是影响标签的显示方向
+                       //step: 4,
+                       formatter: function () {
+                           return Highcharts.dateFormat('%d-%H:%M', this.value);
+                           }
+                       },
+                   {#//刻度的宽度#}
+                   lineColor: '#990000',
+                   {#//自定义刻度颜色#}
+                   lineWidth: 1,
+                   {#//自定义x轴宽度#}
+                   gridLineWidth: 1
+                   {#//默认是0，即在图上没有纵轴间隔线#}
+{#//                    dateTimeLabelFormats: { // don't display the dummy year#}
+{#//                      second: '%H:%M:%S',#}
+{#//                    minute: '%e. %b %H:%M',#}
+{#//                    hour: '%b/%e %H:%M'#}
+{#//                        }#}
+               },
+
+            yAxis: {
+
+                title: {
+
+                    text: 'Breathing Rate'
+                }
+
+            },
+
+            tooltip: {
+
+                enabled: false,
+
+                formatter: function() {
+
+                    resualt = 'Title' + ': ' + this.series.name + '<br>' + 'Breathing Rate: ' + this.y + '<br>' + 'Time: ' + this.x
+
+                    return resualt
+                }
+            },
+
+            plotOptions: {
+
+                line: {
+
+                    dataLabels: {
+
+                        enabled: true
+                    },
+
+                    enableMouseTracking: true
+                }
+            },
+
+            series: [
+                {
+                    type: 'line',
+                    color: 'chocolate',
+                    name: 'Breathing Rate',
+                    data: {{ dataBreathingRate }},
+                },
+            ]
+
+        });
+        {% endif %}
+
+        {% if spo2 %}
+            $('#spo2').highcharts({
+
+            chart: {
+
+                type: 'line'
+            },
+
+            title: {
+                text: 'Spo2'
+            },
+
+            toolbox: {
+                show : true,
+                feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                magicType : {show: true, type: ['line', 'bar']},
+                restore : {show: true},
+                saveAsImage : {show: true}
+                 }
+            },
+
+            calculable : true,
+
+
+
+            ubtitle: {
+
+                {#text: 'Source: WorldClimate.com'#}
+            },
+
+            xAxis: {
+
+                   type: "datetime",
+                   categories: {{ dateAll }},
+                {#// tickInterval: 5*60 * 1000,#}
+{#//                   tickWidth: 1000 * 60 * 30, //刻度的宽度#}
+                   labels: {
+                       enable: true,
+                       rotation: 90, //旋转,效果就是影响标签的显示方向
+                       //step: 4,
+                       formatter: function () {
+                           return Highcharts.dateFormat('%d-%H:%M', this.value);
+                           }
+                       },
+                   {#//刻度的宽度#}
+                   lineColor: '#990000',
+                   {#//自定义刻度颜色#}
+                   lineWidth: 1,
+                   {#//自定义x轴宽度#}
+                   gridLineWidth: 1
+                   {#//默认是0，即在图上没有纵轴间隔线#}
+{#//                    dateTimeLabelFormats: { // don't display the dummy year#}
+{#//                      second: '%H:%M:%S',#}
+{#//                    minute: '%e. %b %H:%M',#}
+{#//                    hour: '%b/%e %H:%M'#}
+{#//                        }#}
+               },
+
+            yAxis: {
+
+                title: {
+
+                    text: 'Spo2'
+                }
+
+            },
+
+            tooltip: {
+
+                enabled: false,
+
+                formatter: function() {
+
+                    resualt = 'Title' + ': ' + this.series.name + '<br>' + 'Spo2: ' + this.y + '<br>' + 'Time: ' + this.x
+
+                    return resualt
+                }
+            },
+
+            plotOptions: {
+
+                line: {
+
+                    dataLabels: {
+
+                        enabled: true
+                    },
+
+                    enableMouseTracking: true
+                }
+            },
+
+            series: [
+                {
+                    type: 'line',
+                    name: 'Spo2',
+                    data: {{ dataSpo2 }},
+                },
+            ]
+
+        });
+        {% endif %}
+
+        {% if urineOutput %}
+            $('#urineOutput').highcharts({
+
+            chart: {
+
+                type: 'line'
+            },
+
+            title: {
+                text: 'Urine Output'
+            },
+
+            toolbox: {
+                show : true,
+                feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                magicType : {show: true, type: ['line', 'bar']},
+                restore : {show: true},
+                saveAsImage : {show: true}
+                 }
+            },
+
+            calculable : true,
+
+
+
+            ubtitle: {
+
+                {#text: 'Source: WorldClimate.com'#}
+            },
+
+            xAxis: {
+
+                   type: "datetime",
+                   categories: {{ dateAll }},
+                {#// tickInterval: 5*60 * 1000,#}
+{#//                   tickWidth: 1000 * 60 * 30, //刻度的宽度#}
+                   labels: {
+                       enable: true,
+                       rotation: 90, //旋转,效果就是影响标签的显示方向
+                       //step: 4,
+                       formatter: function () {
+                           return Highcharts.dateFormat('%d-%H:%M', this.value);
+                           }
+                       },
+                   {#//刻度的宽度#}
+                   lineColor: '#990000',
+                   {#//自定义刻度颜色#}
+                   lineWidth: 1,
+                   {#//自定义x轴宽度#}
+                   gridLineWidth: 1
+                   {#//默认是0，即在图上没有纵轴间隔线#}
+{#//                    dateTimeLabelFormats: { // don't display the dummy year#}
+{#//                      second: '%H:%M:%S',#}
+{#//                    minute: '%e. %b %H:%M',#}
+{#//                    hour: '%b/%e %H:%M'#}
+{#//                        }#}
+               },
+
+            yAxis: {
+
+                title: {
+
+                    text: 'Urine Output'
+                }
+
+            },
+
+            tooltip: {
+
+                enabled: false,
+
+                formatter: function() {
+
+                    resualt = 'Title' + ': ' + this.series.name + '<br>' + 'Urine Output: ' + this.y + '<br>' + 'Time: ' + this.x
+
+                    return resualt
+                }
+            },
+
+            plotOptions: {
+
+                line: {
+
+                    dataLabels: {
+
+                        enabled: true
+                    },
+
+                    enableMouseTracking: true
+                }
+            },
+
+            series: [
+                {
+                    type: 'line',
+                    color: 'goldenrod',
+                    name: 'Urine Output',
+                    data: {{ dataUrineOutput }},
+                },
+            ]
+
+        });
+         {% endif %}
+
+        {% if glucose %}
+            $('#glucose').highcharts({
+
+            chart: {
+
+                type: 'line'
+            },
+
+            title: {
+                text: 'glucose'
+            },
+
+            toolbox: {
+                show : true,
+                feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                magicType : {show: true, type: ['line', 'bar']},
+                restore : {show: true},
+                saveAsImage : {show: true}
+                 }
+            },
+
+            calculable : true,
+
+
+
+            ubtitle: {
+
+                {#text: 'Source: WorldClimate.com'#}
+            },
+
+            xAxis: {
+
+                   type: "datetime",
+                   categories: {{ dateAll }},
+                {#// tickInterval: 5*60 * 1000,#}
+{#//                   tickWidth: 1000 * 60 * 30, //刻度的宽度#}
+                   labels: {
+                       enable: true,
+                       rotation: 90, //旋转,效果就是影响标签的显示方向
+                       //step: 4,
+                       formatter: function () {
+                           return Highcharts.dateFormat('%d-%H:%M', this.value);
+                           }
+                       },
+                   {#//刻度的宽度#}
+                   lineColor: '#990000',
+                   {#//自定义刻度颜色#}
+                   lineWidth: 1,
+                   {#//自定义x轴宽度#}
+                   gridLineWidth: 1
+                   {#//默认是0，即在图上没有纵轴间隔线#}
+{#//                    dateTimeLabelFormats: { // don't display the dummy year#}
+{#//                      second: '%H:%M:%S',#}
+{#//                    minute: '%e. %b %H:%M',#}
+{#//                    hour: '%b/%e %H:%M'#}
+{#//                        }#}
+               },
+
+            yAxis: {
+
+                title: {
+
+                    text: 'glucose'
+                }
+
+            },
+
+            tooltip: {
+
+                enabled: false,
+
+                formatter: function() {
+
+                    resualt = 'Title' + ': ' + this.series.name + '<br>' + 'glucose: ' + this.y + '<br>' + 'Time: ' + this.x
+
+                    return resualt
+                }
+            },
+
+            plotOptions: {
+
+                line: {
+
+                    dataLabels: {
+
+                        enabled: true
+                    },
+
+                    enableMouseTracking: true
+                }
+            },
+
+            series: [
+                {
+                    type: 'line',
+                    color: 'salmon',
+                    name: 'glucose',
+                    data: {{ dataGlucose }},
+                },
+            ]
+
+        });
+         {% endif %}
+
+
+    });
+
+</script>
+
+
+    <style type="text/css">
+
+        td{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        th{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+
+        }
+    </style>
+
+
+    <div class="card-body">
+        <div class="table-responsive">
+
+            {% if user.language == 1 %}
+
+                <table class="table table-bordered">
+                    <tr>
+                        <th class="forthBigMenu">اسم المريض</th>
+                        <td class="forthNormalText">{{ patient.basicInfo.name}}</td>
+                        <th class="forthBigMenu">العمر</th>
+                        <td class="forthNormalText">{{ patient.basicInfo.age}}</td>
+                        <th class="forthBigMenu">الجنس</th>
+                        <td class="forthNormalText">{{ patient.basicInfo.sex }}</td>
+
+                    </tr>
+
+                </table>
+
+                <br>
+
+                <h2 class="firstBigTitle" align="center">العلامات الحيوية مخطط</h2><br>
+
+                <table class="table" border="0">
+
+                    <tr>
+                        <td style="width: 320px">
+                            <a href="{% url 'addVitalSigns' patient_id patient.patientID %}"><input type="submit" class="btn btn-info forthNormalText" value="إضافة علامة حيوية"></a>
+                            <a href="/viewVitalSigns/{{patient_id}}"><input type="submit" class="btn btn-info forthNormalText" value="العلامة الحيوية"></a>
+                        </td>
+
+                        <form action="" method="post">
+                            {% csrf_token %}
+                                <td style="width: 175px; text-align: right" class="has-info">
+                                    <select name="date" class="form-control forthNormalText" required>
+                                        <option value=""></option>
+                                        <option value="0">كل الأيام</option>
+                                        {% for i in count %}
+                                          <option value="{{ i }}">اليوم {{ i }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td style="width: 175px; text-align: left"><input type="submit" class="btn btn-info forthNormalText" value="إرسال"></td>
+                                <td></td>
+                          </form>
+                    </tr>
+
+                </table>
+
+            {% elif user.language == 2 %}
+
+                <table class="table table-bordered">
+                    <tr>
+                        <th class="forthBigMenu">Name</th>
+                        <td class="forthNormalText">{{patient.basicInfo.name}}</td>
+                        <th class="forthBigMenu">Age</th>
+                        <td class="forthNormalText">{{patient.basicInfo.age}}</td>
+                        <th class="forthBigMenu">Blood Group</th>
+                        <td class="forthNormalText">{{patient.basicInfo.bloodGroup}}</td>
+
+                    </tr>
+
+                </table>
+
+                <br>
+
+                <h2 class="firstBigTitle" align="center">Graphic Vital Signs</h2><br>
+
+                <table class="table" border="0">
+
+                    <tr>
+                        <td style="width: 320px">
+                            <a href="{% url 'addVitalSigns' patient_id patient.patientID %}"><input type="submit" class="btn btn-info" value="+ Add Vital Signs"></a>
+                            <a href="/viewVitalSigns/{{patient_id}}"><input type="submit" class="btn btn-info" value="View VitalSigns"></a>
+                        </td>
+
+                        <form action="" method="post">
+                            {% csrf_token %}
+                                <td style="width: 175px; text-align: right" class="has-info">
+                                    <select name="date" class="form-control" required>
+                                        <option value=""></option>
+                                        <option value="0">All Days</option>
+                                        {% for i in count %}
+                                          <option value="{{ i }}">Day of {{ i }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td style="width: 175px; text-align: left"><input type="submit" class="btn btn-info" value="Submit"></td>
+                                <td></td>
+                          </form>
+                    </tr>
+
+                </table>
+
+            {% endif %}
+
+
+
+            <table class="table" style="width:100%; table-layout:fixed;">
+
+                <tr>
+                    <td colspan="2" id="Pressure"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" id="pulsePressure"></td>
+                </tr>
+                <tr>
+                    <td id="temperature"></td>
+                    <td id="breathingRate"></td>
+                </tr>
+                <tr>
+                    <td id="spo2"></td>
+                    <td id="urineOutput"></td>
+                </tr>
+                <tr>
+                    <td id="glucose"></td>
+                </tr>
+
+            </table>
+
+        </div>
+    </div>
+
+
+
+{% endblock home %}

@@ -1,0 +1,168 @@
+{% extends "home/base_hospitalized.html" %}
+
+{% block home %}
+
+    {{ block.super }}
+
+    <style type="text/css">
+
+        td{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        th{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+    </style>
+
+    {% if user.language == 1 %}
+
+        <div class="card-header" align="center">
+
+            <h2 class="firstBigTitle">معلومات المريض</h2>
+
+        </div>
+
+        <div class="card-body" dir="rtl">
+            <div class="table-responsive">
+
+                <table class="table">
+
+                    <tr>
+                        <th class="thirdBigMenu">اسم المريض</th>
+                        <td class="normalText">{{ patient.basicInfo.name }}</td>
+                        <th class="thirdBigMenu">العمر</th>
+                        <td class="normalText">{{ patient.basicInfo.age }}</td>
+                    </tr>
+
+                    <tr>
+                        <th class="thirdBigMenu">الجنس</th>
+                        <td class="normalText">{{ patient.basicInfo.sex }}</td>
+                        <th class="thirdBigMenu">الحالة العائلية</th>
+                        <td class="normalText">{{ patient.basicInfo.marriage }}</td>
+                    </tr>
+
+                    <tr>
+                        <th class="thirdBigMenu">السكن</th>
+                        <td class="normalText">{{ patient.basicInfo.address }}</td>
+                        <th class="thirdBigMenu">رقم هاتف</th>
+                        <td class="normalText">{{ patient.basicInfo.phone }}</td>
+                    </tr>
+
+                    <tr>
+                        <th class="thirdBigMenu">تاريخ القبول</th>
+                        <td class="normalText">{{patient.enterDate}}</td>
+                        <th class="thirdBigMenu">رقم المريض</th>
+                        <td class="normalText">{{patient.patientID}}</td>
+                    </tr>
+
+                    <tr>
+                        <th class="thirdBigMenu">جناح</th>
+                        <td class="normalText">{{patient.sickroom.arabic_name}}</td>
+                        <th class="thirdBigMenu">العامل</th>
+                        <td class="normalText">{{ patient.operator }}</td>
+                    </tr>
+
+                    <tr>
+                       <th class="thirdBigMenu">قسم القبول</th>
+                        <td colspan="3" style="text-align: right" class="normalText">
+                            {% for department in patient.department.all %}
+                                {{ department.arabic_name }} ,&nbsp;&nbsp;&nbsp;
+                            {% endfor %}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="4">
+                            {% if patient.condition and rights %}
+                                <a href="{% url 'editBasicInfo' patient_id patient.patientID %}"><input type="submit" class="btn btn-info forthBigMenu" value="تعديل"></a>&nbsp;&nbsp;&nbsp;
+                            {% elif rights %}
+                                <a href="{% url 'reenterPatient' patient_id patient.patientID%}"><input type="submit" class="btn btn-info forthBigMenu" value="اعادة قبول"></a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+
+    {% elif user.language == 2 %}
+
+        <div class="card-header" align="center">
+
+            <h2 class="firstBigTitle"> Basic Information  </h2>
+
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+
+                <table class="table">
+
+                    <tr>
+                        <th class="thirdBigMenu">Name: </th>
+                        <td class="normalText">{{ patient.basicInfo.name }}</td>
+                        <th class="thirdBigMenu">Age</th>
+                        <td class="normalText">{{ patient.basicInfo.age }}</td>
+                    </tr>
+
+                    <tr>
+                        <th class="thirdBigMenu">Gender</th>
+                        <td class="normalText">{{ patient.basicInfo.sex }}</td>
+                        <th class="thirdBigMenu">Marriage</th>
+                        <td class="normalText">{{ patient.basicInfo.marriage }}</td>
+                    </tr>
+
+                    <tr>
+                        <th class="thirdBigMenu">Address</th>
+                        <td class="normalText">{{ patient.basicInfo.address }}</td>
+                        <th class="thirdBigMenu">Phone</th>
+                        <td class="normalText">{{ patient.basicInfo.phone }}</td>
+                    </tr>
+
+                    <tr>
+                        <th class="thirdBigMenu">Date Of Enter</th>
+                        <td class="normalText">{{patient.enterDate}}</td>
+                        <th class="thirdBigMenu">Patient ID</th>
+                        <td class="normalText">{{patient.patientID}}</td>
+                    </tr>
+
+                    <tr>
+                        <th class="thirdBigMenu">Ward</th>
+                        <td class="normalText">{{patient.sickroom}}</td>
+                        <th class="thirdBigMenu">Operator </th>
+                        <td class="normalText">{{ patient.operator }}</td>
+                    </tr>
+
+                    <tr>
+                        <th class="thirdBigMenu">Spaciality</th>
+                        <td colspan="3" style="text-align: left" class="normalText">
+                            {% for department in patient.department.all %}
+                                {{ department.name }} ,&nbsp;&nbsp;&nbsp;
+                            {% endfor %}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="4">
+                            {% if patient.condition and rights %}
+                                <a href="{% url 'editBasicInfo' patient_id patient.patientID %}"><input type="submit" class="btn btn-info forthBigMenu" value="Edit"></a>&nbsp;&nbsp;&nbsp;
+                            {% elif rights %}
+                                <a href="{% url 'reenterPatient' patient_id patient.patientID%}"><input type="submit" class="btn btn-info forthBigMenu" value="Reenter"></a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+
+    {% endif %}
+
+
+{% endblock home %}

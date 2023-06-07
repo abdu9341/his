@@ -1,0 +1,472 @@
+{% extends "home/base_admin.html" %}
+
+{% block home %}
+    
+
+
+    <script>
+
+         $(window).unload(function () {
+            var top = $(window).scrollTop();
+
+            $.cookie("scroll_top", top);
+         });
+
+         $(document).ready(function () {
+            var top = $.cookie("scroll_top");
+
+            $('html, body').animate({
+                scrollTop: top
+            }, 100);
+         });
+
+
+         function deleteAccount()
+		{
+		     if(confirm("Do you have to delete?"))
+		     {
+		         return true;
+		     }else{
+		         return false;
+			 }
+		}
+
+    </script>
+
+
+    <style>
+
+        td{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        th{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+
+        }
+
+    </style>
+
+
+    <div class="card-header">
+        <h2 class="firstBigTitle">
+            <a href="#" class="btn btn-info m-r-5" data-toggle="modal" data-target="#addUser"><i class="mdi mdi-plus"></i>User</a>
+        </h2>
+    </div>
+
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table" align="center">
+
+                <thead>
+                    <tr class="forthBigMenu">
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Account</th>
+                        <th>Password</th>
+                        <th>Gender</th>
+                        <th>Position</th>
+                        <th>Department</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for user in users %}
+
+                        <tr class="forthNormalText">
+                            <th>{{ forloop.counter }}</th>
+                            <th>{{ user.name }}</th>
+                            <td>{{ user.account }}</td>
+                            <td>{{ user.password }}</td>
+                            <td>{{ user.sex }}</td>
+                            <td>{{ user.position }}</td>
+                            <td>{{ user.authorityDepartment }}</td>
+
+                            <td>
+                                {% if user.status %}
+                                    <a href="{% url 'inactiveUser' user.id %}">
+                                        <input type="button" class="btn btn-info" value="Active">
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'activeUser' user.id %}">
+                                        <input type="button" class="btn btn-secondary" value="Inactive">
+                                    </a>
+                                {% endif %}
+                            </td>
+
+                            <td style="text-align: center">
+                                <a href="#" type="button" data-toggle="modal" data-target="#check{{ user.id }}">
+                                    <i class="mdi mdi-comment-text-outline mdi-24px" style="color: #33cccc" title="Check" data-toggle="tooltip" data-placement="left"></i>
+                                </a>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <a href="#" type="button" data-toggle="modal" data-target="#edit{{ user.id }}">
+                                    <i class="mdi mdi-pencil mdi-24px" style="color: #33cccc" title="Edit" data-toggle="tooltip" data-placement="right"></i>
+                                </a>
+
+                                <!-- Edit -->
+                                <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="wardLabel" id="edit{{ user.id }}">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title thirdBigMenu" id="gridSystemModalLabel">Edit User</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <form class="form-horizontal" action="{% url 'editUser' user.id %}" method="POST">
+                                                        {% csrf_token %}
+
+                                                        <div class="form-group has-info">
+                                                            <label class="col-md-2 control-label" for="name" style="color: darkblue; font-size: 18px">Name<span style="color: brown">*</span></label>
+                                                            <div class="col-md-4">
+                                                                <input class="form-control" type="text" id="name" name="name" required maxlength="35" value="{{ user.name }}">
+                                                            </div>
+
+                                                            <label class="col-md-2 control-label" for="gender" style="color: darkblue; font-size: 18px">Gender<span style="color: brown">*</span></label>
+                                                            <div class="col-md-3">
+                                                                <select class="form-control" name="gender" required>
+                                                                    <option value="{{ user.sex }}">{{ user.sex }}</option>
+                                                                    <option value="Male">Male</option>
+                                                                    <option value="Female">Female</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group has-info">
+                                                            <label class="col-md-2 control-label" for="arabic" style="color: darkblue; font-size: 18px">Arabic Name<span style="color: brown">*</span></label>
+                                                            <div class="col-md-4">
+                                                                <input class="form-control" type="text" id="arabic" name="arabic_name" required maxlength="35" dir="rtl" value="{{ user.arabic_name }}">
+                                                            </div>
+
+                                                            <label class="col-md-2 control-label" for="password" style="color: darkblue; font-size: 18px">Password<span style="color: brown">*</span></label>
+                                                            <div class="col-md-3">
+                                                                <input class="form-control" type="text"  id="password" name="password" required maxlength="11" value="{{ user.password }}">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group has-info">
+                                                            <label class="col-md-2 control-label" for="position" style="color: darkblue; font-size: 18px">Position<span style="color: brown">*</span></label>
+                                                            <div class="col-md-4">
+                                                                <select class="form-control" name="position" required>
+                                                                    {% for position in positions %}
+                                                                        {% if user.position == position %}
+                                                                            <option selected="selected" value="{{ position.id }}">{{ position.name }}</option>
+                                                                        {% else %}
+                                                                            <option value="{{ position.id }}">{{ position.name }}</option>
+                                                                        {% endif %}
+                                                                    {% endfor %}
+
+                                                                </select>
+                                                            </div>
+
+                                                            <label class="col-md-2 control-label" for="department" style="color: darkblue; font-size: 18px">Department<span style="color: brown">*</span></label>
+                                                            <div class="col-md-3">
+                                                                <select class="form-control" name="department" required>
+                                                                    {% for department in departments %}
+                                                                        {% if user.authorityDepartment == department %}
+                                                                            <option selected="selected" value="{{ department.id }}">{{ department.name }}</option>
+                                                                        {% else %}
+                                                                            <option value="{{ department.id }}">{{ department.name }}</option>
+                                                                        {% endif %}
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group has-info">
+                                                            <label class="col-md-2 control-label" for="ward" style="color: darkblue; font-size: 18px">Ward</label>
+                                                            <div class="col-md-4">
+                                                                <select class="form-control" name="wards" size="3" multiple>
+{#                                                                    <option></option>#}
+                                                                    {% for ward in wards %}
+                                                                        {% if ward in user.authorityWard.all %}
+                                                                            <option selected="selected" value="{{ ward.id }}">{{ ward.name }}</option>
+                                                                        {% else %}
+                                                                            <option value="{{ ward.id }}">{{ ward.name }}</option>
+                                                                        {% endif %}
+                                                                    {% endfor %}
+
+                                                                </select>
+                                                            </div>
+
+                                                            <label class="col-md-2 control-label" for="template" style="color: darkblue; font-size: 18px">Template<span style="color: brown">*</span></label>
+                                                            <div class="col-md-3">
+                                                                <select class="form-control" name="templates" size="3" multiple required>
+                                                                    {% for template in templates %}
+                                                                        {% if template in user.template.all %}
+                                                                            <option selected="selected" value="{{ template.id }}">{{ template.name }}</option>
+                                                                        {% else %}
+                                                                            <option value="{{ template.id }}">{{ template.name }}</option>
+                                                                        {% endif %}
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                            <p style="color: brown; font-size: 16px">Hold down “Control” to select or cancel more than one.</p>
+
+
+                                                            <div class="table-responsive">
+                                                                <table class="table table-striped">
+
+                                                                    {% for category in menuCategories %}
+                                                                        <tr>
+                                                                            <td><span>{{ category.name }}</span></td>
+                                                                            {% for menu in menus %}
+                                                                                {% if menu.menu_category == category %}
+                                                                                    <td>
+                                                                                        {% if menu in user.authorityMenu.all %}
+                                                                                            <label class="lyear-checkbox checkbox-info">
+                                                                                                <input name="menus" type="checkbox" checked="checked" value="{{ menu.id }}">
+                                                                                                <span>{{ menu.name }}</span>
+                                                                                            </label>
+                                                                                        {% else %}
+                                                                                            <label class="lyear-checkbox checkbox-info">
+                                                                                                <input name="menus" type="checkbox" value="{{ menu.id }}">
+                                                                                                <span>{{ menu.name }}</span>
+                                                                                            </label>
+                                                                                        {% endif %}
+                                                                                    </td>
+                                                                                {% endif %}
+                                                                            {% endfor %}
+                                                                        </tr>
+                                                                    {% endfor %}
+                                                                </table>
+                                                            </div>
+
+
+
+                                                        <div class="form-group">
+                                                            <div class="col-md-12 col-md-offset-5">
+                                                                <button class="btn btn-info" type="submit">Submit</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Check -->
+                        <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="wardLabel" id="check{{ user.id }}">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title thirdBigMenu" id="gridSystemModalLabel">User Detail</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row smallText">
+
+                                            <div class="col-md-3" style="color: #AE4C4C">Name</div>
+                                            <div class="col-md-3">{{ user.name }}</div>
+                                            <div class="col-md-3" style="color: #AE4C4C">Arabic Name</div>
+                                            <div class="col-md-3" style="color: #205072">{{ user.arabic_name }}</div>
+
+                                            <div class="col-md-12" style="color: #205072"><hr></div>
+
+                                            <div class="col-md-2" style="color: #AE4C4C">Account</div>
+                                            <div class="col-md-2" style="color: #205072">{{ user.account }}</div>
+                                            <div class="col-md-2" style="color: #AE4C4C">Password</div>
+                                            <div class="col-md-2" style="color: #205072">{{ user.password }}</div>
+                                            <div class="col-md-2" style="color: #AE4C4C">Gender</div>
+                                            <div class="col-md-2" style="color: #205072">{{ user.sex }}</div>
+
+                                            <div class="col-md-12" style="color: #205072"><hr></div>
+
+                                            <div class="col-md-3" style="color: #AE4C4C">Department</div>
+                                            <div class="col-md-3" style="color: #205072">{{ user.authorityDepartment.name }}</div>
+                                            <div class="col-md-3" style="color: #AE4C4C">Position</div>
+                                            <div class="col-md-3" style="color: #205072">{{ user.position.name }}</div>
+
+                                            <div class="col-md-12" style="color: #205072"><hr></div>
+
+                                            <div class="col-md-2" style="color: #AE4C4C">Template</div>
+                                            <div class="col-md-9" style="color: #205072">
+                                                {% for template in user.template.all %}
+                                                    {{ template.name }} ,
+                                                {% endfor %}
+                                            </div>
+
+                                            <div class="col-md-12" style="color: #205072"><hr></div>
+
+                                            <div class="col-md-2" style="color: #AE4C4C">Ward</div>
+                                            <div class="col-md-9" >
+                                                {% for ward in user.authorityWard.all %}
+                                                    {% if  ward.status %}
+                                                        {{ ward.name }} ,
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+
+                                            <div class="col-md-12" style="color: #205072"><hr></div>
+
+                                            <div class="col-md-2" style="color: #AE4C4C">Menu</div>
+                                            <div class="col-md-9" style="color: #205072">
+                                                {% for menu in user.authorityMenu.all %}
+                                                    {{ menu.name }} ,
+                                                {% endfor %}
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- Add new user -->
+    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="wardLabel" id="addUser">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title thirdBigMenu" id="gridSystemModalLabel">Add A New User</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row" >
+                        <form class="form-horizontal" action="{% url 'addUser' %}" method="post">
+                            {% csrf_token %}
+
+                            <div class="form-group has-info">
+                                <label class="col-md-2 control-label" for="name" style="color: darkblue; font-size: 18px">Name<span style="color: brown">*</span></label>
+                                <div class="col-md-4">
+                                    <input class="form-control" type="text" id="name" name="name" required maxlength="35">
+                                </div>
+
+                                <label class="col-md-2 control-label" for="gender" style="color: darkblue; font-size: 18px">Gender<span style="color: brown">*</span></label>
+                                <div class="col-md-3">
+                                    <select class="form-control" name="gender" required>
+                                        <option></option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group has-info">
+                                <label class="col-md-2 control-label" for="arabic" style="color: darkblue; font-size: 18px">Arabic Name<span style="color: brown">*</span></label>
+                                <div class="col-md-4">
+                                    <input class="form-control forthNormalText" type="text" id="arabic" name="arabic_name" required maxlength="35" dir="rtl">
+                                </div>
+
+                                <label class="col-md-2 control-label" for="password" style="color: darkblue; font-size: 18px">Password<span style="color: brown">*</span></label>
+                                <div class="col-md-3">
+                                    <input class="form-control" type="text" name="password" required maxlength="11">
+                                </div>
+                            </div>
+
+                            <div class="form-group has-info">
+                                <label class="col-md-2 control-label" for="position" style="color: darkblue; font-size: 18px">Position<span style="color: brown">*</span></label>
+                                <div class="col-md-4">
+                                    <select class="form-control" name="position" required>
+                                        <option></option>
+                                        {% for position in positions %}
+                                            <option value="{{ position.id }}">{{ position.name }}</option>
+                                        {% endfor %}
+
+                                    </select>
+                                </div>
+
+                                <label class="col-md-2 control-label" for="department" style="color: darkblue; font-size: 18px">Department<span style="color: brown">*</span></label>
+                                <div class="col-md-3">
+                                    <select class="form-control" name="department" required>
+                                        <option></option>
+                                        {% for department in departments %}
+                                            <option value="{{ department.id }}">{{ department.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group has-info">
+                                <label class="col-md-2 control-label" for="ward" style="color: darkblue; font-size: 18px">Ward</label>
+                                <div class="col-md-4">
+                                    <select class="form-control" name="wards" size="3" multiple>
+                                        {% for ward in wards %}
+                                            <option value="{{ ward.id }}">{{ ward.name }}</option>
+                                        {% endfor %}
+                                    </select>
+
+                                </div>
+
+                                <label class="col-md-2 control-label" for="template" style="color: darkblue; font-size: 18px">Template<span style="color: brown">*</span></label>
+                                <div class="col-md-3">
+                                    <select class="form-control" name="templates" size="3" multiple required>
+                                        {% for template in templates %}
+                                            <option value="{{ template.id }}">{{ template.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12" style="color: brown">
+                                Hold down “Control” to select or cancel more than one.
+
+                                <div class="table-responsive">
+
+                                    <table class="table table-striped forthNormalText">
+
+                                        {% for category in menuCategories %}
+                                            <tr>
+                                                <td><span>{{ category.name }}</span></td>
+                                                {% for menu in menus %}
+                                                    {% if menu.menu_category == category %}
+                                                        <td>
+                                                            <label class="lyear-checkbox checkbox-info m-t-10">
+                                                                <input name="menus" type="checkbox" value="{{ menu.id }}">
+                                                                <span>{{ menu.name }}</span>
+                                                            </label>
+                                                        </td>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+                                </div>
+
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-12 col-md-offset-5">
+                                    <button class="btn btn-info" type="submit">Submit</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock home %}
+
+
+
+
+
+

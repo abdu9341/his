@@ -1,0 +1,211 @@
+{% extends "home/base_emergency.html" %}
+
+{% block home %}
+
+    {{ block.super }}
+
+    <style type="text/css">
+
+        td{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        th{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+    </style>
+
+
+    <div class="card-body">
+
+        {% if user.language == 1 %}
+
+            <div class="table-responsive">
+
+                <!-- 显示基本信息 -->
+                <table class="table" style="text-align: center">
+
+                    <thead>
+                       <tr class="forthBigMenu">
+                            <th scope="col">اسم المريض</th>
+                            <th scope="col">العمر</th>
+                            <th scope="col" colspan="2">قسم القبول</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                       <tr class="forthNormalText">
+                           <td class="basicInfoFont">{{ patient.basicInfo }}</td>
+                           <td>{{ patient.basicInfo.age }}</td>
+                           <td colspan="2" class="basicInfoFont">
+                                {% for department in patient.department.all %}
+                                    {{ department.arabic_name }} &nbsp;&nbsp;&nbsp;
+                                {% endfor %}
+                            </td>
+                       </tr>
+
+                    </tbody>
+                </table>
+
+            </div>
+
+            <div class="card-header" align="center">
+                <h2 class="card-title firstBigTitle">حالة التخريج</h2>
+            </div>
+
+            <form class="form-horizontal" action="" method="post">
+                {% csrf_token %}
+
+                <div class="form-group has-info forthBigTitle">
+
+                    <div class="col-md-2"></div>
+
+                    <div class="col-md-3">
+                        <input type="radio" name="discharge" value="تأجيل قبو المريض">   تأجيل قبو المريض
+                    </div>
+
+                    <div class="col-md-3">
+                        <input type="radio" name="discharge" value="تحويل إلى مشفى أخر">  تحويل إلى مشفى أخر
+                     </div>
+
+                    <div class="col-md-3">
+                        <input type="radio" name="discharge" value="تحويل إلى تركيا">  تحويل إلى تركيا
+
+                    </div>
+
+                    <div class="col-md-1"></div>
+
+                </div>
+
+                <div class="form-group has-info forthBigTitle">
+
+                    <div class="col-md-2"></div>
+
+                    <div class="col-md-3">
+                        <input type="radio" name="discharge" value="تخريج على مسؤوليته">   تخريج على مسؤوليته
+                    </div>
+
+                    <div class="col-md-3">
+                        <input type="radio" name="discharge" value="تخريج إلى المنزل">  تخريج إلى المنزل
+                     </div>
+
+                    <div class="col-md-3">
+                        <input type="radio" name="discharge" value="وفاة">  وفاة
+                    </div>
+
+                    <div class="col-md-1"></div>
+
+                </div>
+
+                <br>
+
+                <div class="form-group">
+                    <div class="col-md-5"></div>
+                    <div class="col-md-5">
+                        <button class="btn btn-info forthNormalText" type="submit">إرسال</button>
+                    </div>
+                </div>
+            </form>
+
+        {% elif user.language == 2 %}
+
+            <div class="table-responsive">
+
+                <!-- 显示基本信息 -->
+                <table class="table" style="text-align: center">
+
+                    <thead>
+                       <tr class="forthBigMenu">
+                            <th scope="col">Name</th>
+                            <th scope="col">Age</th>
+                            <th scope="col" colspan="2">Spaciality</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                       <tr class="forthNormalText">
+                           <td class="basicInfoFont">{{ patient.basicInfo }}</td>
+                           <td>{{ patient.basicInfo.age }}</td>
+                           <td colspan="2" class="basicInfoFont" style="font-family: 'Calibri'; font-size: 18px">
+                               {% for deparmtnet in departmentObjs %}
+                                   {{ deparmtnet.department.name }} &nbsp;&nbsp;&nbsp;
+                               {% endfor %}
+                           </td>
+                       </tr>
+
+                    </tbody>
+                </table>
+
+            </div>
+
+            <div class="card-header" align="center">
+                <h2 class="card-title firstBigTitle">Discharge Status</h2>
+            </div>
+
+            <form class="form-horizontal" action="" method="post">
+            {% csrf_token %}
+
+            <div class="form-group has-info forthBigTitle">
+
+                <div class="col-md-1"></div>
+
+                <div class="col-md-3">
+                    <input type="radio" name="discharge" value="Postpone treatment">  Postpone treatment
+                </div>
+
+                <div class="col-md-3">
+                    <input type="radio" name="discharge" value="Transfer">  Transfer
+                 </div>
+
+                <div class="col-md-3">
+                    <input type="radio" name="discharge" value="Graduated on his responsibility">  Graduated on his responsibility
+
+                </div>
+
+                <div class="col-md-1"></div>
+
+            </div>
+
+            <div class="form-group has-info forthBigTitle">
+
+                <div class="col-md-1"></div>
+
+                <div class="col-md-3">
+                    <input type="radio" name="discharge" value="Discharged home">  Discharged home
+                </div>
+
+                <div class="col-md-3">
+                    <input type="radio" name="discharge" value="Go to Turkey">  Go to Turkey
+                 </div>
+
+                <div class="col-md-3">
+                    <input type="radio" name="discharge" value="Death">  Death
+                </div>
+
+                <div class="col-md-1"></div>
+
+            </div>
+
+            <br>
+
+            <div class="form-group">
+                <div class="col-md-5"></div>
+                <div class="col-md-5">
+                    <button class="btn btn-info" type="submit">Submit</button>
+                </div>
+            </div>
+        </form>
+
+        {% endif %}
+
+
+
+    </div>
+
+
+{% endblock home %}

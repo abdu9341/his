@@ -1,0 +1,115 @@
+{% extends "home/base_hospitalized.html" %}
+
+{% block home %}
+
+    <style>
+
+        td{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        th{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+
+        }
+
+    </style>
+
+    {% if user.language == 1 %}
+
+        <div class="card-header">
+            <h2 class="firstBigTitle">{{ wardObj.arabic_name }}</h2>
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+
+                <table class="table" align="center">
+                    <thead >
+                        <tr class="forthBigMenu">
+                            <th>#</th>
+                            <th style="width: 265px">اسم المريض</th>
+                            <th style="width: 265px">رقم المريض</th>
+                            <th style="width: 262px">العمر</th>
+                            <th style="width: 262px">تاريخ القبول</th>
+                            <th style="width: 262px">جناح</th>
+                        </tr>
+                    </thead>
+
+                    {% for patient in patients %}
+
+                        <tr class="forthNormalText">
+                            <td>{{ forloop.counter }}</td>
+                            <th><a href="{% url 'viewBasicInfo' patient.id patient.patientID %}">{{ patient.basicInfo.name }}</a></th>
+                            <td>{{ patient.patientID }}</td>
+                            <td>{{ patient.basicInfo.age }}</td>
+                            <td>{{ patient.enterDate}}</td>
+                            <td>{{ patient.sickroom.arabic_name }}</td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </table>
+
+            </div>
+        </div>
+
+    {% elif user.language == 2 %}
+
+        <div class="card-header">
+            <h2 class="firstBigTitle">{{ wardObj.name }}</h2>
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+
+                <table class="table" align="center">
+                    <thead >
+                        <tr class="forthBigMenu">
+                            <th>#</th>
+                            <th style="width: 265px">Name</th>
+                            <th style="width: 265px">Patient ID</th>
+                            <th style="width: 262px">Age</th>
+                            <th style="width: 262px">Enter Date</th>
+                            <th style="width: 262px">Ward</th>
+                        </tr>
+                    </thead>
+
+                    {% for patient in patients %}
+
+                        <tr class="forthNormalText">
+                            <td>{{ forloop.counter }}</td>
+                            <th><a href="{% url 'viewBasicInfo' patient.id patient.patientID %}">{{ patient.basicInfo.name }}</a></th>
+                            <td>{{ patient.patientID }}</td>
+                            <td>{{ patient.basicInfo.age }}</td>
+                            <td>{{ patient.enterDate}}</td>
+                            <td>{{ patient.sickroom }}</td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </table>
+
+            </div>
+        </div>
+
+    {% endif %}
+
+
+
+
+
+
+{% endblock home %}
+
+
+
+
+
+

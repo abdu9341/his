@@ -1,0 +1,330 @@
+{% extends "home/base_hospitalized.html" %}
+
+{% block home %}
+
+    {{ block.super }}
+
+
+    <script type="text/javascript" language="JavaScript">
+            function deleteVitalSigns()
+            {
+                 if(confirm("Do you have to delete?"))
+                 {
+                     return true;
+                 }else{
+                     return false;
+                 }
+            }
+    </script>
+
+
+    <style type="text/css">
+
+        td{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        th{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+
+        }
+    </style>
+
+
+    <div class="card-body">
+        <div class="table-responsive">
+
+
+            {% if user.language == 1 %}
+
+                <table class="table table-bordered">
+                    <tr>
+                        <th class="forthBigMenu">اسم المريض</th>
+                        <td class="forthNormalText">{{ patient.basicInfo.name}}</td>
+                        <th class="forthBigMenu">العمر</th>
+                        <td class="forthNormalText">{{ patient.basicInfo.age}}</td>
+                        <th class="forthBigMenu">الجنس</th>
+                        <td class="forthNormalText">{{ patient.basicInfo.sex }}</td>
+
+                    </tr>
+
+                </table>
+
+
+                <h2 class="firstBigTitle" align="center">العلامة الحيوية</h2><br>
+
+                <table class="table" border="0">
+
+                    <tr>
+                        <td colspan="12" style="text-align: left">
+                            <a href="{% url 'addVitalSigns' patient_id patient.patientID %}"><input type="submit" class="btn btn-info forthNormalText" value="إضافة علامة حيوية"></a>
+                            <a href="{% url 'graphics' patient_id patient.patientID %}"><input type="submit" class="btn btn-info forthNormalText" value="العلامات الحيوية مخطط"></a>
+                        </td>
+                    </tr>
+
+                    {% for vitalSigns in vitalSignss %}
+                        <tr align="center" valign="middle">
+                            <th class="forthBigMenu">Pulse</th>
+                            {% if vitalSigns.pulse %}<td class="forthNormalText">{{vitalSigns.pulse}}</td>
+                            {% else %}<td></td>
+                            {% endif %}
+                            <th class="forthBigMenu">SYS</th>
+                            {% if vitalSigns.bloodPressureMax %}<td class="forthNormalText">{{vitalSigns.bloodPressureMax}}</td>
+                            {% else %}<td></td>
+                            {% endif %}
+                            <th class="forthBigMenu">DYS</th>
+                            {% if vitalSigns.bloodPressureMin %}<td class="forthNormalText">{{vitalSigns.bloodPressureMin}}</td>
+                            {% else %}<td></td>
+                            {% endif %}
+                            <th class="forthBigMenu">MAP</th>
+                            {% if vitalSigns.bloodPressureAverage %}<td class="forthNormalText">{{vitalSigns.bloodPressureAverage}}</td>
+                            {% else %}<td></td>
+                            {% endif %}
+                            <th class="forthBigMenu">Spo2</th>
+                            {% if vitalSigns.spo2 %}<td class="forthNormalText">{{vitalSigns.spo2}}</td>
+                            {% else %}<td></td>
+                            {% endif %}
+                            <th class="forthBigMenu">TemP</th>
+                            {% if vitalSigns.temperature %}<td class="forthNormalText">{{vitalSigns.temperature}}</td>
+                            {% else %}<td></td>
+                            {% endif %}
+                        </tr>
+
+                        <tr align="center" valign="middle">
+                            <th class="forthBigMenu">BR</th>
+                            {% if vitalSigns.breathingRate %}<td class="forthNormalText">{{vitalSigns.breathingRate}}</td>
+                            {% else %}<td></td>
+                            {% endif %}
+                            <th class="forthBigMenu">Urine Hourly</th>
+                            {% if vitalSigns.urineOutput %}<td class="forthNormalText">{{vitalSigns.urineOutput}}</td>
+                            {% else %}<td></td>
+                            {% endif %}
+                            <th class="forthBigMenu">Oxygen</th>
+                            {% if vitalSigns.oxygen %}<td class="forthNormalText">{{ vitalSigns.oxygen }}</td>
+                            {% else %}<td></td>
+                            {% endif %}
+                            <th class="forthBigMenu">glucose</th>
+                            {% if vitalSigns.glucose %}<td class="forthNormalText">{{ vitalSigns.glucose }}</td>
+                            {% else %}<td></td>
+                            {% endif %}
+                            <th class="forthBigMenu">Frequency</th>
+                            {% if vitalSigns.frequency %}<td class="forthNormalText">{{ vitalSigns.frequency }}</td>
+                            {% else %}<td></td>
+                            {% endif %}
+                            <th class="forthBigMenu">Mode</th>
+                            {% if vitalSigns.mode %}<td class="forthNormalText">{{ vitalSigns.mode }}</td>
+                            {% else %}<td></td>
+                            {% endif %}
+                        </tr>
+
+                        <tr align="center" valign="middle">
+                            <th class="forthBigMenu">VT</th>
+                            {% if vitalSigns.vt %}<td class="forthNormalText">{{ vitalSigns.vt }}</td>
+                            {% else %}<td></td>
+                            {% endif %}
+                            <th class="forthBigMenu">Fio2</th>
+                            {% if vitalSigns.fio2 %}<td class="forthNormalText">{{ vitalSigns.fio2 }}</td>
+                            {% else %}<td></td>
+                            {% endif %}
+                            <th class="forthBigMenu">PSV</th>
+                            {% if vitalSigns.psv %}<td class="forthNormalText">{{ vitalSigns.psv }}</td>
+                            {% else %}<td></td>
+                            {% endif %}
+                            <th class="forthBigMenu">Peep</th>
+                            {% if vitalSigns.peep %}<td class="forthNormalText">{{ vitalSigns.peep }}</td>
+                            {% else %}<td></td>
+                            {% endif %}
+                            <th class="forthBigMenu">التاريخ</th>
+                            <td class="forthNormalText">{{vitalSigns.date|date:"n-j H:i"}}</td>
+                            <th class="forthBigMenu">Operator</th>
+                            <td class="forthNormalText">{{vitalSigns.recorder}}</td>
+                        </tr>
+
+                        <tr align="center">
+                            <td>
+                                <a href="{% url 'editVitalSigns' vitalSigns.id patient_id patient.patientID %}" title="edit" ><i class="mdi mdi-24px mdi-pencil"></i></a>
+                                <a onclick="return deleteVitalSigns()" href="/deleteVitalSigns/{{ vitalSigns.id }}/{{patient.id}}" title="delete" data-toggle="tooltip"><i class="mdi mdi-24px mdi-delete"></i></a>
+                            </td>
+                            <td colspan="11"></td>
+                        </tr>
+                    {% endfor %}
+
+                    <tr>
+                        <td colspan="14" align="center" style="font-size: larger">
+                            <ul class="pagination">
+                                {% if page.has_previous %}
+                                    <li class=""><a href="/viewVitalSigns{{ page.previous_page_number }}/{{ patient.id }}"><span>«</span></a>
+                                {% endif %}
+                                {% for pindex in page.paginator.page_range %}
+                                    {% if pindex == page.number %}
+                                        <li class="active"><span>{{ pindex }}</span></li>
+                                    {% elif pindex < 5 %}
+                                        <li><a href="/viewVitalSigns{{ pindex }}/{{ patient.id }}">{{ pindex }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+                                {% if page.has_next %}
+                                    <li><a href="/viewVitalSigns{{ page.next_page_number }}/{{ patient.id }}">»</a></li>
+                                {% endif %}
+                            </ul>
+                        </td>
+                    </tr>
+
+                </table>
+
+            {% elif user.language == 2 %}
+
+                <table class="table table-bordered">
+                    <tr>
+                        <th class="forthBigMenu">Name</th>
+                        <td class="forthNormalText">{{patient.basicInfo.name}}</td>
+                        <th class="forthBigMenu">Age</th>
+                        <td class="forthNormalText">{{patient.basicInfo.age}}</td>
+                        <th class="forthBigMenu">Blood Group</th>
+                        <td class="forthNormalText">{{patient.basicInfo.bloodGroup}}</td>
+
+                    </tr>
+
+                </table>
+
+                <br>
+
+                <h2 class="firstBigTitle" align="center">View Vital Signs</h2><br>
+
+                <table class="table" border="0">
+
+                    <tr>
+                        <td colspan="12" style="text-align: left">
+                            <a href="{% url 'addVitalSigns' patient_id patient.patientID %}"><input type="submit" class="btn btn-info" value="+ Add Vital Signs"></a>
+                            <a href="{% url 'graphics' patient_id patient.patientID %}"><input type="submit" class="btn btn-info" value="View Graphics"></a>
+                        </td>
+                    </tr>
+
+                    {% for vitalSigns in vitalSignss %}
+                        <tr align="center" valign="middle">
+                            <th class="forthBigMenu">Pulse</th>
+                            {% if vitalSigns.pulse %}<td class="forthNormalText">{{vitalSigns.pulse}}</td>
+                            {% else %}<td></td>
+                            {% endif %}
+                            <th class="forthBigMenu">SYS</th>
+                            {% if vitalSigns.bloodPressureMax %}<td class="forthNormalText">{{vitalSigns.bloodPressureMax}}</td>
+                            {% else %}<td></td>
+                            {% endif %}
+                            <th class="forthBigMenu">DYS</th>
+                            {% if vitalSigns.bloodPressureMin %}<td class="forthNormalText">{{vitalSigns.bloodPressureMin}}</td>
+                            {% else %}<td></td>
+                            {% endif %}
+                            <th class="forthBigMenu">MAP</th>
+                            {% if vitalSigns.bloodPressureAverage %}<td class="forthNormalText">{{vitalSigns.bloodPressureAverage}}</td>
+                            {% else %}<td></td>
+                            {% endif %}
+                            <th class="forthBigMenu">Spo2</th>
+                            {% if vitalSigns.spo2 %}<td class="forthNormalText">{{vitalSigns.spo2}}</td>
+                            {% else %}<td></td>
+                            {% endif %}
+                            <th class="forthBigMenu">TemP</th>
+                            {% if vitalSigns.temperature %}<td class="forthNormalText">{{vitalSigns.temperature}}</td>
+                            {% else %}<td></td>
+                            {% endif %}
+                        </tr>
+
+                        <tr align="center" valign="middle">
+                            <th class="forthBigMenu">BR</th>
+                            {% if vitalSigns.breathingRate %}<td class="forthNormalText">{{vitalSigns.breathingRate}}</td>
+                            {% else %}<td></td>
+                            {% endif %}
+                            <th class="forthBigMenu">Urine Hourly</th>
+                            {% if vitalSigns.urineOutput %}<td class="forthNormalText">{{vitalSigns.urineOutput}}</td>
+                            {% else %}<td></td>
+                            {% endif %}
+                            <th class="forthBigMenu">Oxygen</th>
+                            {% if vitalSigns.oxygen %}<td class="forthNormalText">{{ vitalSigns.oxygen }}</td>
+                            {% else %}<td></td>
+                            {% endif %}
+                            <th class="forthBigMenu">glucose</th>
+                            {% if vitalSigns.glucose %}<td class="forthNormalText">{{ vitalSigns.glucose }}</td>
+                            {% else %}<td></td>
+                            {% endif %}
+                            <th class="forthBigMenu">Frequency</th>
+                            {% if vitalSigns.frequency %}<td class="forthNormalText">{{ vitalSigns.frequency }}</td>
+                            {% else %}<td></td>
+                            {% endif %}
+                            <th class="forthBigMenu">Mode</th>
+                            {% if vitalSigns.mode %}<td class="forthNormalText">{{ vitalSigns.mode }}</td>
+                            {% else %}<td></td>
+                            {% endif %}
+                        </tr>
+
+                        <tr align="center" valign="middle">
+                            <th class="forthBigMenu">VT</th>
+                            {% if vitalSigns.vt %}<td class="forthNormalText">{{ vitalSigns.vt }}</td>
+                            {% else %}<td></td>
+                            {% endif %}
+                            <th class="forthBigMenu">Fio2</th>
+                            {% if vitalSigns.fio2 %}<td class="forthNormalText">{{ vitalSigns.fio2 }}</td>
+                            {% else %}<td></td>
+                            {% endif %}
+                            <th class="forthBigMenu">PSV</th>
+                            {% if vitalSigns.psv %}<td class="forthNormalText">{{ vitalSigns.psv }}</td>
+                            {% else %}<td></td>
+                            {% endif %}
+                            <th class="forthBigMenu">Peep</th>
+                            {% if vitalSigns.peep %}<td class="forthNormalText">{{ vitalSigns.peep }}</td>
+                            {% else %}<td></td>
+                            {% endif %}
+                            <th class="forthBigMenu">Date</th>
+                            <td class="forthNormalText">{{vitalSigns.date|date:"n-j H:i"}}</td>
+                            <th class="forthBigMenu">Recorder</th>
+                            <td class="forthNormalText">{{vitalSigns.recorder}}</td>
+                        </tr>
+
+                        <tr align="center">
+                            <td>
+                                <a href="{% url 'editVitalSigns' vitalSigns.id patient_id patient.patientID %}" title="edit" ><i class="mdi mdi-24px mdi-pencil"></i></a>
+                                <a onclick="return deleteVitalSigns()" href="/deleteVitalSigns/{{ vitalSigns.id }}/{{patient.id}}" title="delete" data-toggle="tooltip"><i class="mdi mdi-24px mdi-delete"></i></a>
+                            </td>
+                            <td colspan="11"></td>
+                        </tr>
+                    {% endfor %}
+
+                    <tr>
+                        <td colspan="14" align="center" style="font-size: larger">
+                            <ul class="pagination">
+                                {% if page.has_previous %}
+                                    <li class=""><a href="/viewVitalSigns{{ page.previous_page_number }}/{{ patient.id }}"><span>«</span></a>
+                                {% endif %}
+                                {% for pindex in page.paginator.page_range %}
+                                    {% if pindex == page.number %}
+                                        <li class="active"><span>{{ pindex }}</span></li>
+                                    {% elif pindex < 5 %}
+                                        <li><a href="/viewVitalSigns{{ pindex }}/{{ patient.id }}">{{ pindex }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+                                {% if page.has_next %}
+                                    <li><a href="/viewVitalSigns{{ page.next_page_number }}/{{ patient.id }}">»</a></li>
+                                {% endif %}
+                            </ul>
+                        </td>
+                    </tr>
+
+                </table>
+
+            {% endif %}
+
+
+
+        </div>
+    </div>
+
+
+
+{% endblock home %}
+
+
+
+
+
+

@@ -1,0 +1,763 @@
+{% extends "home/base_operation.html" %}
+
+{% block home %}
+
+    <script type="text/javascript" language="JavaScript">
+		function deleteOperationRecord()
+		{
+		     if(confirm("Do you have to delete?"))
+		     {
+		         return true;
+		     }else{
+		         return false;
+			 }
+		}
+    </script>
+
+    <style>
+
+        td{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        th{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+
+        }
+
+    </style>
+
+
+    <div class="card-body">
+
+        {% if user.language == 1 %}
+
+            <div class="table-responsive">
+
+                <table class="table" align="center">
+                    <thead>
+                        <tr class="forthBigTitle">
+                            <th>اسم المريض</th>
+                            <th>العمر</th>
+                            <th>السكن</th>
+                            <th>رقم المريض</th>
+                            <th>سجل العمليات</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr class="forthNormalText">
+                            <th>{{ patient.basicInfo.name }}</th>
+                            <td>{{ patient.basicInfo.age }}</td>
+                            <td>{{ patient.basicInfo.address }}</td>
+                            <td>{{ patient.patientID}}</td>
+                            <td>
+                                <a href="#" type="button" data-toggle="modal" data-target="#addRecord">
+                                    <i class="mdi mdi-pencil mdi-24px" style="color: #33cccc" title="سجل" data-toggle="tooltip" data-placement="right"></i>
+                                </a>
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+
+                <table class="table" align="center">
+
+                    <thead >
+                        <tr>
+                            <th colspan="11"><h1 class="firstBigTitle">تفاصيل السجل الجراحي</h1></th>
+                        </tr>
+
+                        <tr class="forthBigTitle">
+                            <th>العمل الجراحي</th>
+                            <th>الطبيب الجراح</th>
+                            <th>الطبيب المساعد</th>
+                            <th>فني عمليات</th>
+                            <th>المخدر</th>
+                            <th>نوع التخدير</th>
+                            <th>نوع العمل</th>
+                            <th>القاعة</th>
+                            <th>التاريخ</th>
+                            <th>مدة</th>
+                            <th>تعديل</th>
+                        </tr>
+                    </thead>
+
+                    {% if operations %}
+
+                        {% for operation in operations %}
+
+                            <tr class="forthNormalText">
+                                <th>{{ operation.name }}</th>
+                                <td>{{ operation.doctor }}</td>
+                                <td>{{ operation.assistant }}</td>
+                                <td>{{ operation.surgicalNurse }}</td>
+                                <td>{{ operation.anesthetist }}</td>
+                                <td>{{ operation.typesNarcosis }}</td>
+                                <td>{{ operation.typesOperation }}</td>
+                                <td>{{ operation.roomNo }}</td>
+                                <td>{{ operation.begin }}</td>
+                                <td>{{ operation.timeOfOperation }}</td>
+                                <td>
+                                    <a href="#" type="button" data-toggle="modal" data-target="#editRecord{{ operation.id }}">
+                                        <i class="mdi mdi-pencil mdi-24px" style="color: #33cccc" title="تعديل" data-toggle="tooltip" data-placement="left"></i>
+                                    </a>
+                                    &nbsp;&nbsp;
+                                    <a href="{% url 'deleteOperationRecord' patient_id operation.id %}" onclick="return deleteOperationRecord()">
+                                        <i class="mdi mdi-delete mdi-24px" style="color: #33cccc" title="Delete" data-toggle="tooltip" data-placement="right"></i>
+                                    </a>
+                                </td>
+
+                            </tr>
+
+                            <!--Edit operation record-->
+                            <div class="modal fade" id="editRecord{{ operation.id }}" tabindex="-1" role="dialog" aria-labelledby="addRecordModalLabel">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="addRecordModalLabel" style="font-family: Calibri; font-size: 20px">تعديل العمليات</h4>
+                                        </div>
+
+                                        <form action="{% url 'editOperationRecord' patient_id operation.id %}" method="post">
+                                            {% csrf_token %}
+
+                                            <div class="modal-body">
+                                                <div class="row" style="font-family: Calibri; font-size: 18px">
+
+                                                    <div class="col-md-2" style="color: #AE4C4C">العمل الجراحي</div>
+                                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                                        <input type="text" name="name" class="form-control" list="nameList" maxlength="35" value="{{ operation.name }}" required>
+                                                        <datalist id="nameList">
+                                                            {% for operation in operationNames %}
+                                                                <option value="{{ operation.name }}">
+                                                            {% endfor %}
+                                                        </datalist>
+                                                    </div>
+
+                                                    <div class="col-md-2" style="color: #AE4C4C">الطبيب الجراح</div>
+                                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                                        <input class="form-control" type="text" list="doctorsList" name="doctor" maxlength="35" value="{{ operation.doctor }}" required>
+                                                        <datalist id="doctorsList">
+                                                            {% for doctor in doctors %}
+                                                                <option value="{{ doctor.arabic_name }}">
+                                                            {% endfor %}
+                                                        </datalist>
+                                                    </div>
+
+                                                    <div class="col-md-12" style="color: #205072"><hr></div>
+
+                                                    <div class="col-md-2" style="color: #AE4C4C">الطبيب المساعد</div>
+                                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                                        <input class="form-control" type="text" list="doctorsList" name="assistant" maxlength="35" value="{{ operation.assistant }}" required>
+                                                        <datalist id="doctorsList">
+                                                            {% for doctor in doctors %}
+                                                                <option value="{{ doctor.arabic_name }}">
+                                                            {% endfor %}
+                                                        </datalist>
+                                                    </div>
+
+                                                    <div class="col-md-2" style="color: #AE4C4C">فني عمليات</div>
+                                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                                        <input class="form-control" type="text" list="nursesList" name="surgicalNurse" maxlength="35" value="{{ operation.surgicalNurse }}" required>
+                                                        <datalist id="nursesList">
+                                                            {% for nurse in nurses %}
+                                                                <option value="{{ nurse.arabic_name }}">
+                                                            {% endfor %}
+                                                        </datalist>
+                                                    </div>
+
+                                                    <div class="col-md-12" style="color: #205072"><hr></div>
+
+                                                    <div class="col-md-2" style="color: #AE4C4C">المخدر</div>
+                                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                                        <input class="form-control" type="text" list="doctorsList" name="anesthetist" maxlength="35" value="{{ operation.anesthetist }}" required>
+                                                        <datalist id="doctorsList">
+                                                            {% for doctor in doctors %}
+                                                                <option value="{{ doctor.arabic_name }}">
+                                                            {% endfor %}
+                                                        </datalist>
+                                                    </div>
+
+                                                    <div class="col-md-2" style="color: #AE4C4C">نوع التخدير</div>
+                                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                                        <select name="typesNarcosis" class="form-control" required>
+                                                            <option selected="selected" value="{{ operation.typesNarcosis }}">{{ operation.typesNarcosis }}</option>
+                                                            <option value="تخدير عام">تخدير عام</option>
+                                                            <option value="تخدير الناحى">تخدير الناحى</option>
+                                                            <option value="تخدير موضعي">تخدير موضعي</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="col-md-12" style="color: #205072"><hr></div>
+
+                                                    <div class="col-md-2" style="color: #AE4C4C">نوع العمل</div>
+                                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                                        <select name="typesOperation" class="form-control" required>
+                                                            <option selected="selected" value="{{ operation.typesOperation }}">{{ operation.typesOperation }}</option>
+                                                            <option value="اسعافي">اسعافي</option>
+                                                            <option value="باردة">باردة</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="col-md-2" style="color: #AE4C4C">القاعة</div>
+                                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                                        <select name="roomNo" class="form-control" required>
+                                                            <option selected="selected" value="{{ operation.roomNo }}">{{ operation.roomNo }}</option>
+                                                            <option value="الأولى">الأولى</option>
+                                                            <option value="الثانية">الثانية</option>
+                                                            <option value="الثالثة">الثالثة</option>
+                                                            <option value="الرابعة">الرابعة</option>
+                                                            <option value="الخامسة">الخامسة</option>
+                                                            <option value="السادسة">السادسة</option>
+                                                            <option value="السابعة">السابعة</option>
+                                                            <option value="الثامنة">الثامنة</option>
+                                                            <option value="التاسعة">التاسعة</option>
+                                                            <option value="العاشرة">العاشرة</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="col-md-12" style="color: #205072"><hr></div>
+
+                                                    <div class="col-md-2" style="color: #AE4C4C">التاريخ</div>
+                                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                                        <input type="datetime-local" name="begin" class="form-control" value="{{ operation.begin }}" required>
+                                                    </div>
+
+                                                    <div class="col-md-2" style="color: #AE4C4C">مدة</div>
+                                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                                        <input type="text" name="timeOfOperation" class="form-control" value="{{ operation.timeOfOperation }}" required oninput="setCustomValidity(''); value=value.replace(/[^\d]/g,'')">
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="modal-footer" style="text-align: center">
+                                                <button type="submit" class="btn btn-info forthNormalText">إرسال</button>
+                                            </div>
+
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        {% endfor %}
+
+                    {% endif %}
+
+                </table>
+
+            </div>
+
+            <!--Add operation record-->
+            <div class="modal fade" id="addRecord" tabindex="-1" role="dialog" aria-labelledby="addRecordModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="addRecordModalLabel" style="font-family: Calibri; font-size: 20px">سجل العمليات</h4>
+                        </div>
+
+                        <form action="{% url 'addOperationRecord' patient_id %}" method="post">
+                            {% csrf_token %}
+
+                            <div class="modal-body">
+                                <div class="row" style="font-family: Calibri; font-size: 18px">
+
+                                    <div class="col-md-2" style="color: #AE4C4C">العمل الجراحي</div>
+                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                        <input type="text" name="name" list="nameList" class="form-control" maxlength="35" required>
+                                        <datalist id="nameList">
+                                            {% for operation in operationNames %}
+                                                <option value="{{ operation.name }}">
+                                            {% endfor %}
+                                        </datalist>
+                                    </div>
+
+                                    <div class="col-md-2" style="color: #AE4C4C">الطبيب الجراح</div>
+                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                        <input class="form-control" type="text" list="doctorsList" name="doctor" maxlength="35" required>
+                                        <datalist id="doctorsList">
+                                            {% for doctor in doctors %}
+                                                <option value="{{ doctor.arabic_name }}">
+                                            {% endfor %}
+                                        </datalist>
+                                    </div>
+
+                                    <div class="col-md-12" style="color: #205072"><hr></div>
+
+                                    <div class="col-md-2" style="color: #AE4C4C">الطبيب المساعد</div>
+                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                        <input class="form-control" type="text" list="doctorsList" name="assistant" maxlength="35" required>
+                                        <datalist id="doctorsList">
+                                            {% for doctor in doctors %}
+                                                <option value="{{ doctor.arabic_name }}">
+                                            {% endfor %}
+                                        </datalist>
+                                    </div>
+
+                                    <div class="col-md-2" style="color: #AE4C4C">فني عمليات</div>
+                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                        <input class="form-control" type="text" list="nursesList" name="surgicalNurse" maxlength="35" required>
+                                        <datalist id="nursesList">
+                                            {% for nurse in nurses %}
+                                                <option value="{{ nurse.arabic_name }}">
+                                            {% endfor %}
+                                        </datalist>
+                                    </div>
+
+                                    <div class="col-md-12" style="color: #205072"><hr></div>
+
+                                    <div class="col-md-2" style="color: #AE4C4C">المخدر</div>
+                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                        <input class="form-control" type="text" list="doctorsList" name="anesthetist" maxlength="35" required>
+                                        <datalist id="doctorsList">
+                                            {% for doctor in doctors %}
+                                                <option value="{{ doctor.name }}">
+                                            {% endfor %}
+                                        </datalist>
+                                    </div>
+
+                                    <div class="col-md-2" style="color: #AE4C4C">نوع التخدير</div>
+                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                        <select name="typesNarcosis" class="form-control" required>
+                                            <option></option>
+                                            <option value="تخدير عام">تخدير عام</option>
+                                            <option value="تخدير الناحى">تخدير الناحى</option>
+                                            <option value="تخدير موضعي">تخدير موضعي</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-12" style="color: #205072"><hr></div>
+
+                                    <div class="col-md-2" style="color: #AE4C4C">نوع العمل</div>
+                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                        <select name="typesOperation" class="form-control" required>
+                                            <option></option>
+                                            <option value="اسعافي">اسعافي</option>
+                                            <option value="باردة">باردة</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-2" style="color: #AE4C4C">القاعة</div>
+                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                        <select name="roomNo" class="form-control" required>
+                                            <option></option>
+                                            <option value="الأولى">الأولى</option>
+                                            <option value="الثانية">الثانية</option>
+                                            <option value="الثالثة">الثالثة</option>
+                                            <option value="الرابعة">الرابعة</option>
+                                            <option value="الخامسة">الخامسة</option>
+                                            <option value="السادسة">السادسة</option>
+                                            <option value="السابعة">السابعة</option>
+                                            <option value="الثامنة">الثامنة</option>
+                                            <option value="التاسعة">التاسعة</option>
+                                            <option value="العاشرة">العاشرة</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-12" style="color: #205072"><hr></div>
+
+                                    <div class="col-md-2" style="color: #AE4C4C">التاريخ</div>
+                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                        <input type="datetime-local" name="begin" class="form-control" required>
+                                    </div>
+
+                                    <div class="col-md-2" style="color: #AE4C4C">مدة</div>
+                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                        <input type="text" name="timeOfOperation" class="form-control" required oninput="setCustomValidity(''); value=value.replace(/[^\d]/g,'')">
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="modal-footer" style="text-align: center">
+                                <button type="submit" class="btn btn-info forthNormalText">إرسال</button>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+        {% elif user.language == 2 %}
+
+            <div class="table-responsive">
+
+                <table class="table" align="center">
+                    <thead>
+                        <tr class="forthBigTitle">
+                            <th style="width: 265px">Name</th>
+                            <th style="width: 262px">Age</th>
+                            <th style="width: 262px">Address</th>
+                            <th style="width: 265px">Patient ID</th>
+                            <th style="width: 262px">Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr class="forthNormalText">
+                            <th>{{ patient.basicInfo.name }}</th>
+                            <td>{{ patient.basicInfo.age }}</td>
+                            <td>{{ patient.basicInfo.address }}</td>
+                            <td>{{ patient.patientID}}</td>
+                            <td>
+                                <a href="#" type="button" data-toggle="modal" data-target="#addRecord">
+                                    <i class="mdi mdi-pencil mdi-24px" style="color: #33cccc" title="Add Record" data-toggle="tooltip" data-placement="right"></i>
+                                </a>
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+
+                <table class="table" align="center">
+
+                    <thead >
+                        <tr>
+                            <th colspan="11"><h1 class="firstBigTitle">Operation Record Details</h1></th>
+                        </tr>
+
+                        <tr class="forthBigTitle">
+                            <th>العمل الجراحي</th>
+                            <th>الطبيب الجراح</th>
+                            <th>الطبيب المساعد</th>
+                            <th>فني عمليات</th>
+                            <th>المخدر</th>
+                            <th>نوع التخدير</th>
+                            <th>نوع العمل</th>
+                            <th>القاعة</th>
+                            <th>التاريخ</th>
+                            <th>مدة</th>
+                            <th>عمل</th>
+                        </tr>
+                    </thead>
+
+                    {% if operations %}
+
+                        {% for operation in operations %}
+
+                            <tr class="forthNormalText">
+                                <th>{{ operation.name }}</th>
+                                <td>{{ operation.doctor }}</td>
+                                <td>{{ operation.assistant }}</td>
+                                <td>{{ operation.surgicalNurse }}</td>
+                                <td>{{ operation.anesthetist }}</td>
+                                <td>{{ operation.typesNarcosis }}</td>
+                                <td>{{ operation.typesOperation }}</td>
+                                <td>{{ operation.roomNo }}</td>
+                                <td>{{ operation.begin }}</td>
+                                <td>{{ operation.timeOfOperation }}</td>
+                                <td>
+                                    <a href="#" type="button" data-toggle="modal" data-target="#editRecord{{ operation.id }}">
+                                        <i class="mdi mdi-pencil mdi-24px" style="color: #33cccc" title="Edit" data-toggle="tooltip" data-placement="left"></i>
+                                    </a>
+                                    &nbsp;&nbsp;
+                                    <a href="{% url 'deleteOperationRecord' patient_id operation.id %}" onclick="return deleteOperationRecord()">
+                                        <i class="mdi mdi-delete mdi-24px" style="color: #33cccc" title="Delete" data-toggle="tooltip" data-placement="right"></i>
+                                    </a>
+                                </td>
+
+                            </tr>
+
+                            <!--Edit operation record-->
+                            <div class="modal fade" id="editRecord{{ operation.id }}" tabindex="-1" role="dialog" aria-labelledby="addRecordModalLabel">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="addRecordModalLabel" style="font-family: Calibri; font-size: 20px">تعديل العمليات</h4>
+                                        </div>
+
+                                        <form action="{% url 'editOperationRecord' patient_id operation.id %}" method="post">
+                                            {% csrf_token %}
+
+                                            <div class="modal-body">
+                                                <div class="row" style="font-family: Calibri; font-size: 18px">
+
+                                                    <div class="col-md-2" style="color: #AE4C4C">العمل الجراحي</div>
+                                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                                        <input type="text" name="name" class="form-control" list="nameList" maxlength="35" value="{{ operation.name }}" required>
+                                                        <datalist id="nameList">
+                                                            {% for operation in operationNames %}
+                                                                <option value="{{ operation.name }}">
+                                                            {% endfor %}
+                                                        </datalist>
+                                                    </div>
+
+                                                    <div class="col-md-2" style="color: #AE4C4C">الطبيب الجراح</div>
+                                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                                        <input class="form-control" type="text" list="doctorsList" name="doctor" maxlength="35" value="{{ operation.doctor }}" required>
+                                                        <datalist id="doctorsList">
+                                                            {% for doctor in doctors %}
+                                                                <option value="{{ doctor.name }}">
+                                                            {% endfor %}
+                                                        </datalist>
+                                                    </div>
+
+                                                    <div class="col-md-12" style="color: #205072"><hr></div>
+
+                                                    <div class="col-md-2" style="color: #AE4C4C">الطبيب المساعد</div>
+                                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                                        <input class="form-control" type="text" list="doctorsList" name="assistant" maxlength="35" value="{{ operation.assistant }}" required>
+                                                        <datalist id="doctorsList">
+                                                            {% for doctor in doctors %}
+                                                                <option value="{{ doctor.name }}">
+                                                            {% endfor %}
+                                                        </datalist>
+                                                    </div>
+
+                                                    <div class="col-md-2" style="color: #AE4C4C">فني عمليات</div>
+                                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                                        <input class="form-control" type="text" list="nursesList" name="surgicalNurse" maxlength="35" value="{{ operation.surgicalNurse }}" required>
+                                                        <datalist id="nursesList">
+                                                            {% for nurse in nurses %}
+                                                                <option value="{{ nurse.name }}">
+                                                            {% endfor %}
+                                                        </datalist>
+                                                    </div>
+
+                                                    <div class="col-md-12" style="color: #205072"><hr></div>
+
+                                                    <div class="col-md-2" style="color: #AE4C4C">المخدر</div>
+                                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                                        <input class="form-control" type="text" list="doctorsList" name="anesthetist" maxlength="35" value="{{ operation.anesthetist }}" required>
+                                                        <datalist id="doctorsList">
+                                                            {% for doctor in doctors %}
+                                                                <option value="{{ doctor.name }}">
+                                                            {% endfor %}
+                                                        </datalist>
+                                                    </div>
+
+                                                    <div class="col-md-2" style="color: #AE4C4C">نوع التخدير</div>
+                                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                                        <select name="typesNarcosis" class="form-control" required>
+                                                            <option selected="selected" value="{{ operation.typesNarcosis }}">{{ operation.typesNarcosis }}</option>
+                                                            <option value="تخدير عام">تخدير عام</option>
+                                                            <option value="تخدير الناحى">تخدير الناحى</option>
+                                                            <option value="تخدير موضعي">تخدير موضعي</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="col-md-12" style="color: #205072"><hr></div>
+
+                                                    <div class="col-md-2" style="color: #AE4C4C">نوع العمل</div>
+                                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                                        <select name="typesOperation" class="form-control" required>
+                                                            <option selected="selected" value="{{ operation.typesOperation }}">{{ operation.typesOperation }}</option>
+                                                            <option value="اسعافي">اسعافي</option>
+                                                            <option value="باردة">باردة</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="col-md-2" style="color: #AE4C4C">القاعة</div>
+                                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                                        <select name="roomNo" class="form-control" required>
+                                                            <option selected="selected" value="{{ operation.roomNo }}">{{ operation.roomNo }}</option>
+                                                            <option value="الأولى">الأولى</option>
+                                                            <option value="الثانية">الثانية</option>
+                                                            <option value="الثالثة">الثالثة</option>
+                                                            <option value="الرابعة">الرابعة</option>
+                                                            <option value="الخامسة">الخامسة</option>
+                                                            <option value="السادسة">السادسة</option>
+                                                            <option value="السابعة">السابعة</option>
+                                                            <option value="الثامنة">الثامنة</option>
+                                                            <option value="التاسعة">التاسعة</option>
+                                                            <option value="العاشرة">العاشرة</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="col-md-12" style="color: #205072"><hr></div>
+
+                                                    <div class="col-md-2" style="color: #AE4C4C">التاريخ</div>
+                                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                                        <input type="datetime-local" name="begin" class="form-control" value="{{ operation.begin }}" required>
+                                                    </div>
+
+                                                    <div class="col-md-2" style="color: #AE4C4C">مدة</div>
+                                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                                        <input type="text" name="timeOfOperation" class="form-control" value="{{ operation.timeOfOperation }}" required oninput="setCustomValidity(''); value=value.replace(/[^\d]/g,'')">
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="modal-footer" style="text-align: center">
+                                                <button type="submit" class="btn btn-info">Submit</button>
+                                            </div>
+
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        {% endfor %}
+
+                    {% endif %}
+
+                </table>
+
+            </div>
+
+            <!--Add operation record-->
+            <div class="modal fade" id="addRecord" tabindex="-1" role="dialog" aria-labelledby="addRecordModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="addRecordModalLabel" style="font-family: Calibri; font-size: 20px">سجل العمليات</h4>
+                        </div>
+
+                        <form action="{% url 'addOperationRecord' patient_id %}" method="post">
+                            {% csrf_token %}
+
+                            <div class="modal-body">
+                                <div class="row" style="font-family: Calibri; font-size: 18px">
+
+                                    <div class="col-md-2" style="color: #AE4C4C">العمل الجراحي</div>
+                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                        <input type="text" name="name" list="nameList" class="form-control" maxlength="35" required>
+                                        <datalist id="nameList">
+                                            {% for operation in operationNames %}
+                                                <option value="{{ operation.name }}">
+                                            {% endfor %}
+                                        </datalist>
+                                    </div>
+
+                                    <div class="col-md-2" style="color: #AE4C4C">الطبيب الجراح</div>
+                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                        <input class="form-control" type="text" list="doctorsList" name="doctor" maxlength="35" required>
+                                        <datalist id="doctorsList">
+                                            {% for doctor in doctors %}
+                                                <option value="{{ doctor.name }}">
+                                            {% endfor %}
+                                        </datalist>
+                                    </div>
+
+                                    <div class="col-md-12" style="color: #205072"><hr></div>
+
+                                    <div class="col-md-2" style="color: #AE4C4C">الطبيب المساعد</div>
+                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                        <input class="form-control" type="text" list="doctorsList" name="assistant" maxlength="35" required>
+                                        <datalist id="doctorsList">
+                                            {% for doctor in doctors %}
+                                                <option value="{{ doctor.name }}">
+                                            {% endfor %}
+                                        </datalist>
+                                    </div>
+
+                                    <div class="col-md-2" style="color: #AE4C4C">فني عمليات</div>
+                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                        <input class="form-control" type="text" list="nursesList" name="surgicalNurse" maxlength="35" required>
+                                        <datalist id="nursesList">
+                                            {% for nurse in nurses %}
+                                                <option value="{{ nurse.name }}">
+                                            {% endfor %}
+                                        </datalist>
+                                    </div>
+
+                                    <div class="col-md-12" style="color: #205072"><hr></div>
+
+                                    <div class="col-md-2" style="color: #AE4C4C">المخدر</div>
+                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                        <input class="form-control" type="text" list="doctorsList" name="anesthetist" maxlength="35" required>
+                                        <datalist id="doctorsList">
+                                            {% for doctor in doctors %}
+                                                <option value="{{ doctor.name }}">
+                                            {% endfor %}
+                                        </datalist>
+                                    </div>
+
+                                    <div class="col-md-2" style="color: #AE4C4C">نوع التخدير</div>
+                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                        <select name="typesNarcosis" class="form-control" required>
+                                            <option></option>
+                                            <option value="تخدير عام">تخدير عام</option>
+                                            <option value="تخدير الناحى">تخدير الناحى</option>
+                                            <option value="تخدير موضعي">تخدير موضعي</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-12" style="color: #205072"><hr></div>
+
+                                    <div class="col-md-2" style="color: #AE4C4C">نوع العمل</div>
+                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                        <select name="typesOperation" class="form-control" required>
+                                            <option></option>
+                                            <option value="اسعافي">اسعافي</option>
+                                            <option value="باردة">باردة</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-2" style="color: #AE4C4C">القاعة</div>
+                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                        <select name="roomNo" class="form-control" required>
+                                            <option></option>
+                                            <option value="الأولى">الأولى</option>
+                                            <option value="الثانية">الثانية</option>
+                                            <option value="الثالثة">الثالثة</option>
+                                            <option value="الرابعة">الرابعة</option>
+                                            <option value="الخامسة">الخامسة</option>
+                                            <option value="السادسة">السادسة</option>
+                                            <option value="السابعة">السابعة</option>
+                                            <option value="الثامنة">الثامنة</option>
+                                            <option value="التاسعة">التاسعة</option>
+                                            <option value="العاشرة">العاشرة</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-12" style="color: #205072"><hr></div>
+
+                                    <div class="col-md-2" style="color: #AE4C4C">التاريخ</div>
+                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                        <input type="datetime-local" name="begin" class="form-control" required>
+                                    </div>
+
+                                    <div class="col-md-2" style="color: #AE4C4C">مدة</div>
+                                    <div class="col-md-4 col-xs-4 has-info" style="height: 1px;">
+                                        <input type="text" name="timeOfOperation" class="form-control" required oninput="setCustomValidity(''); value=value.replace(/[^\d]/g,'')">
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="modal-footer" style="text-align: center">
+                                <button type="submit" class="btn btn-info">Submit</button>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+        {% endif %}
+
+
+
+    </div>
+
+
+
+
+
+{% endblock home %}
+
+
+
+
+
+

@@ -1,0 +1,189 @@
+{% extends "home/base_hospitalized.html" %}
+
+{% block home %}
+
+    {{ block.super }}
+
+
+<script type="text/javascript" src="/static/js/jquery-1.8.3.min.js"></script>
+{#<script type="text/javascript" src="/static/js/highcharts.js"></script>#}
+<script type="text/javascript" src="/static/js/exporting.js"></script>
+
+<script>
+
+     $(function () {
+
+        {% if result %}
+            $('#laboratory').highcharts({
+
+            chart: {
+
+                type: 'line'
+            },
+
+            title: {
+                text: '{{ big_item }} : {{ small_item }}'
+            },
+
+            toolbox: {
+                show : true,
+                feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                magicType : {show: true, type: ['line', 'bar']},
+                restore : {show: true},
+                saveAsImage : {show: true}
+                 }
+            },
+
+            calculable : true,
+
+
+
+            ubtitle: {
+
+                {#text: 'Source: WorldClimate.com'#}
+            },
+
+            xAxis: {
+
+                   type: "datetime",
+                   categories: {{ date }},
+
+                   labels: {
+                       enable: true,
+                       rotation: 90, //旋转,效果就是影响标签的显示方向
+
+                       formatter: function () {
+                           return Highcharts.dateFormat('%d-%H:%M', this.value);
+                           }
+                       },
+                   //刻度的宽度
+                   lineColor: '#990000',
+                   //自定义刻度颜色
+                   lineWidth: 1,
+                   //自定义x轴宽度
+                   gridLineWidth: 1
+                   //默认是0，即在图上没有纵轴间隔线
+
+               },
+
+
+            yAxis: {
+
+                title: {
+
+                    text: '{{ big_item }} : {{ small_item }}'
+                }
+
+            },
+
+            tooltip: {  //提示框
+
+                enabled: false,
+
+                formatter: function() {
+
+                    resualt = 'Title' + ': ' + this.series.name + '<br>' + 'Pulse: ' + this.y + '<br>' + 'Time: ' + this.x
+
+                    return resualt
+                }
+            },
+
+            plotOptions: {
+
+                line: {
+
+                    dataLabels: {
+
+                        enabled: true
+                    },
+
+                    enableMouseTracking: true
+                }
+            },
+
+            series: [
+                {
+                    type: 'line',
+                    color: '#8B0000',
+                    name: '{{ big_item }} : {{ small_item }}',
+                    data: {{ result }},
+
+                }
+            ]
+
+        });
+        {% endif %}
+
+
+    });
+
+</script>
+
+
+    <style type="text/css">
+
+        td{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        th{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+
+        }
+    </style>
+
+
+    <div class="card-body">
+        <div class="table-responsive">
+
+            {% if user.language == 1 %}
+
+                <table class="table table-bordered">
+                    <tr>
+                        <th class="forthBigMenu">اسم المريض</th>
+                        <td class="forthNormalText">{{patient.basicInfo.name}}</td>
+                        <th class="forthBigMenu">العمر</th>
+                        <td class="forthNormalText">{{patient.basicInfo.age}}</td>
+                        <th class="forthBigMenu">زمرة</th>
+                        <td class="forthNormalText">{{patient.basicInfo.bloodGroup}}</td>
+
+                    </tr>
+
+                </table>
+                <br>
+
+            {% elif user.language == 2 %}
+
+                <table class="table" border="1">
+                    <tr>
+                        <th style="color:blue; width: 175px; text-align: center">Name</th>
+                        <td style="width: 175px; text-align: center">{{patient.basicInfo.name}}</td>
+                        <th style="color:blue; width: 175px; text-align: center">Age</th>
+                        <td style="width: 175px; text-align: center">{{patient.basicInfo.age}}</td>
+                        <th style="color:blue; width: 175px">Blood Group</th>
+                        <td style="width: 175px">{{patient.basicInfo.bloodGroup}}</td>
+                    </tr>
+                </table>
+                <br>
+
+
+            {% endif %}
+
+
+            <table class="table" style="width:100%; table-layout:fixed;">
+                <tr>
+                    <td colspan="2" id="laboratory"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+
+
+{% endblock home %}

@@ -1,0 +1,322 @@
+{% extends "home/base_polyclinic.html" %}
+
+{% block home %}
+
+    <script src="/static/js/jquery-1.12.4.min.js"></script>
+
+    <script type="text/javascript">
+        function call() {
+            $.ajax({
+                'url': '/calling/',
+                'type': 'get',
+                {#headers:{'X-CSRFToken': csrftoken},#}
+                'data': {'id': {{ patient_id }} },
+                'dataType': 'json',
+            })
+
+
+            lightyear.notify('Successful Call ! ', 'info', 1000);
+            lightyear.loading('show');
+
+
+            // 假设ajax提交操作
+            setTimeout(function() {
+
+                lightyear.loading('hide');
+
+                document.antibiotics.submit();
+
+             },   1e3)
+        }
+
+    </script>
+
+
+    {% if user.authorityDepartment.name == 'Polyclinic' %}
+
+    {% else %}
+        <script type="text/javascript">
+
+            window.setTimeout(function () {
+                {#location.href = "{% url 'home' %}";#}
+                location.href = "{{ request.get_full_path }}";
+            }, 30000);
+
+        </script>
+    {% endif %}
+
+
+    <script type="text/javascript" language="JavaScript">
+        function checkXRay()
+        {
+             alert("The XRay checklist was sent successfully !")
+        }
+    </script>
+
+
+    <script type="text/javascript" language="JavaScript">
+        function finish1()
+        {
+             alert("The patient's examination was terminated !")
+        }
+    </script>
+
+
+    <script type="text/javascript" language="JavaScript">
+        function absence1()
+        {
+             alert("Request completed !")
+        }
+    </script>
+
+
+    <!-- XRay图片宽度调整 -->
+    <style>
+
+        {#img{width: 100%;border-radius: 3px;transition: all 2s;}#}
+        {#img:hover{transform: scale(1.2);}#}
+
+    </style>
+
+
+    <style type="text/css">
+
+        td{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        th{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+    </style>
+
+
+    <div class="card-header" style=" font-size: medium">
+        {% if user.position.name == 'Doctor' %}
+            <div class="col-md-8">
+                <p>
+                    <button onclick="call()" class="btn btn-success"><i class="mdi mdi-volume-high"></i> Call</button>
+
+                    {% if patient.condition == 6 %}
+                        <a href="/finishTest/{{ patient_id }}" onclick="finish()" class="btn btn-secondary"><i class="mdi mdi-check"></i> Finish</a>
+                    {% else %}
+                        <a href="/finishTest/{{ patient_id }}" onclick="finish()" class="btn btn-info"><i class="mdi mdi-check"></i> Finish</a>
+                    {% endif %}
+
+                    {% if patient.condition == 7 %}
+                        <a href="/absence/{{ patient_id }}" onclick="absence()" class="btn btn-secondary"><i class="mdi mdi-close"></i> Absence</a>
+                    {% else %}
+                        <a href="/absence/{{ patient_id }}" onclick="absence()" class="btn btn-danger"><i class="mdi mdi-close"></i> Absence</a>
+                    {% endif %}
+                </p>
+            </div>
+
+            <div class="col-md-4">
+                <h1 style="text-align: right; color: #AE4C4C">ID : {{ patient.patientID }}</h1>
+            </div>
+        {% else %}
+            <div class="col-md-12">
+                <h1 style="text-align: right; color: #AE4C4C">ID : {{ patient.patientID }}</h1>
+            </div>
+        {% endif %}
+
+    </div>
+
+
+    {% if user.language == 1 %}
+
+        <div class="card-header" align="center">
+            <h2 class="firstBigTitle">معلومات المريض</h2>
+
+        </div>
+
+        <div class="card-body" dir="rtl">
+            <div class="table-responsive">
+
+                <table class="table" style="font-family: Calibri; font-size: 20px">
+                    <tr>
+                        <th class="thirdBigMenu">اسم المريض</th>
+                        <td style="font-family: Calibri; font-size: xx-large; color: dodgerblue">{{ patient.basicInfo.name }}</td>
+                        <th class="thirdBigMenu">العمر</th>
+                        <td style="font-size: xx-large; color: dodgerblue">{{ patient.basicInfo.age }}</td>
+                    </tr>
+
+                    <tr>
+                        <th class="thirdBigMenu">الجنس</th>
+                        <td class="normalText">{{ patient.basicInfo.sex }}</td>
+                        <th class="thirdBigMenu">الحالة العائلية</th>
+                        <td class="normalText">{{ patient.basicInfo.marriage }}</td>
+                    </tr>
+
+                    <tr>
+                        <th class="thirdBigMenu">السكن</th>
+                        <td style="font-family: Calibri; font-size: xx-large; color: dodgerblue">{{ patient.basicInfo.address }}</td>
+                        <th class="thirdBigMenu">رقم هاتف</th>
+                        <td class="normalText">{{ patient.basicInfo.phone }}</td>
+                    </tr>
+
+                    <tr>
+                        <th class="thirdBigMenu">تاريخ القبول</th>
+                        <td class="normalText">{{patient.enterDate}}</td>
+                        <th class="thirdBigMenu">جناح</th>
+                        <td class="normalText">Polyclinic</td>
+                    </tr>
+                    <tr>
+                        <th class="thirdBigMenu">قسم القبول</th>
+                        <td class="normalText">
+                            {% for department in patient.department.all %}
+                                {{ department.arabic_name }}
+                            {% endfor %}
+                        </td>
+                        <th class="thirdBigMenu">العامل</th>
+                        <td class="normalText">{{ patient.operator }}</td>
+                    </tr>
+
+                    <tr>
+                        <th class="thirdBigMenu">تشخبص</th>
+                        <td colspan="2" style="text-align: center">{{ patient.diagnosis }}</td>
+                        <td></td>
+                    </tr>
+
+                    {% if user.authorityDepartment.name == 'Polyclinic' %}
+
+                    {% else %}
+                        <tr>
+                            <form action="/diagnosis/{{ patient_id }}" method="post">
+                                {% csrf_token %}
+                                <th class="thirdBigMenu">تشخبص</th>
+                                <td colspan="2" class="has-info"><input type="text" class="form-control forthNormalText" name="diagnosis" autofocus></td>
+                                <td><input type="submit" class="btn btn-info" value="إرسال"></td>
+                            </form>
+                        </tr>
+                    {% endif %}
+
+                    <tr>
+                        <td colspan="4">
+                            {% if user.authorityDepartment.name == 'Polyclinic' %}
+                                {% if patient.condition >= 5 and patient.condition <= 7 %}
+                                    <a href="/editBasicInfoPolyclinic/{{ patient_id }}"><button class="btn btn-info" style="font-family: Calibri; font-size: 20px" type="submit">تعديل</button ></a>&nbsp;&nbsp;&nbsp;
+                                    {% if patient.arrive %}
+                                        <a href="/notArrived/{{ patient.id }}">
+                                            <input style="font-family: Calibri; font-size: 20px" type="button" class="btn btn-info" value="ياتي"></a>
+                                    {% else %}
+                                        <a href="/arrived/{{ patient.id }}">
+                                            <input style="font-family: Calibri; font-size: 20px" type="button" class="btn btn-danger" value="لم ياتي"></a>
+                                    {% endif %}
+                                {% else %}
+                                    <a href="/reenterPolyclinicPatient/{{ patient_id }}"><button class="btn btn-info" style="font-family: Calibri; font-size: 20px" type="submit">اعادة قبول</button ></a>
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+
+    {% elif user.language == 2 %}
+
+        <div class="card-header" align="center">
+            <h2 class="firstBigTitle"> Polyclinic Basic Information  </h2>
+
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+
+                <table class="table" style="font-family: Calibri; font-size: 20px">
+                    <tr>
+                        <th class="thirdBigMenu">Name: </th>
+                        <td style="font-family: Calibri; font-size: xx-large; color: dodgerblue">{{ patient.basicInfo.name }}</td>
+                        <th class="thirdBigMenu">Age</th>
+                        <td style="font-size: xx-large; color: dodgerblue">{{ patient.basicInfo.age }}</td>
+                    </tr>
+
+                    <tr>
+                        <th class="thirdBigMenu">Gender</th>
+                        <td class="normalText">{{ patient.basicInfo.sex }}</td>
+                        <th class="thirdBigMenu">Marriage</th>
+                        <td class="normalText">{{ patient.basicInfo.marriage }}</td>
+                    </tr>
+
+                    <tr>
+                        <th class="thirdBigMenu">Address</th>
+                        <td style="font-family: Calibri; font-size: xx-large; color: dodgerblue">{{ patient.basicInfo.address }}</td>
+                        <th class="thirdBigMenu">Phone</th>
+                        <td class="normalText">{{ patient.basicInfo.phone }}</td>
+                    </tr>
+
+                    <tr>
+                        <th class="thirdBigMenu">Date Of Enter</th>
+                        <td class="normalText">{{patient.enterDate}}</td>
+                        <th class="thirdBigMenu">Ward</th>
+                        <td class="normalText">Polyclinic</td>
+                    </tr>
+                    <tr>
+                        <th class="thirdBigMenu">Spaciality</th>
+                        <td class="normalText">
+                            {% for department in patient.department.all %}
+                                {{ department.name }}
+                            {% endfor %}
+                        </td>
+                        <th class="thirdBigMenu">Operator</th>
+                        <td class="normalText">{{ patient.operator }}</td>
+                    </tr>
+
+                    <tr>
+                        <th class="thirdBigMenu">Diagnosis</th>
+                        <td colspan="3" style="text-align: left">{{ patient.diagnosis }}</td>
+                    </tr>
+
+                    {% if user.authorityDepartment.name == 'Polyclinic' %}
+
+                    {% else %}
+                        <tr>
+                            <form action="/diagnosis/{{ patient_id }}" method="post">
+                                {% csrf_token %}
+                                <th class="thirdBigMenu">Diagnosis</th>
+                                <td colspan="2" class="has-info"><input type="text" class="form-control" name="diagnosis" autofocus></td>
+                                <td><input type="submit" class="btn btn-info" value="Submit"></td>
+                            </form>
+                        </tr>
+                    {% endif %}
+
+                    <tr>
+                        <td colspan="4">
+                            {% if user.authorityDepartment.name == 'Polyclinic' %}
+                                {% if patient.condition >= 5 and patient.condition <= 7 %}
+                                    <a href="/editBasicInfoPolyclinic/{{ patient_id }}"><button class="btn btn-info" style="font-family: Calibri; font-size: 20px" type="submit">Edit</button ></a>&nbsp;&nbsp;&nbsp;
+                                    {% if patient.arrive %}
+                                        <a href="/notArrived/{{ patient.id }}">
+                                            <input style="font-family: Calibri; font-size: 20px" type="button" class="btn btn-info" value="Arrive"></a>
+                                    {% else %}
+                                        <a href="/arrived/{{ patient.id }}">
+                                            <input style="font-family: Calibri; font-size: 20px" type="button" class="btn btn-danger" value="Did'nt Arrive"></a>
+                                    {% endif %}
+                                {% else %}
+                                    <a href="/reenterPolyclinicPatient/{{ patient_id }}"><button class="btn btn-info" style="font-family: Calibri; font-size: 20px" type="submit">Re-admission</button ></a>
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+
+    {% endif %}
+
+
+
+
+
+
+{% endblock home %}
+
+
+

@@ -1,0 +1,301 @@
+{% extends "home/base_polyclinic.html" %}
+
+    {% block home %}
+
+    {% if user.authorityDepartment.name == 'Polyclinic' %}
+
+    {% else %}
+        <script type="text/javascript">
+
+            window.setTimeout(function () {
+                {#location.href = "{% url 'home' %}";#}
+                location.href = "{{ request.get_full_path }}";
+            }, 20000);
+
+        </script>
+    {% endif %}
+
+
+     <script type="text/javascript" language="JavaScript">
+            function sent()
+            {
+                 alert("Data sent successfully !")
+            }
+     </script>
+
+
+    <style type="text/css">
+
+        td{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        th{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+    </style>
+
+
+    <br>
+
+    <div class="row g-3" style="text-align: center">
+
+        <div class="col-md-1"></div>
+
+        <div class="col-md-10">
+          <label for="inputName5" class="form-label" style="font-family: Calibri;font-size: xx-large;">
+
+             ﴾ بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّح۪يم &nbsp;&nbsp;&nbsp; ﴿ وَإِذَا مَرِضۡتُ فَهُوَ يَشۡفِينِ
+
+          </label>
+        </div>
+
+        <div class="col-md-1"></div>
+
+    </div>
+
+
+    {% if user.language == 1 %}
+
+        {% if user.position.name == 'Doctor' %}
+
+            <br><br>
+            <h1 class="card-title firstBigTitle" style="text-align: center; font-family: Calibri;font-size: 35px">مريض اليوم</h1>
+
+
+            <table class="table" align="center">
+                <thead>
+                    <tr class="forthBigMenu">
+                        <th>اسم المريض</th>
+                        <th>العمر</th>
+                        <th>الجنس</th>
+                        <th>رقم المريض</th>
+                        <th>تشخبص</th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for patient in waitPatients %}
+                        <tr class="forthNormalText">
+                            <th><a href="/basicInfoPolyclinic/{{ patient.id }}">{{ patient.basicInfo.name }}</a></th>
+                            <td>{{ patient.basicInfo.age }}</td>
+                            <td>{{ patient.basicInfo.sex }}</td>
+                            <td>{{ patient.patientID }}</td>
+                            <td>{{ patient.diagnosis }}</td>
+
+
+                        </tr>
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+
+        {% elif user.authorityDepartment.name == 'Polyclinic' %}
+
+            <!-- 下载电子表格 -->
+
+            <br><br>
+            <h2 class="card-title firstBigTitle" style="text-align: center;">إحصائيات</h2>
+            <br>
+
+            <div class="card-body">
+
+                <form action="{% url 'excelPatientInfo' %}" method="post">
+                    {% csrf_token %}
+
+                    <table class="table table-hover">
+
+                        <tr>
+                            <th class="thirdBigMenu">احصائية</th>
+                            <th class="thirdBigMenu">تاريخ البدء</th>
+                            <th class="thirdBigMenu">تاريخ الانتهاء</th>
+                            <th rowspan="2"><input type="submit" class="btn btn-info forthNormalText" value="اكسل" onclick="excel()"></th>
+                        </tr>
+
+                        <tr>
+                            <td class="has-info"><label>
+                                <select name="types" class="form-control normalText" required>
+                                <option value=""></option>
+                                <option value="Hospitalization">قبول المشفى</option>
+                                <option value="Operation">عملية</option>
+                                <option value="Polyclinic">عيادة</option>
+                                <option value="Emergency">اسعاف</option>
+                                <option value="Discharge">خروج</option>
+                                <option value="AllPatients">كل المرضى</option>
+                                <option value="Laboratory">المخبر</option>
+                            </select>
+                            </label></td>
+
+                            <td class="has-info"><input type="datetime-local" class="form-control" name="start" required></td>
+                            <td class="has-info"><input type="datetime-local" class="form-control" name="end" required></td>
+                        </tr>
+
+
+                    </table>
+                </form>
+
+            </div>
+
+
+            <hr class="dropdown-divider">
+
+
+            <!-- 上传电子表格 -->
+
+            <h2 class="card-title firstBigTitle" style="text-align: center;">ملف اكسل</h2>
+
+
+            <form class="row g-3" action="{% url 'uploadPolyclinicPatient' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="col-md-1"></div>
+
+                <div class="col-md-8">
+                  <input type="file" class="form-control myFont" name="file" required>
+                </div>
+
+                <div class="col-md-2">
+
+                    <input type="submit" class="form-control btn btn-info forthNormalText" onclick="sent()" value="إرسال">
+                </div>
+
+                <div class="col-md-1"></div>
+
+            </form>
+
+
+        {% endif %}
+
+    {% elif user.language == 2 %}
+
+        {% if user.position.name == 'Doctor' %}
+
+            <br><br>
+            <h1 class="card-title firstBigTitle" style="text-align: center; font-family: Calibri;font-size: 35px">Today's Patient</h1>
+
+
+            <table class="table" align="center">
+                <thead>
+                    <tr class="forthBigMenu">
+                        <th>Name</th>
+                        <th>Age</th>
+                        <th>Gender</th>
+                        <th>Patient ID</th>
+                        <th>Diagnosis</th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for patient in waitPatients %}
+                        <tr class="forthNormalText">
+                            <th><a href="/basicInfoPolyclinic/{{ patient.id }}">{{ patient.basicInfo.name }}</a></th>
+                            <td>{{ patient.basicInfo.age }}</td>
+                            <td>{{ patient.basicInfo.sex }}</td>
+                            <td>{{ patient.patientID }}</td>
+                            <td>{{ patient.diagnosis }}</td>
+
+
+                        </tr>
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+
+        {% elif user.authorityDepartment.name == 'Polyclinic' %}
+
+
+            <!-- 下载电子表格 -->
+
+            <br><br>
+            <h2 class="card-title firstBigTitle" style="text-align: center;">Statistics</h2>
+            <br>
+
+            <div class="card-body">
+
+                <table class="table table-hover">
+                    <form action="{% url 'excelPatientInfo' %}" method="post">
+                        {% csrf_token %}
+                        <tr>
+                            <th class="thirdBigMenu">Type</th>
+                            <th class="thirdBigMenu">Start Date</th>
+                            <th class="thirdBigMenu">End Date</th>
+                            <th rowspan="2"><input type="submit" class="btn btn-info" value="Excel" onclick="excel()"></th>
+                        </tr>
+
+                        <tr>
+                            <td class="has-info"><label>
+                                <select name="types" class="form-control normalText" required>
+                                    <option value=""></option>
+                                    <option value="Hospitalization">Hospitalization</option>
+                                    <option value="Operation">Operation</option>
+                                    <option value="Polyclinic">Polyclinic</option>
+                                    <option value="Emergency">Emergency</option>
+                                    <option value="Discharge">Discharge</option>
+                                    <option value="AllPatients">All Patients</option>
+                                    <option value="Laboratory">Laboratory</option>
+                                </select>
+                            </label></td>
+
+                            <td class="has-info"><input type="datetime-local" class="form-control" name="start" required></td>
+                            <td class="has-info"><input type="datetime-local" class="form-control" name="end" required></td>
+                        </tr>
+
+                    </form>
+                </table>
+
+            </div>
+
+
+            <hr class="dropdown-divider">
+
+
+            <!-- 上传电子表格 -->
+
+            <h2 class="card-title firstBigTitle" style="text-align: center;">Import Excel</h2>
+
+
+            <form class="row g-3" action="{% url 'uploadPolyclinicPatient' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="col-md-1"></div>
+
+                <div class="col-md-8">
+                  <input type="file" class="form-control myFont" name="file" required>
+                </div>
+
+                <div class="col-md-2">
+
+                    <input type="submit" class="form-control btn btn-info" onclick="sent()" value="Submit">
+                </div>
+
+                <div class="col-md-1"></div>
+
+            </form>
+
+
+        {% endif %}
+
+    {% endif %}
+
+
+
+    <br><br><br>
+
+
+
+{% endblock home %}
+
+

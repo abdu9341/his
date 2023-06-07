@@ -1,0 +1,132 @@
+{% extends "home/base_admin.html" %}
+
+{% block home %}
+
+
+    <style type="text/css">
+
+        td{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        th{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+
+        }
+    </style>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover" border="0">
+                <tr>
+                    <td class="firstBigTitle">
+                         ﴾ بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّح۪يم &nbsp;&nbsp;&nbsp; ﴿ وَإِذَا مَرِضۡتُ فَهُوَ يَشۡفِينِ
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+    </div>
+
+
+    <!--统计查询-->
+    {% if user.language == 1 %}
+
+        <br><br>
+        <h2 class="card-title firstBigTitle" style="text-align: center;">إحصائيات</h2>
+        <br>
+
+        <div class="card-body">
+
+            <form action="{% url 'excelPatientInfo' %}" method="post">
+                {% csrf_token %}
+
+                <table class="table table-hover">
+
+                    <tr>
+                        <th class="thirdBigMenu">احصائية</th>
+                        <th class="thirdBigMenu">تاريخ البدء</th>
+                        <th class="thirdBigMenu">تاريخ الانتهاء</th>
+                        <th rowspan="2"><input type="submit" class="btn btn-info forthNormalText" value="اكسل" onclick="excel()"></th>
+                    </tr>
+
+                    <tr>
+                        <td class="has-info"><label>
+                            <select name="types" class="form-control normalText" required>
+                            <option value=""></option>
+                            <option value="Hospitalization">قبول المشفى</option>
+                            <option value="Operation">عملية</option>
+                            <option value="Polyclinic">عيادة</option>
+                            <option value="Emergency">اسعاف</option>
+                            <option value="Discharge">خروج</option>
+                            <option value="AllPatients">كل المرضى</option>
+                            <option value="Laboratory">المخبر</option>
+                        </select>
+                        </label></td>
+
+                        <td class="has-info"><input type="datetime-local" class="form-control" name="start" required></td>
+                        <td class="has-info"><input type="datetime-local" class="form-control" name="end" required></td>
+                    </tr>
+
+
+                </table>
+
+            </form>
+
+        </div>
+
+    {% elif user.language == 2 %}
+
+        <br><br>
+        <h2 class="card-title firstBigTitle" style="text-align: center;">Statistics</h2>
+        <br>
+
+        <div class="card-body">
+            <form action="{% url 'excelPatientInfo' %}" method="post">
+                {% csrf_token %}
+
+                <table class="table table-hover">
+
+                    <tr>
+                        <th class="thirdBigMenu">Type</th>
+                        <th class="thirdBigMenu">Start Date</th>
+                        <th class="thirdBigMenu">End Date</th>
+                        <th rowspan="2"><input type="submit" class="btn btn-info" value="Excel" onclick="excel()"></th>
+                    </tr>
+
+                    <tr>
+                        <td class="has-info"><label>
+                            <select name="types" class="form-control normalText" required>
+                                <option value=""></option>
+                                <option value="Hospitalization">Hospitalization</option>
+                                <option value="Operation">Operation</option>
+                                <option value="Polyclinic">Polyclinic</option>
+                                <option value="Emergency">Emergency</option>
+                                <option value="Discharge">Discharge</option>
+                                <option value="AllPatients">All Patients</option>
+                                <option value="Laboratory">Laboratory</option>
+                            </select>
+                        </label></td>
+
+                        <td class="has-info"><input type="datetime-local" class="form-control" name="start" required></td>
+                        <td class="has-info"><input type="datetime-local" class="form-control" name="end" required></td>
+                    </tr>
+
+                </table>
+            </form>
+
+        </div>
+
+
+        <hr class="dropdown-divider">
+
+    {% endif %}
+
+
+{% endblock home %}
+
+

@@ -1,0 +1,252 @@
+{% extends "home/base_emergency.html" %}
+
+    {% block home %}
+
+        {{ block.super }}
+
+    <style type="text/css">
+
+        td{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        th{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+
+        }
+
+    </style>
+
+    <div class="card-body">
+
+        <div class="table-responsive has-success">
+
+
+            {% if user.language == 1 %}
+
+                <table class="table table-bordered">
+                    <tr>
+                        <th class="forthBigMenu">اسم المريض</th>
+                        <td class="forthNormalText">{{ patient.basicInfo.name}}</td>
+                        <th class="forthBigMenu">العمر</th>
+                        <td class="forthNormalText">{{ patient.basicInfo.age}}</td>
+                        <th class="forthBigMenu">الجنس</th>
+                        <td class="forthNormalText">{{ patient.basicInfo.sex}}</td>
+
+                    </tr>
+
+                </table>
+
+                <br>
+                <table class="table" >
+                    <form action="" method="POST">
+                        {% csrf_token %}
+
+                            <tr>
+                                <th class="thirdBigMenu">جناح</th>
+                                <td class="normalText">{{patient.sickroom.arabic_name}}</td>
+
+                                <th class="thirdBigMenu">تحويل جناح</th>
+                                <td class="has-info">
+                                    <select name="sickroom" class="form-control normalText" required>
+                                        <option></option>
+                                        {% for ward in wards %}
+                                            {% if ward.name == patient.sickroom.name %}
+                                            {% else %}
+                                                <option value="{{ ward.id }}">{{ ward.arabic_name }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+
+                                    </select>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th class="thirdBigMenu">قسم القبول</th>
+                                <th colspan="3" class="forthNormalText" style="text-align: left">
+                                    {% for department in patient.department.all %}
+                                        {{ department.arabic_name }} ,&nbsp;&nbsp;&nbsp;
+                                    {% endfor %}
+                                </th>
+                            </tr>
+
+{#                            <tr>#}
+{#                                <td colspan="4" class="normalText" style="text-align: right">#}
+{#                                    <div class="col-md-1"></div>#}
+{#                                    {% for department in departments %}#}
+{#                                        {% if forloop.counter <= 5 %}#}
+{#                                             <div class="col-md-2 basicInfoFont">#}
+{#                                                 {{ department.arabic_name }}#}
+{#                                                 <label for="radio">#}
+{#                                                    <input type="checkbox" name="department" value="{{ department.id }}">#}
+{#                                                 </label>#}
+{#                                             </div>#}
+{##}
+{#                                        {% endif %}#}
+{#                                    {% endfor %}#}
+{#                                    <div class="col-md-1"></div>#}
+{#                                </td>#}
+{#                            </tr>#}
+{##}
+{#                            <tr>#}
+{#                                <td colspan="4" class="normalText" style="text-align: right">#}
+{#                                    <div class="col-md-1"></div>#}
+{#                                    {% for department in departments %}#}
+{#                                        {% if forloop.counter >= 6 and forloop.counter <= 10 %}#}
+{#                                             <div class="col-md-2 basicInfoFont">#}
+{#                                                 {{ department.arabic_name }}#}
+{#                                                 <label for="radio">#}
+{#                                                    <input type="checkbox" name="department" value="{{ department.id }}">#}
+{#                                                 </label>#}
+{#                                             </div>#}
+{##}
+{#                                        {% endif %}#}
+{#                                    {% endfor %}#}
+{#                                    <div class="col-md-1"></div>#}
+{#                                </td>#}
+{#                            </tr>#}
+{##}
+{#                            <tr>#}
+{#                                <td colspan="4" class="normalText" style="text-align: right">#}
+{#                                    <div class="col-md-1"></div>#}
+{#                                    {% for department in departments %}#}
+{#                                        {% if forloop.counter >= 11 %}#}
+{#                                             <div class="col-md-2 basicInfoFont">#}
+{#                                                 {{ department.arabic_name }}#}
+{#                                                 <label for="radio">#}
+{#                                                    <input type="checkbox" name="department" value="{{ department.id }}">#}
+{#                                                 </label>#}
+{#                                             </div>#}
+{##}
+{#                                        {% endif %}#}
+{#                                    {% endfor %}#}
+{#                                    <div class="col-md-1"></div>#}
+{#                                </td>#}
+{#                            </tr>#}
+
+
+                            <tr>
+                                <td colspan="4"><input type="submit" class="btn btn-info forthNormalText" value="تحويل"></td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="4" style="color: blue; font-size: large">{{ message }}</td>
+                            </tr>
+
+                        </form>
+                    </table>
+
+            {% elif user.language == 2 %}
+
+                <table class="table table-bordered">
+                    <tr>
+                        <th class="forthBigMenu">Name</th>
+                        <td class="forthNormalText">{{patient.basicInfo.name}}</td>
+                        <th class="forthBigMenu">Age</th>
+                        <td class="forthNormalText">{{patient.basicInfo.age}}</td>
+                        <th class="forthBigMenu">Blood Group</th>
+                        <td class="forthNormalText">{{patient.basicInfo.bloodGroup}}</td>
+
+                    </tr>
+
+                </table>
+
+                <br>
+                <table class="table" >
+                    <form action="" method="POST">
+                        {% csrf_token %}
+
+                            <tr>
+                                <th class="thirdBigMenu">Ward</th>
+                                <td class="normalText">{{patient.sickroom}}</td>
+
+                                <th class="thirdBigMenu">Transfer Ward</th>
+                                <td>
+                                    <select name="sickroom" class="form-control normalText" required>
+                                        <option></option>
+                                        {% for ward in wards %}
+                                            {% if ward.name == patient.sickroom.name %}
+                                            {% else %}
+                                                <option value="{{ ward.id }}">{{ ward.name }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+
+                                    </select>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th class="thirdBigMenu">Department</th>
+                                <th colspan="3" class="normalText" style="text-align: left">
+                                    {% for deparmtnet in departmentObj %}
+                                        {{ deparmtnet.department.arabic_name }} &nbsp;&nbsp;&nbsp;
+                                    {% endfor %}
+                                </th>
+                            </tr>
+
+                            <tr>
+                                <td colspan="4" class="normalText" style="text-align: right">
+                                    <div class="col-md-1"></div>
+                                    {% for department in departments %}
+                                        {% if department.name == 'Surgery' or department.name == 'Orthopedic' or department.name == 'Neurosurgery' or department.name == 'Vascular Surgery' or department.name == 'Internal Cardiology' %}
+                                             <div class="col-md-2 basicInfoFont">
+                                                 {{ department.arabic_name }}
+                                                 <label for="radio">
+                                                    <input type="checkbox" name="department" value="{{ department.id }}">
+                                                 </label>
+                                             </div>
+
+                                        {% endif %}
+                                    {% endfor %}
+                                    <div class="col-md-1"></div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="4" class="normalText" style="text-align: right">
+                                    <div class="col-md-1"></div>
+                                    {% for department in departments %}
+                                        {% if department.name == 'Urology' or department.name == 'ICU' or department.name == 'Thoracic Surgery' or department.name == 'Internal Surgery' or department.name == 'Internal Thoracic' %}
+
+                                            <div class="col-md-2">
+                                                {{ department.arabic_name }}
+                                                <label for="radio">
+                                                    <input type="checkbox" name="department" value="{{ department.id }}">
+                                                </label>
+                                            </div>
+
+                                        {% endif %}
+                                    {% endfor %}
+                                    <div class="col-md-1"></div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="4"><input type="submit" class="btn btn-info" value="Transfer"></td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="4" style="color: blue; font-size: large">{{ message }}</td>
+                            </tr>
+
+                        </form>
+                    </table>
+
+            {% endif %}
+
+
+
+        </div>
+
+    </div>
+
+
+
+{% endblock home %}
+
+
+

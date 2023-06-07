@@ -1,0 +1,146 @@
+{% extends "home/base_laboratory.html" %}
+
+{% block home %}
+
+    <style>
+
+        td{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        th{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+
+        }
+
+    </style>
+
+
+    {% if user.language == 1 %}
+
+        <div class="card-header">
+            <h2 class="firstBigTitle" >مرضى اليوم</h2>
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+
+                <table class="table" align="center">
+                    <thead >
+
+                        <tr class="forthBigMenu">
+                            <th>#</th>
+                            <th>اسم المريض</th>
+                            <th>العمر</th>
+                            <th>رقم المريض</th>
+                            <th>جناح</th>
+                            <th colspan="2">عمل</th>
+                        </tr>
+                    </thead>
+
+                    {% for patient in patientsOfToday %}
+
+                        <tr class="forthNormalText">
+                            <th>{{ forloop.counter }}</th>
+
+                            {% if patient.haveLaboratoryTest == 2 %}
+                                <th style="color: brown">{{ patient.basicInfo.name }} <i class="mdi mdi-check-circle" style="color: #205072"></i></th>
+                            {% else %}
+                                <th>{{ patient.basicInfo.name }}</th>
+                            {% endif %}
+
+                            <td>{{ patient.basicInfo.age}}</td>
+                            <td>{{ patient.patientID }}</td>
+                            <td>{{ patient.sickroom }}</td>
+
+                            <td>
+                                <a href="{% url 'results' patient.id patient.patientID %}" title="تحقيق" data-toggle="tooltip" data-placement="left">
+                                    <i class="mdi mdi-comment-text-outline mdi-24px" style="color: #33cccc"></i>
+                                </a>
+                            </td>
+
+                            <td>
+                                <a href="{% url 'laboratory' patient.id patient.patientID %}" title="سجل" data-toggle="tooltip" data-placement="left">
+                                    <i class="mdi mdi-lead-pencil mdi-24px" style="color: #33cccc"></i>
+                                </a>
+                            </td>
+                        </tr>
+
+                    {% endfor %}
+
+                </table>
+
+            </div>
+        </div>
+
+    {% elif user.language == 2 %}
+
+        <div class="card-header">
+            <h2 class="firstBigTitle">Patients Of Today</h2>
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+
+                <table class="table" align="center">
+                    <thead >
+
+                        <tr class="forthBigMenu">
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Patient ID</th>
+                            <th>Enter Date</th>
+                            <th>Ward</th>
+                            <th colspan="2">Action</th>
+                        </tr>
+                    </thead>
+
+                    {% for patient in patientsOfToday %}
+
+                        <tr class="forthNormalText">
+                            <th>{{ forloop.counter }}</th>
+                            {% if patient.haveLaboratoryTest == 2 %}
+                                <th style="color: brown">{{ patient.basicInfo.name }} <i class="mdi mdi-check-circle" style="color: #205072"></i></th>
+                            {% else %}
+                                <th>{{ patient.basicInfo.name }}</th>
+                            {% endif %}
+                            <td>{{ patient.patientID }}</td>
+                            <td>{{ patient.enterDate}}</td>
+                            <td>{{ patient.sickroom }}</td>
+
+                            <td>
+                                <a href="{% url 'results' patient.id patient.patientID %}" title="Check" data-toggle="tooltip" data-placement="left">
+                                    <i class="mdi mdi-comment-text-outline mdi-24px" style="color: #33cccc"></i>
+                                </a>
+                            </td>
+
+                            <td>
+                                <a href="{% url 'laboratory' patient.id patient.patientID %}" title="Write Result" data-toggle="tooltip" data-placement="left">
+                                    <i class="mdi mdi-lead-pencil mdi-24px" style="color: #33cccc"></i>
+                                </a>
+                            </td>
+                        </tr>
+
+                    {% endfor %}
+
+                </table>
+
+            </div>
+        </div>
+
+    {% endif %}
+
+
+
+
+{% endblock home %}
+
+
+
+
+
+

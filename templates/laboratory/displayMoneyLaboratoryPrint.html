@@ -1,0 +1,2318 @@
+{% extends "home/base_laboratory.html" %}
+
+{% block home %}
+
+    <style>
+
+        td{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        th{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+
+        }
+
+    </style>
+
+
+    {% if user.language == 1 %}
+
+        <div class="card-header">
+
+            <a href="#" class="btn btn-dark forthNormalText" onclick="preview(1)">
+                طباعة
+            </a>
+
+        </div>
+
+
+        <div class="card-body">
+            <div class="modal-dialog modal-lg" role="document">
+                <!--startprint1-->
+{#                style="background-image: url(/static/images/logo.png); background-repeat: no-repeat"#}
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="modal-title">
+
+                            <h3 class="firstBigTitle" dir="rtl" style="color: darkblue!important;">مخبر الشفاء الخيري<img src="/static/images/logo_laboratory.jpg" height="150" alt="" align="left"></h3>
+                            <h3 class="firstBigTitle" dir="rtl" style="color: darkblue!important;">للتحاليل الطبية</h3>
+                            <h3 class="thirdBigTitle" dir="rtl" style="color: brown!important;">كيميائية دموية هرمونية مناعية</h3>
+                            <h3 class="thirdBigTitle" dir="rtl" style="color: brown!important;">جرثومية واسمات سرطانية زرع بول وسوائل</h3>
+                        </div>
+                    </div>
+
+                    <div class="modal-body" dir="rtl">
+
+{#                        <div class="col-xs-2 forthNormalText">{{ patient.patientID }}</div>#}
+{#                        <div class="col-xs-2 forthBigMenu">رقم المريض</div>#}
+
+                        <div class="col-xs-2 forthNormalText">{{ patient.enterDate|date:"Y-m-d" }}</div>
+                        <div class="col-xs-2 forthBigMenu">التاريخ :</div>
+
+                        <div class="col-xs-2 forthBigMenu"></div>
+
+                        <div class="col-xs-4 forthNormalText">{{ patient.basicInfo.name }}</div>
+                        <div class="col-xs-2 forthBigMenu">الاسم السيد :</div>
+
+                        <br>
+                        <hr style="border-color: brown;"/>
+
+
+                        {% if cbcObj %}
+                            <div class="col-md-12 firstBigTitle" style="color: brown !important;text-align: center">Hematology</div>
+
+                            <div class="modal-body" dir="ltr">
+                                <div class="col-xs-4 forthNormalText text-blue">Tests<hr style="margin-top: 1px; border-color: darkblue"></div>
+                                <div class="col-xs-2 forthNormalText text-blue" >Results<hr style="margin-top: 1px; border-color: darkblue"></div>
+                                <div class="col-xs-4 forthNormalText text-blue" >Expected Values<hr style="margin-top: 1px; border-color: darkblue"></div>
+                                <div class="col-xs-2 forthNormalText text-blue" style="text-align: center">Units<hr style="margin-top: 1px; border-color: darkblue"></div>
+                            </div>
+
+                            {% if bloodGroup %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Blood Group</div>
+                                    <div class="col-xs-2 resultOfItem">{{ cbc.bloodGroup }}</div>
+                                    <div class="col-xs-4 forthNormalText" >&nbsp;</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">RH</div>
+                                </div>
+                            {% endif %}
+
+                            {% if wbc_cbc %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">WBC</div>
+                                    {% if cbc.wbc >= 3.5 and cbc.wbc <= 10 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.wbc }}</div>
+                                    {% elif cbc.wbc < 3.5 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.wbc }}&nbsp;&nbsp;↓</div>
+                                    {% elif cbc.wbc > 10 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.wbc }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >3.5-10</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">10^3/ul</div>
+                                </div>
+                            {% endif %}
+
+                            {% if lym %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">LYM</div>
+                                    {% if cbc.lym >= 20.0 and cbc.lym <= 50.0 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.lym }}</div>
+                                    {% elif cbc.lym < 20.0 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.lym }}&nbsp;&nbsp;↓</div>
+                                    {% elif cbc.lym > 50.0 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.lym }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >20.0-50.0</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">%</div>
+                                </div>
+                            {% endif %}
+
+                            {% if mid %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">MID</div>
+                                    {% if cbc.mid >= 3 and cbc.mid <= 15 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.mid }}</div>
+                                    {% elif cbc.mid < 3 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.mid }}&nbsp;&nbsp;↓</div>
+                                    {% elif cbc.mid > 15 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.mid }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >3-15</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">%</div>
+                                </div>
+                            {% endif %}
+
+                            {% if gran %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Gran</div>
+                                    {% if cbc.gran >= 40 and cbc.gran <= 75 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.gran }}</div>
+                                    {% elif cbc.gran < 40 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.gran }}&nbsp;&nbsp;↓</div>
+                                    {% elif cbc.gran > 75 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.gran }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >40-75</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">%</div>
+                                </div>
+                            {% endif %}
+
+                            {% if rbc_cbc %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">RBC</div>
+                                    {% if cbc.rbc >= 3.8 and cbc.rbc <= 5.8 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.rbc }}</div>
+                                    {% elif cbc.rbc < 3.8 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.rbc }}&nbsp;&nbsp;↓</div>
+                                    {% elif cbc.rbc > 5.8 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.rbc }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >3.8-5.8</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">10^6/uL</div>
+                                </div>
+                            {% endif %}
+
+                            {% if hemoglobin %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Hemoglobin</div>
+                                    {% if cbc.hemoglobin >= 11.5 and cbc.hemoglobin <= 17.5 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.hemoglobin }}</div>
+                                    {% elif cbc.hemoglobin < 11.5 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.hemoglobin }}&nbsp;&nbsp;↓</div>
+                                    {% elif cbc.hemoglobin > 17.5 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.hemoglobin }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >11.5-17.5</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">g/dl</div>
+                                </div>
+                            {% endif %}
+
+                            {% if hematocrite %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Hematocrite</div>
+                                    {% if cbc.hematocrite >= 35.0 and cbc.hematocrite <= 50.0 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.hematocrite }}</div>
+                                    {% elif cbc.hematocrite < 35.0 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.hematocrite }}&nbsp;&nbsp;↓</div>
+                                    {% elif cbc.hematocrite > 50.0 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.hematocrite }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >35.0-50.0</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">%</div>
+                                </div>
+                            {% endif %}
+
+                            {% if plt %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">PLT</div>
+                                    {% if cbc.plt >= 150 and cbc.plt <= 400 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.plt }}</div>
+                                    {% elif cbc.plt < 150 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.plt }}&nbsp;&nbsp;↓</div>
+                                    {% elif cbc.plt > 400 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.plt }}&nbsp;&nbsp;↑</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >150-400</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">10^3/ul</div>
+                                </div>
+                            {% endif %}
+
+                            {% if mcv %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">MCV</div>
+                                    {% if cbc.mcv >= 82.0 and cbc.mcv <= 100.0 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.mcv }}</div>
+                                    {% elif cbc.mcv < 82.0 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.mcv }}&nbsp;&nbsp;↓</div>
+                                    {% elif cbc.mcv > 100.0 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.mcv }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >82.0-100.0</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">fL</div>
+                                </div>
+                            {% endif %}
+
+                            {% if mch %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">MCH</div>
+                                    {% if cbc.mch >= 27.0 and cbc.mch <= 34.0 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.mch }}</div>
+                                    {% elif cbc.mch < 27.0 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.mch }}&nbsp;&nbsp;↓</div>
+                                    {% elif cbc.mch > 34.0 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.mch }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >27.0-34.0</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">pg</div>
+                                </div>
+                            {% endif %}
+
+                            {% if mchc %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">MCHC</div>
+                                    {% if cbc.mchc >= 31.6 and cbc.mchc <= 35.4 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.mchc }}</div>
+                                    {% elif cbc.mchc < 31.6 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.mchc }}&nbsp;&nbsp;↓</div>
+                                    {% elif cbc.mchc > 35.4 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.mchc }}&nbsp;&nbsp;↑</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >31.6-35.4</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">g/dL</div>
+                                </div>
+                            {% endif %}
+
+                            {% if rdw %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">RDW</div>
+                                    {% if cbc.rdw >= 11 and cbc.rdw <= 16 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.rdw }}</div>
+                                    {% elif cbc.rdw < 11 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.rdw }}&nbsp;&nbsp;↓</div>
+                                    {% elif cbc.rdw > 16 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.rdw }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >11-16</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">%</div>
+                                </div>
+                            {% endif %}
+
+                            {% if esrH1 %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">EsrH1</div>
+                                    {% if cbc.esrH1 < 20 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.esrH1 }}</div>
+                                    {% elif cbc.esrH1 >= 20 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.esrH1 }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >Up To 20</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if esrH2 %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">EsrH2</div>
+                                    {% if cbc.esrH2 < 20 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.esrH2 }}</div>
+                                    {% elif cbc.esrH2 >= 20 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ cbc.esrH2 }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >Up To 20</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            <br>
+                            <hr style="border-color: brown;"/>
+
+                        {% endif %}
+
+
+                        {% if coagulationObj %}
+                            <div class="col-md-12 firstBigTitle"  style="color: brown !important;text-align: center">Coagulation</div>
+
+                            <div class="modal-body" dir="ltr">
+                                <div class="col-xs-4 forthNormalText text-blue">Tests<hr style="margin-top: 1px; border-color: darkblue"/></div>
+                                <div class="col-xs-2 forthNormalText text-blue" >Results<hr style="margin-top: 1px; border-color: darkblue"/></div>
+                                <div class="col-xs-4 forthNormalText text-blue" >Expected Values<hr style="margin-top: 1px; border-color: darkblue"/></div>
+                                <div class="col-xs-2 forthNormalText text-blue" style="text-align: center">Units<hr style="margin-top: 1px; border-color: darkblue"/></div>
+                            </div>
+
+                            {% if pt %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">PT</div>
+                                    {% if coagulation.pt >= 12 and coagulation.pt <= 14 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ coagulation.pt }}</div>
+                                    {% elif coagulation.pt < 12 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ coagulation.pt }}&nbsp;&nbsp;↓</div>
+                                    {% elif coagulation.pt > 14 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ coagulation.pt }}&nbsp;&nbsp;↑</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText">12-14</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">sec</div>
+                                </div>
+                            {% endif %}
+
+                            {% if act %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Activity</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ coagulation.act }}</div>
+                                    <div class="col-xs-4 forthNormalText" >&nbsp;</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">%</div>
+                                </div>
+                            {% endif %}
+
+                            {% if inr %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Inr</div>
+                                    {% if coagulation.inr >= 1 and coagulation.inr <= 1.3 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ coagulation.inr }}</div>
+                                    {% elif coagulation.inr < 1 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ coagulation.inr }}&nbsp;&nbsp;↓</div>
+                                    {% elif coagulation.inr > 1.3 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ coagulation.inr }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >1-1.3</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">Sec</div>
+                                </div>
+                            {% endif %}
+
+                            {% if aptt %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">APPT</div>
+                                    {% if coagulation.aptt >= 26 and coagulation.aptt <= 36 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ coagulation.aptt }}</div>
+                                    {% elif coagulation.aptt < 26 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ coagulation.aptt }}&nbsp;&nbsp;↓</div>
+                                    {% elif coagulation.aptt > 36 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ coagulation.aptt }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >26-36</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">Sec</div>
+                                </div>
+                            {% endif %}
+
+                            {% if bleedTime %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Bleed Time</div>
+                                    {% if coagulation.bleedTime >= 2 and coagulation.bleedTime <= 4 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ coagulation.bleedTime }}</div>
+                                    {% elif coagulation.bleedTime < 2 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ coagulation.bleedTime }}&nbsp;&nbsp;↓</div>
+                                    {% elif coagulation.bleedTime > 4 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ coagulation.bleedTime }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >2-4</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">min</div>
+                                </div>
+                            {% endif %}
+
+                            {% if clotTime %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Clot Time</div>
+                                    {% if coagulation.clotTime >= 3 and coagulation.clotTime <= 8 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ coagulation.clotTime }}</div>
+                                    {% elif coagulation.clotTime < 3 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ coagulation.clotTime }}&nbsp;&nbsp;↓</div>
+                                    {% elif coagulation.clotTime > 8 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ coagulation.clotTime }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >3-8</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">min</div>
+                                </div>
+                            {% endif %}
+
+                            {% if act %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Act</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ coagulation.act }}</div>
+                                    <div class="col-xs-4 forthNormalText" >&nbsp;</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">%</div>
+                                </div>
+                            {% endif %}
+
+                            <br>
+                            <hr style="border-color: brown"/>
+
+                        {% endif %}
+
+
+                        {% if biochemistryObj %}
+                            <div class="col-md-12 firstBigTitle"  style="color: brown !important;text-align: center">Biochemistry</div>
+
+                            <div class="modal-body" dir="ltr">
+                                <div class="col-xs-4 forthNormalText text-blue">Tests<hr style="margin-top: 1px; border-color: darkblue"/></div>
+                                <div class="col-xs-2 forthNormalText text-blue" >Results<hr style="margin-top: 1px; border-color: darkblue"/></div>
+                                <div class="col-xs-4 forthNormalText text-blue" >Expected Values<hr style="margin-top: 1px; border-color: darkblue"/></div>
+                                <div class="col-xs-2 forthNormalText text-blue" style="text-align: center">Units<hr style="margin-top: 1px; border-color: darkblue"/></div>
+                            </div>
+
+                            {% if glucose_bio %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Glucose</div>
+                                    {% if biochemistry.glucose >= 70 and biochemistry.glucose <= 110 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.glucose }}</div>
+                                    {% elif biochemistry.glucose < 70 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.glucose }}&nbsp;&nbsp;↓</div>
+                                    {% elif biochemistry.glucose > 110 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.glucose }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >70-110</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">mg/dl</div>
+                                </div>
+                            {% endif %}
+
+                            {% if urea %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Urea</div>
+                                    {% if biochemistry.urea >= 20 and biochemistry.urea <= 45 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.urea }}</div>
+                                    {% elif biochemistry.urea < 20 %}
+                                        <div class="col-xs-2 resultOfItem">{{ biochemistry.urea }}&nbsp;&nbsp;↓</div>
+                                    {% elif biochemistry.urea > 45 %}
+                                        <div class="col-xs-2 resultOfItem">{{ biochemistry.urea }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >20-45</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">mg/dl</div>
+                                </div>
+                            {% endif %}
+
+                            {% if creatine_bio %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Creatine</div>
+                                    {% if biochemistry.creatine >= 0.5 and biochemistry.creatine <= 1.2 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.creatine }}</div>
+                                    {% elif biochemistry.creatine < 0.5 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.creatine }}&nbsp;&nbsp;↓</div>
+                                    {% elif biochemistry.creatine > 1.2 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.creatine }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >0.5-1.2</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">mg/dl</div>
+                                </div>
+                            {% endif %}
+
+                            {% if sgpt %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">SGPT</div>
+                                    {% if biochemistry.sgpt < 41 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.sgpt }}</div>
+                                    {% elif biochemistry.sgpt >= 41 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.sgpt }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >up41</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">u/l</div>
+                                </div>
+                            {% endif %}
+
+                            {% if sgot %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">SGOT</div>
+                                    {% if biochemistry.sgot < 41 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.sgot }}</div>
+                                    {% elif biochemistry.sgot >= 41 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.sgot }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >up41</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">u/l</div>
+                                </div>
+                            {% endif %}
+
+                            {% if biliTotal %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">BiliTotal</div>
+                                    {% if biochemistry.biliTotal >= 0.3 and biochemistry.biliTotal <= 1.1 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.biliTotal }}</div>
+                                    {% elif biochemistry.biliTotal < 0.3 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.biliTotal }}&nbsp;&nbsp;↓</div>
+                                    {% elif biochemistry.biliTotal > 1.1 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.biliTotal }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >0.3-1.1</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">mg/dl</div>
+                                </div>
+                            {% endif %}
+
+                            {% if biliDirect %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">BiliDirect</div>
+                                    {% if biochemistry.biliDirect >= 0 and biochemistry.biliDirect <= 0.3 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.biliDirect }}</div>
+                                    {% elif biochemistry.biliDirect < 0 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.biliDirect }}&nbsp;&nbsp;↓</div>
+                                    {% elif biochemistry.biliDirect > 0.3 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.biliDirect }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >0-0.3</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">mg/dl</div>
+                                </div>
+                            {% endif %}
+
+                            {% if biliIndirect %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">BiliIndirect</div>
+                                    {% if biochemistry.biliIndirect >= 0.3 and biochemistry.biliIndirect <= 0.8 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.biliIndirect }}</div>
+                                    {% elif biochemistry.biliIndirect < 0.3 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.biliIndirect }}&nbsp;&nbsp;↓</div>
+                                    {% elif biochemistry.biliIndirect > 0.8 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.biliIndirect }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >0.3-0.8</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">mg/dl</div>
+                                </div>
+                            {% endif %}
+
+                            {% if alp %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">ALP</div>
+                                    {% if biochemistry.alp < 115 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.alp }}</div>
+                                    {% elif biochemistry.alp >= 115 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.alp }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >up115</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">u/l</div>
+                                </div>
+                            {% endif %}
+
+                            {% if amylase %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Amylase</div>
+                                    {% if biochemistry.amylase >= 20 and biochemistry.amylase <= 90 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.amylase }}</div>
+                                    {% elif biochemistry.amylase < 20 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.amylase }}&nbsp;&nbsp;↓</div>
+                                    {% elif biochemistry.amylase > 90 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.amylase }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >20-90</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">u/l</div>
+                                </div>
+                            {% endif %}
+
+                            {% if ldh %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">LDH</div>
+                                    {% if biochemistry.ldh >= 214 and biochemistry.ldh <= 417 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.ldh }}</div>
+                                    {% elif biochemistry.ldh < 214 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.ldh }}&nbsp;&nbsp;↓</div>
+                                    {% elif biochemistry.ldh > 417 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.ldh }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >214-417</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">u/l</div>
+                                </div>
+                            {% endif %}
+
+                            {% if albumin %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Albumin</div>
+                                    {% if biochemistry.albumin >= 3 and biochemistry.albumin <= 5 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.albumin }}</div>
+                                    {% elif biochemistry.albumin < 3 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.albumin }}&nbsp;&nbsp;↓</div>
+                                    {% elif biochemistry.albumin > 5 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.albumin }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >3-5</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">g/dl</div>
+                                </div>
+                            {% endif %}
+
+                            {% if totalProtein %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Total Protein</div>
+                                    {% if biochemistry.totalProtein >= 6 and biochemistry.totalProtein <= 8 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.totalProtein }}</div>
+                                    {% elif biochemistry.totalProtein < 6 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.totalProtein }}&nbsp;&nbsp;↓</div>
+                                    {% elif biochemistry.totalProtein > 8 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.totalProtein }}&nbsp;&nbsp;↑</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >6-8</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">g/dl</div>
+                                </div>
+                            {% endif %}
+
+                            {% if ck %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">CK</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ biochemistry.ck }}</div>
+                                    <div class="col-xs-4 forthNormalText" >M:38-174 / F:26-140</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">u/l</div>
+                                </div>
+                            {% endif %}
+
+                            {% if ck_mb %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">CK-MB</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ biochemistry.ck_mb }}</div>
+                                    <div class="col-xs-4 forthNormalText" >5-25</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">u/l</div>
+                                </div>
+                            {% endif %}
+
+                            {% if lipase %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Lipase</div>
+                                    {% if biochemistry.lipase >= 0 and biochemistry.lipase <= 38 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.lipase }}</div>
+                                    {% elif biochemistry.lipase < 0 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.lipase }}&nbsp;&nbsp;↓</div>
+                                    {% elif biochemistry.lipase > 38 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.lipase }}&nbsp;&nbsp;↑</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >0-38</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">u/l</div>
+                                </div>
+                            {% endif %}
+
+                            {% if uric_acid %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Uric Acid</div>
+                                    {% if biochemistry.uric_acid >= 2 and biochemistry.uric_acid <= 7 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.uric_acid }}</div>
+                                    {% elif biochemistry.uric_acid < 2 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.uric_acid }}&nbsp;&nbsp;↓</div>
+                                    {% elif biochemistry.uric_acid > 7 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.uric_acid }}&nbsp;&nbsp;↑</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >2-7</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">mg/dl</div>
+                                </div>
+                            {% endif %}
+
+                            {% if triglycerid %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Triglycerid</div>
+                                    {% if biochemistry.triglycerid >= 50 and biochemistry.triglycerid <= 150 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.triglycerid }}</div>
+                                    {% elif biochemistry.triglycerid < 50 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.triglycerid }}&nbsp;&nbsp;↓</div>
+                                    {% elif biochemistry.triglycerid > 150 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.triglycerid }}&nbsp;&nbsp;↑</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >50-150</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">mg/dl</div>
+                                </div>
+                            {% endif %}
+
+                            {% if cholesterol %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Cholesterol</div>
+                                    {% if biochemistry.cholesterol >= 50 and biochemistry.cholesterol <= 200 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.cholesterol }}</div>
+                                    {% elif biochemistry.cholesterol < 50 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.cholesterol }}&nbsp;&nbsp;↓</div>
+                                    {% elif biochemistry.cholesterol > 200 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.cholesterol }}&nbsp;&nbsp;↑</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >50-200</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">mg/dl</div>
+                                </div>
+                            {% endif %}
+
+                            {% if crp %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">CRP</div>
+                                    {% if biochemistry.crp < 6 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.crp }}</div>
+                                    {% elif biochemistry.crp >= 6 %}
+                                        <div class="col-xs-2 resultOfItem">{{ biochemistry.crp }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >Up To 6</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">mg/l</div>
+                                </div>
+                            {% endif %}
+
+                            {% if aslo %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Aslo</div>
+                                    {% if biochemistry.aslo < 200 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.aslo }}</div>
+                                    {% elif biochemistry.aslo >= 200 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.aslo }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >Up To 200</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">u/l</div>
+                                </div>
+                            {% endif %}
+
+                            {% if rf %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">RF</div>
+                                    {% if biochemistry.rf < 20 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.rf }}</div>
+                                    {% elif biochemistry.rf >= 20 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ biochemistry.rf }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >Up To 20</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">u/l</div>
+                                </div>
+                            {% endif %}
+
+                            <br>
+                            <hr style="border-color: brown"/>
+
+                        {% endif %}
+
+
+                        {% if electrolytesObj %}
+                            <div class="col-md-12 firstBigTitle"  style="color: brown !important;text-align: center">Electrolytes</div>
+
+                            <div class="modal-body" dir="ltr">
+                                <div class="col-xs-4 forthNormalText text-blue">Tests<hr style="margin-top: 1px; border-color: darkblue"/></div>
+                                <div class="col-xs-2 forthNormalText text-blue" >Results<hr style="margin-top: 1px; border-color: darkblue"/></div>
+                                <div class="col-xs-4 forthNormalText text-blue" >Expected Values<hr style="margin-top: 1px; border-color: darkblue"/></div>
+                                <div class="col-xs-2 forthNormalText text-blue" style="text-align: center">Units<hr style="margin-top: 1px; border-color: darkblue"/></div>
+                            </div>
+
+                            {% if na_elec %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Na</div>
+                                    {% if electrolytes.na >= 135 and electrolytes.na <= 145 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ electrolytes.na }}</div>
+                                    {% elif electrolytes.na < 135 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ electrolytes.na }}&nbsp;&nbsp;↓</div>
+                                    {% elif electrolytes.na > 145 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ electrolytes.na }}&nbsp;&nbsp;↑</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >135-145</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">mEq/l</div>
+                                </div>
+                            {% endif %}
+
+                            {% if k_elec %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">K</div>
+                                    {% if electrolytes.k >= 3.5 and electrolytes.k <= 5.5 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ electrolytes.k }}</div>
+                                    {% elif electrolytes.k < 3.5 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ electrolytes.k }}&nbsp;&nbsp;↓</div>
+                                    {% elif electrolytes.k > 5.5 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ electrolytes.k }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >3.5-5.5</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">mEq/l</div>
+                                </div>
+                            {% endif %}
+
+                            {% if cl %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Cl</div>
+                                    {% if electrolytes.cl >= 90 and electrolytes.cl <= 110 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ electrolytes.cl }}</div>
+                                    {% elif electrolytes.cl < 90 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ electrolytes.cl }}&nbsp;&nbsp;↓</div>
+                                    {% elif electrolytes.cl > 110 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ electrolytes.cl }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >90-110</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">mEq/l</div>
+                                </div>
+                            {% endif %}
+
+                            {% if tca %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">TCa</div>
+                                    {% if electrolytes.tca >= 8.5 and electrolytes.tca <= 10.5 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ electrolytes.tca }}</div>
+                                    {% elif electrolytes.tca < 8.5 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ electrolytes.tca }}&nbsp;&nbsp;↓</div>
+                                    {% elif electrolytes.tca > 10.5 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ electrolytes.tca }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >8.5-10.5</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">mg/dl</div>
+                                </div>
+                            {% endif %}
+
+{#                            {% if nca %}#}
+{#                                <div class="modal-body" dir="ltr">#}
+{#                                    <div class="col-xs-4 forthNormalText">NCa</div>#}
+{#                                    <div class="col-xs-2 forthNormalText" style="text-align: center">{{ electrolytes.nca }}</div>#}
+{#                                    <div class="col-xs-3 forthNormalText" style="text-align: center">&nbsp;</div>#}
+{#                                    <div class="col-xs-3 forthNormalText" style="text-align: center">&nbsp;</div>#}
+{#                                </div>#}
+{#                            {% endif %}#}
+
+                            {% if ica %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">ICa</div>
+                                    {% if electrolytes.ica >= 4.5 and electrolytes.ica <= 5 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ electrolytes.ica }}</div>
+                                    {% elif electrolytes.ica < 4.5 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ electrolytes.ica }}&nbsp;&nbsp;↓</div>
+                                    {% elif electrolytes.ica > 5 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ electrolytes.ica }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >4.5-5</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">mg/dl</div>
+                                </div>
+                            {% endif %}
+
+                            {% if iron %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Iron</div>
+                                    {% if electrolytes.iron >= 70 and electrolytes.iron <= 175 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ electrolytes.iron }}</div>
+                                    {% elif electrolytes.iron < 70 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ electrolytes.iron }}&nbsp;&nbsp;↓</div>
+                                    {% elif electrolytes.iron > 175 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ electrolytes.iron }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >70-175</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">mg/dl</div>
+                                </div>
+                            {% endif %}
+
+                            {% if mg %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Mg</div>
+                                    {% if electrolytes.mg >= 1.5 and electrolytes.mg <= 2.5 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ electrolytes.mg }}</div>
+                                    {% elif electrolytes.mg < 1.5 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ electrolytes.mg }}&nbsp;&nbsp;↓</div>
+                                    {% elif electrolytes.mg > 2.5 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ electrolytes.mg }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >1.5-2.5</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">mg/dl</div>
+                                </div>
+                            {% endif %}
+
+                            {% if phosphorus %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Phosphorus</div>
+                                    {% if electrolytes.phosphorus >= 2.5 and electrolytes.phosphorus <= 4.5 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ electrolytes.phosphorus }}</div>
+                                    {% elif electrolytes.phosphorus < 2.5 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ electrolytes.phosphorus }}&nbsp;&nbsp;↓</div>
+                                    {% elif electrolytes.phosphorus > 4.5 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ electrolytes.phosphorus }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >2.5-4.5</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">mg/dl</div>
+                                </div>
+                            {% endif %}
+
+                            <br>
+                            <hr style="border-color: brown"/>
+
+                        {% endif %}
+
+
+                        {% if abgObj %}
+                            <div class="col-md-12 firstBigTitle"  style="color: brown !important;text-align: center">ABG</div>
+
+                            <div class="modal-body" dir="ltr">
+                                <div class="col-xs-4 forthNormalText text-blue">Tests<hr style="margin-top: 1px; border-color: darkblue"/></div>
+                                <div class="col-xs-2 forthNormalText text-blue" >Results<hr style="margin-top: 1px; border-color: darkblue"/></div>
+                                <div class="col-xs-4 forthNormalText text-blue" >Expected Values<hr style="margin-top: 1px; border-color: darkblue"/></div>
+                                <div class="col-xs-2 forthNormalText text-blue" style="text-align: center">Units<hr style="margin-top: 1px; border-color: darkblue"/></div>
+                            </div>
+
+                            {% if ph_abg %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">PH</div>
+                                    {% if abg.ph >= 7.35 and abg.ph <= 7.45 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ abg.ph }}</div>
+                                    {% elif abg.ph < 7.35 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ abg.ph }}&nbsp;&nbsp;↓</div>
+                                    {% elif abg.ph > 17.4545 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ abg.ph }}&nbsp;&nbsp;↑</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >7.35-7.45</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center"></div>
+                                </div>
+                            {% endif %}
+
+                            {% if pc02 %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Pc02</div>
+                                    {% if abg.pc02 >= 35 and abg.pc02 <= 45 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ abg.pc02 }}</div>
+                                    {% elif abg.pc02 < 35 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ abg.pc02 }}&nbsp;&nbsp;↓</div>
+                                    {% elif abg.pc02 > 45 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ abg.pc02 }}&nbsp;&nbsp;↑</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >35-45</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">mmHG</div>
+                                </div>
+                            {% endif %}
+
+                            {% if p02 %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">P02</div>
+                                    {% if abg.p02 >= 70 and abg.p02 <= 100 %}
+                                        <div class="col-xs-2 resultOfItem">{{ abg.p02 }}</div>
+                                    {% elif abg.p02 < 70 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ abg.p02 }}&nbsp;&nbsp;↓</div>
+                                    {% elif abg.p02 > 100 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ abg.p02 }}&nbsp;&nbsp;↑</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >70-100</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">mmHG</div>
+                                </div>
+                            {% endif %}
+
+                            {% if na_abg %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Na</div>
+                                    {% if abg.na >= 135 and abg.na <= 145 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ abg.na }}</div>
+                                    {% elif abg.na < 135 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ abg.na }}&nbsp;&nbsp;↓</div>
+                                    {% elif abg.na > 145 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ abg.na }}&nbsp;&nbsp;↑</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >135-145</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">mmol</div>
+                                </div>
+                            {% endif %}
+
+                             {% if k_abg %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">K</div>
+                                    {% if abg.k >= 3.5 and abg.k <= 5.5 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ abg.k }}</div>
+                                    {% elif abg.k < 3.5 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ abg.k }}&nbsp;&nbsp;↓</div>
+                                    {% elif abg.k > 5.5 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ abg.k }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >3.5-5.5</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">mmol</div>
+                                </div>
+                            {% endif %}
+
+                            {% if ca1 %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Ca++</div>
+                                    {% if abg.ca1 >= 1.1 and abg.ca1 <= 1.3 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ abg.ca1 }}</div>
+                                    {% elif abg.ca1 < 1.1 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ abg.ca1 }}&nbsp;&nbsp;↓</div>
+                                    {% elif abg.ca1 > 1.3 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ abg.ca1 }}&nbsp;&nbsp;↑</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >1.1-1.3</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">mmol</div>
+                                </div>
+                            {% endif %}
+
+                            {% if glucose_abg %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Glucose</div>
+                                    {% if abg.glucose >= 70 and abg.glucose <= 110 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ abg.glucose }}</div>
+                                    {% elif abg.glucose < 70 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ abg.glucose }}&nbsp;&nbsp;↓</div>
+                                    {% elif abg.glucose > 110 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ abg.glucose }}&nbsp;&nbsp;↑</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >70-110</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">mg/dl</div>
+                                </div>
+                            {% endif %}
+
+                            {% if lac %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Lac</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ abg.lac }}</div>
+                                    <div class="col-xs-4 forthNormalText" >Below 2</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">mmol</div>
+                                </div>
+                            {% endif %}
+
+                            {% if hc03 %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">HC03-</div>
+                                    {% if abg.hc03 >= 22 and abg.hc03 <= 26 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ abg.hc03 }}</div>
+                                    {% elif abg.hc03 < 22 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ abg.hc03 }}&nbsp;&nbsp;↓</div>
+                                    {% elif abg.hc03 > 26 %}
+                                        <div class="col-xs-2 resultOfItem">{{ abg.hc03 }}&nbsp;&nbsp;↑</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >22-26</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">mmol</div>
+                                </div>
+                            {% endif %}
+
+                            {% if beecf %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">BEecf</div>
+                                    {% if abg.beecf >= -2 and abg.beecf <= 2 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ abg.beecf }}</div>
+                                    {% elif abg.beecf < -2 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ abg.beecf }}&nbsp;&nbsp;↓</div>
+                                    {% elif abg.beecf > 2 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ abg.beecf }}&nbsp;&nbsp;↑</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >-2~2</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">mmol</div>
+                                </div>
+                            {% endif %}
+
+                            {% if s02c %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">S02c</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ abg.s02c }}</div>
+                                    <div class="col-xs-4 forthNormalText" >&nbsp;</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">%</div>
+                                </div>
+                            {% endif %}
+
+                            {% if fi02 %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Fi02</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ abg.fi02 }}</div>
+                                    <div class="col-xs-4 forthNormalText" >&nbsp;</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            <br>
+                            <hr style="border-color: brown"/>
+
+                        {% endif %}
+
+
+                        {% if serologyObj %}
+                            <div class="col-md-12 firstBigTitle"  style="color: brown !important;text-align: center">Serology</div>
+
+                            <div class="modal-body" dir="ltr">
+                                <div class="col-xs-4 forthNormalText text-blue">Tests<hr style="margin-top: 1px; border-color: darkblue"/></div>
+                                <div class="col-xs-2 forthNormalText text-blue">Results<hr style="margin-top: 1px; border-color: darkblue"/></div>
+                                <div class="col-xs-4 forthNormalText text-blue" >Expected Values<hr style="margin-top: 1px; border-color: darkblue"/></div>
+                                <div class="col-xs-2 forthNormalText text-blue" style="text-align: center">Units<hr style="margin-top: 1px; border-color: darkblue"/></div>
+                            </div>
+
+                            {% if hbs_Ag %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">HBS Ag</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ serology.hbs_Ag }}</div>
+                                    <div class="col-xs-4 forthNormalText" >&nbsp;</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if hiv %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Hiv</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ serology.hiv }}</div>
+                                    <div class="col-xs-4 forthNormalText" >&nbsp;</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if hcv %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">HCV</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ serology.hcv }}</div>
+                                    <div class="col-xs-4 forthNormalText" >&nbsp;</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if hcg %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">HCG</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ serology.hcg }}</div>
+                                    <div class="col-xs-4 forthNormalText" >&nbsp;</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if fob %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Fob</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ serology.fob }}</div>
+                                    <div class="col-xs-4 forthNormalText" >&nbsp;</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if widal_o %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Widal O</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ serology.widal_o }}</div>
+                                    <div class="col-xs-4 forthNormalText" >&nbsp;</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if widal_h %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Widal H</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ serology.widal_h }}</div>
+                                    <div class="col-xs-4 forthNormalText" >&nbsp;</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if wrigh_a %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Wrigh A</div>
+                                    <div class="col-xs-2 resultOfItem">{{ serology.wrigh_a }}</div>
+                                    <div class="col-xs-4 forthNormalText" >&nbsp;</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if wrigh_b %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Wrigh B</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ serology.wrigh_b }}</div>
+                                    <div class="col-xs-4 forthNormalText" >&nbsp;</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            <br>
+                            <hr style="border-color: brown"/>
+
+                        {% endif %}
+
+
+                        {% if urineAnalysisObj %}
+                            <div class="col-md-12 firstBigTitle"  style="color: brown !important;text-align: center">Urine Analysis</div>
+
+                            <div class="modal-body" dir="ltr">
+                                <div class="col-xs-4 forthNormalText text-blue">Tests<hr style="margin-top: 1px; border-color: darkblue"/></div>
+                                <div class="col-xs-2 forthNormalText text-blue" >Results<hr style="margin-top: 1px; border-color: darkblue"/></div>
+                                <div class="col-xs-4 forthNormalText text-blue" >Expected Values<hr style="margin-top: 1px; border-color: darkblue"/></div>
+                                <div class="col-xs-2 forthNormalText text-blue" style="text-align: center">Units<hr style="margin-top: 1px; border-color: darkblue"/></div>
+                            </div>
+
+                            {% if color %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Color</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ urineAnalysis.color }}</div>
+                                    <div class="col-xs-4 forthNormalText" >&nbsp;</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if spGravity %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">SpGravity</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ urineAnalysis.spGravity }}</div>
+                                    <div class="col-xs-4 forthNormalText" >&nbsp;</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if netrit %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Netrit</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ urineAnalysis.netrit }}</div>
+                                    <div class="col-xs-4 forthNormalText" >&nbsp;</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if wbc %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">WBC</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ urineAnalysis.wbc }}</div>
+                                    <div class="col-xs-4 forthNormalText" >&nbsp;</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if urates %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Urates</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ urineAnalysis.urates }}</div>
+                                    <div class="col-xs-4 forthNormalText" >&nbsp;</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if uric_acid %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Uric Acid</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ urineAnalysis.uric_acid }}</div>
+                                    <div class="col-xs-4 forthNormalText" >&nbsp;</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if appearance %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Appearance</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ urineAnalysis.appearance }}</div>
+                                    <div class="col-xs-4 forthNormalText" >&nbsp;</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if glucose %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Glucose</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ urineAnalysis.glucose }}</div>
+                                    <div class="col-xs-4 forthNormalText" >&nbsp;</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if keton %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Keton</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ urineAnalysis.keton }}</div>
+                                    <div class="col-xs-4 forthNormalText" >&nbsp;</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if rbc %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">RBC</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ urineAnalysis.rbc }}</div>
+                                    <div class="col-xs-4 forthNormalText" >&nbsp;</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if bacteria %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Bacteria</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ urineAnalysis.bacteria }}</div>
+                                    <div class="col-xs-4 forthNormalText" >&nbsp;</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if mucus %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Mucus</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ urineAnalysis.mucus }}</div>
+                                    <div class="col-xs-4 forthNormalText" >&nbsp;</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if ph %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">PH</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ urineAnalysis.ph }}</div>
+                                    <div class="col-xs-4 forthNormalText" >&nbsp;</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if blood %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Blood</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ urineAnalysis.blood }}</div>
+                                    <div class="col-xs-4 forthNormalText" >&nbsp;</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if protein %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Protein</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ urineAnalysis.protein }}</div>
+                                    <div class="col-xs-4 forthNormalText" >&nbsp;</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if epCells %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">EpCells</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ urineAnalysis.epCells }}</div>
+                                    <div class="col-xs-4 forthNormalText" >&nbsp;</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if ox_calcium %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">OX.Calcium</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ urineAnalysis.ox_calcium }}</div>
+                                    <div class="col-xs-4 forthNormalText" >&nbsp;</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if casts %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Casts</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ urineAnalysis.casts }}</div>
+                                    <div class="col-xs-4 forthNormalText" >&nbsp;</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if fungi %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Fungi</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ urineAnalysis.fungi }}</div>
+                                    <div class="col-xs-4 forthNormalText">&nbsp;</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if yeast %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Yeast</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ urineAnalysis.yeast }}</div>
+                                    <div class="col-xs-4 forthNormalText" >&nbsp;</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if pus_cell %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Pus Cell</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ urineAnalysis.pus_cell }}</div>
+                                    <div class="col-xs-4 forthNormalText" >&nbsp;</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if triple_phospate %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Triple Phospate</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ urineAnalysis.triple_phospate }}</div>
+                                    <div class="col-xs-4 forthNormalText" >&nbsp;</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            <br>
+                            <hr style="border-color: brown"/>
+
+                        {% endif %}
+
+
+                        {% if csfObj %}
+                            <div class="col-md-12 firstBigTitle"  style="color: brown !important;text-align: center">CSF</div>
+
+                            <div class="modal-body" dir="ltr">
+                                <div class="col-xs-4 forthNormalText text-blue">Tests<hr style="margin-top: 1px; border-color: darkblue"/></div>
+                                <div class="col-xs-2 forthNormalText text-blue" >Results<hr style="margin-top: 1px; border-color: darkblue"/></div>
+                                <div class="col-xs-4 forthNormalText text-blue" >Expected Values<hr style="margin-top: 1px; border-color: darkblue"/></div>
+                                <div class="col-xs-2 forthNormalText text-blue" style="text-align: center">Units<hr style="margin-top: 1px; border-color: darkblue"/></div>
+                            </div>
+
+                            {% if color %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Color</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ csf.color }}</div>
+                                    <div class="col-xs-4 forthNormalText" >&nbsp;</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if appearance %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Appearance</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ csf.appearance }}</div>
+                                    <div class="col-xs-4 forthNormalText" >&nbsp;</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if rbc %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">RBC</div>
+                                    {% if csf.rbc == 0 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ csf.rbc }}</div>
+                                    {% elif csf.rbc != 0 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ csf.rbc }}&nbsp;&nbsp;↑</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >0</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if wbc %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">WBC</div>
+                                    {% if csf.wbc == 0 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ csf.wbc }}</div>
+                                    {% elif csf.wbc != 0 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ csf.wbc }}&nbsp;&nbsp;↑</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >0</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if glucose %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Glucose</div>
+                                    {% if csf.glucose >= 50 and csf.glucose <= 80 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ csf.glucose }}</div>
+                                    {% elif csf.glucose < 50 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ csf.glucose }}&nbsp;&nbsp;↓</div>
+                                    {% elif csf.glucose > 80 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ csf.glucose }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >50-80</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if protein %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Protien</div>
+                                    {% if csf.protein >= 15 and csf.protein <= 45 %}
+                                        <div class="col-xs-2 resultOfItem">{{ csf.protein }}</div>
+                                    {% elif csf.protein < 15 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ csf.protein }}&nbsp;&nbsp;↓</div>
+                                    {% elif csf.protein > 45 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ csf.protein }}&nbsp;&nbsp;↑</div>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >15-45</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            <br><br>
+
+                            <hr style="border-color: brown"/>
+
+                        {% endif %}
+
+
+                        {% if antibioticObj %}
+                            <div class="col-md-12 firstBigTitle"  style="color: brown !important;text-align: center">Cultur and Senserite</div>
+
+                            <div class="modal-body" dir="ltr">
+                                <div class="col-xs-4 forthNormalText text-blue">Tests<hr style="margin-top: 1px; border-color: darkblue"/></div>
+                                <div class="col-xs-2 forthNormalText text-blue" >Results<hr style="margin-top: 1px; border-color: darkblue"/></div>
+                                <div class="col-xs-4 forthNormalText text-blue" >Expected Values<hr style="margin-top: 1px; border-color: darkblue"/></div>
+                                <div class="col-xs-2 forthNormalText text-blue" style="text-align: center">Units<hr style="margin-top: 1px; border-color: darkblue"/></div>
+                            </div>
+
+                            {% if cephradine %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Cephradine</div>
+                                    {% if antibiotic.cephradine >= 14 and antibiotic.cephradine <= 18 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.cephradine }} (I)</div>
+                                    {% elif antibiotic.cephradine < 14 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.cephradine }} (R)</div>
+                                    {% elif antibiotic.cephradine > 18 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.cephradine }} (S)</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >14-18</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if ciprofloxacin %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Ciprofloxacin</div>
+                                    {% if antibiotic.ciprofloxacin >= 15 and antibiotic.ciprofloxacin <= 21 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.ciprofloxacin }} (I)</div>
+                                    {% elif antibiotic.ciprofloxacin < 15 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.ciprofloxacin }} (R)</div>
+                                    {% elif antibiotic.ciprofloxacin > 21 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.ciprofloxacin }} (S)</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >15-21</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if gentamicin %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Gentamicin</div>
+                                    {% if antibiotic.gentamicin >= 12 and antibiotic.gentamicin <= 15 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.gentamicin }} (I)</div>
+                                    {% elif antibiotic.gentamicin < 12 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.gentamicin }} (R)</div>
+                                    {% elif antibiotic.gentamicin > 15 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.gentamicin }} (S)</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >12-15</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if nitrofurantoin %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Nitrofurantoin</div>
+                                    {% if antibiotic.nitrofurantoin >= 14 and antibiotic.nitrofurantoin <= 17 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.nitrofurantoin }} (I)</div>
+                                    {% elif antibiotic.nitrofurantoin < 14 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.nitrofurantoin }} (R)</div>
+                                    {% elif antibiotic.nitrofurantoin > 17 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.nitrofurantoin }} (S)</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >14-17</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if ofloxacin %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Ofloxacin</div>
+                                    {% if antibiotic.ofloxacin >= 12 and antibiotic.ofloxacin <= 16 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.ofloxacin }} (I)</div>
+                                    {% elif antibiotic.ofloxacin < 12 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.ofloxacin }} (R)</div>
+                                    {% elif antibiotic.ofloxacin > 16 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.ofloxacin }} (S)</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >12-16</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if cefoxitin %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Cefoxitin</div>
+                                    {% if antibiotic.cefoxitin >= 14 and antibiotic.cefoxitin <= 18 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.cefoxitin }} (I)</div>
+                                    {% elif antibiotic.cefoxitin < 14 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.cefoxitin }} (R)</div>
+                                    {% elif antibiotic.cefoxitin > 18 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.cefoxitin }} (S)</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >14-18</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if cefaclor %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Cefaclor</div>
+                                    {% if antibiotic.cefaclor >= 14 and antibiotic.cefaclor <= 18 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.cefaclor }} (I)</div>
+                                    {% elif antibiotic.cefaclor < 14 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.cefaclor }} (R)</div>
+                                    {% elif antibiotic.cefaclor > 18 %}
+                                        <div class="col-xs-2 resultOfItem">{{ antibiotic.cefaclor }} (S)</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >14-18</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if amikacin %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Amikacin</div>
+                                    {% if antibiotic.amikacin >= 14 and antibiotic.amikacin <= 17 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.amikacin }} (I)</div>
+                                    {% elif antibiotic.amikacin < 14 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.amikacin }} (R)</div>
+                                    {% elif antibiotic.amikacin > 17 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.amikacin }} (S)</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText">14-17</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if ceftriaxone %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Ceftriaxone</div>
+                                    {% if antibiotic.ceftriaxone >= 13 and antibiotic.ceftriaxone <= 21 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.ceftriaxone }} (I)</div>
+                                    {% elif antibiotic.ceftriaxone < 13 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.ceftriaxone }} (R)</div>
+                                    {% elif antibiotic.ceftriaxone > 21 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.ceftriaxone }} (S)</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >13-21</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if amoxicillin_clavulanic_acid %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Amoxicillin/Clavulanic Acid</div>
+                                    {% if antibiotic.amoxicillin_clavulanic_acid >= 13 and antibiotic.amoxicillin_clavulanic_acid <= 20 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.amoxicillin_clavulanic_acid }} (I)</div>
+                                    {% elif antibiotic.amoxicillin_clavulanic_acid < 13 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.amoxicillin_clavulanic_acid }} (R)</div>
+                                    {% elif antibiotic.amoxicillin_clavulanic_acid > 20 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.amoxicillin_clavulanic_acid }} (S)</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >13-20</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if cefadroxil %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Cefadroxil</div>
+                                    {% if antibiotic.cefadroxil >= 14 and antibiotic.cefadroxil <= 18 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.cefadroxil }} (I)</div>
+                                    {% elif antibiotic.cefadroxil < 14 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.cefadroxil }} (R)</div>
+                                    {% elif antibiotic.cefadroxil > 18 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.cefadroxil }} (S)</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >14-18</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if cefixime %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Cefixime</div>
+                                    {% if antibiotic.cefixime >= 14 and antibiotic.cefixime <= 18 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.cefixime }} (I)</div>
+                                    {% elif antibiotic.cefixime < 14 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.cefixime }} (R)</div>
+                                    {% elif antibiotic.cefixime > 18 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.cefixime }} (S)</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >14-18</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if cefotaxime %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Cefotaxime</div>
+                                    {% if antibiotic.cefotaxime >= 14 and antibiotic.cefotaxime <= 23 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.cefotaxime }} (I)</div>
+                                    {% elif antibiotic.cefotaxime < 14 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.cefotaxime }} (R)</div>
+                                    {% elif antibiotic.cefotaxime > 23 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.cefotaxime }} (S)</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >14-23</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if cefuroxime %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Cefuroxime</div>
+                                    {% if antibiotic.cefuroxime >= 14 and antibiotic.cefuroxime <= 18 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.cefuroxime }} (I)</div>
+                                    {% elif antibiotic.cefuroxime < 14 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.cefuroxime }} (R)</div>
+                                    {% elif antibiotic.cefuroxime > 18 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.cefuroxime }} (S)</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >14-18</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if imipenem %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Imipenem</div>
+                                    {% if antibiotic.imipenem >= 13 and antibiotic.imipenem <= 16 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.imipenem }} (I)</div>
+                                    {% elif antibiotic.imipenem < 13 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.imipenem }} (R)</div>
+                                    {% elif antibiotic.imipenem > 16 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.imipenem }} (S)</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >13-16</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if ampicillin_sulbactam %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Ampicillin/Sulbactam</div>
+                                    {% if antibiotic.ampicillin_sulbactam >= 13 and antibiotic.ampicillin_sulbactam <= 18 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.ampicillin_sulbactam }} (I)</div>
+                                    {% elif antibiotic.ampicillin_sulbactam < 13 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.ampicillin_sulbactam }} (R)</div>
+                                    {% elif antibiotic.ampicillin_sulbactam > 18 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.ampicillin_sulbactam }} (S)</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >13-18</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if amoxicillin %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Amoxicillin</div>
+                                    {% if antibiotic.amoxicillin >= 13 and antibiotic.amoxicillin <= 18 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.amoxicillin }} (I)</div>
+                                    {% elif antibiotic.amoxicillin < 13 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.amoxicillin }} (R)</div>
+                                    {% elif antibiotic.amoxicillin > 18 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.amoxicillin }} (S)</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >13-18</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if azithromycin %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Azithromycin</div>
+                                    {% if antibiotic.azithromycin >= 13 and antibiotic.azithromycin <= 18 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.azithromycin }} (I)</div>
+                                    {% elif antibiotic.azithromycin < 13 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.azithromycin }} (R)</div>
+                                    {% elif antibiotic.azithromycin > 18 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.azithromycin }} (S)</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >13-18</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if levofloxacin %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Levofloxacin</div>
+                                    {% if antibiotic.levofloxacin >= 18 and antibiotic.levofloxacin <= 20 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.levofloxacin }} (I)</div>
+                                    {% elif antibiotic.levofloxacin < 18 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.levofloxacin }} (R)</div>
+                                    {% elif antibiotic.levofloxacin > 20 %}
+                                        <div class="col-xs-2 resultOfItem">{{ antibiotic.levofloxacin }} (S)</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >18-20</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if neomycin %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Neomycin</div>
+                                    {% if antibiotic.neomycin >= 12 and antibiotic.neomycin <= 17 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.neomycin }} (I)</div>
+                                    {% elif antibiotic.neomycin < 12 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.neomycin }} (R)</div>
+                                    {% elif antibiotic.neomycin > 17 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.neomycin }} (S)</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >12-17</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if doxycycline %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Doxycycline</div>
+                                    {% if antibiotic.doxycycline >= 12 and antibiotic.doxycycline <= 16 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.doxycycline }} (I)</div>
+                                    {% elif antibiotic.doxycycline < 12 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.doxycycline }} (R)</div>
+                                    {% elif antibiotic.doxycycline > 16 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.doxycycline }} (S)</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >12-16</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if pipemidic_acid %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Pipemidic Acid</div>
+                                    {% if antibiotic.pipemidic_acid >= 14 and antibiotic.pipemidic_acid <= 16 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.pipemidic_acid }} (I)</div>
+                                    {% elif antibiotic.pipemidic_acid < 14 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.pipemidic_acid }} (R)</div>
+                                    {% elif antibiotic.pipemidic_acid > 16 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.pipemidic_acid }} (S)</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >14-16</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if meropenem %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Meropenem</div>
+                                    {% if antibiotic.meropenem >= 12 and antibiotic.meropenem <= 17 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.meropenem }} (I)</div>
+                                    {% elif antibiotic.meropenem < 12 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.meropenem }} (R)</div>
+                                    {% elif antibiotic.meropenem > 17 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.meropenem }} (S)</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >12-17</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if cloxacillin %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Cloxacillin</div>
+                                    {% if antibiotic.cloxacillin >= 10 and antibiotic.cloxacillin <= 23 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.cloxacillin }} (I)</div>
+                                    {% elif antibiotic.cloxacillin < 10 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.cloxacillin }} (R)</div>
+                                    {% elif antibiotic.cloxacillin > 23 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.cloxacillin }} (S)</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >10-23</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if trimethoprim_sulphamethoxazole %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Trimethoprim/Sulphamethoxazole</div>
+                                    {% if antibiotic.trimethoprim_sulphamethoxazole >= 12 and antibiotic.trimethoprim_sulphamethoxazole <= 16 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.trimethoprim_sulphamethoxazole }} (I)</div>
+                                    {% elif antibiotic.trimethoprim_sulphamethoxazole < 12 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.trimethoprim_sulphamethoxazole }} (R)</div>
+                                    {% elif antibiotic.trimethoprim_sulphamethoxazole > 16 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.trimethoprim_sulphamethoxazole }} (S)</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >12-16</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            {% if norfloxacin %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Norfloxacin</div>
+                                    {% if antibiotic.norfloxacin >= 12 and antibiotic.norfloxacin <= 16 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.norfloxacin }} (I)</div>
+                                    {% elif antibiotic.norfloxacin < 12 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.norfloxacin }} (R)</div>
+                                    {% elif antibiotic.norfloxacin > 16 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ antibiotic.norfloxacin }} (S)</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >12-16</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            <br>
+                            <hr style="border-color: brown"/>
+
+                        {% endif %}
+
+
+                        {% if hormonesObj %}
+                            <div class="col-md-12 firstBigTitle"  style="color: brown !important;text-align: center">Hormones</div>
+
+                            <div class="modal-body" dir="ltr">
+                                <div class="col-xs-4 forthNormalText text-blue">Tests<hr style="margin-top: 1px; border-color: darkblue"/></div>
+                                <div class="col-xs-2 forthNormalText text-blue" >Results<hr style="margin-top: 1px; border-color: darkblue"/></div>
+                                <div class="col-xs-4 forthNormalText text-blue" >Expected Values<hr style="margin-top: 1px; border-color: darkblue"/></div>
+                                <div class="col-xs-2 forthNormalText text-blue" style="text-align: center">Units<hr style="margin-top: 1px; border-color: darkblue"/></div>
+                            </div>
+
+                            {% if hba1c %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Hba1c</div>
+                                    {% if hormones.hba1c >= 4 and hormones.hba1c <= 6.5 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.hba1c }}</div>
+                                    {% elif hormones.hba1c < 4 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.hba1c }}&nbsp;&nbsp;↓</div>
+                                    {% elif hormones.hba1c > 6.5 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.hba1c }}&nbsp;&nbsp;↑</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >4-6.5</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">%</div>
+                                </div>
+                            {% endif %}
+
+                            {% if tsh %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Tsh</div>
+                                    {% if hormones.tsh >= 0 and hormones.tsh <= 20 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.tsh }}</div>
+                                    {% elif hormones.tsh < 0 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.tsh }}&nbsp;&nbsp;↓</div>
+                                    {% elif hormones.tsh > 20 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.tsh }}&nbsp;&nbsp;↑</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >0-20</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">mg/L</div>
+                                </div>
+                            {% endif %}
+
+                            {% if ft4 %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Ft4</div>
+                                    {% if hormones.ft4 >= 12 and hormones.ft4 <= 22 %}
+                                        <div class="col-xs-2 resultOfItem">{{ hormones.ft4 }}</div>
+                                    {% elif hormones.ft4 < 12 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.ft4 }}&nbsp;&nbsp;↓</div>
+                                    {% elif hormones.ft4 > 22 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.ft4 }}&nbsp;&nbsp;↑</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >12-22</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">pmol/L</div>
+                                </div>
+                            {% endif %}
+
+                            {% if t4 %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">T4</div>
+                                    {% if hormones.t4 >= 66 and hormones.t4 <= 181 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.t4 }}</div>
+                                    {% elif hormones.t4 < 66 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.t4 }}&nbsp;&nbsp;↓</div>
+                                    {% elif hormones.t4 > 181 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.t4 }}&nbsp;&nbsp;↑</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >66-181</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">nmol/L</div>
+                                </div>
+                            {% endif %}
+
+                            {% if t3 %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">T3</div>
+                                    {% if hormones.t3 >= 1.23 and hormones.pt <= 3.07 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.t3 }}</div>
+                                    {% elif hormones.t3 < 1.23 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.t3 }}&nbsp;&nbsp;↓</div>
+                                    {% elif hormones.t3 > 3.07 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.t3 }}&nbsp;&nbsp;↑</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >1.23-3.07</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">nmol/L</div>
+                                </div>
+                            {% endif %}
+
+                            {% if lh %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">LH</div>
+                                    {% if hormones.lh >= 1.7 and hormones.lh <= 8.6 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.lh }}</div>
+                                    {% elif hormones.lh < 1.7 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.lh }}&nbsp;&nbsp;↓</div>
+                                    {% elif hormones.lh > 8.6 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.lh }}&nbsp;&nbsp;↑</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >1.7-8.6</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">mIU/ml</div>
+                                </div>
+                            {% endif %}
+
+                            {% if fsh %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Fsh</div>
+                                    {% if hormones.fsh >= 1.5 and hormones.fsh <= 12.4 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.fsh }}</div>
+                                    {% elif hormones.fsh < 1.5 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.fsh }}&nbsp;&nbsp;↓</div>
+                                    {% elif hormones.fsh > 12.4 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.fsh }}&nbsp;&nbsp;↑</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >1.5-12.4</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">mIU/ml</div>
+                                </div>
+                            {% endif %}
+
+                            {% if prolactin %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Prolactin</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ hormones.prolactin }}</div>
+                                    <div class="col-xs-4 forthNormalText" >M:3.4-17.5 / F:4.6-25</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">ng/ml</div>
+                                </div>
+                            {% endif %}
+
+                            {% if testosterone %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Testosterone</div>
+                                    {% if hormones.testosterone >= 1.61 and hormones.testosterone <= 8.41 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.testosterone }}</div>
+                                    {% elif hormones.testosterone < 1.61 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.testosterone }}&nbsp;&nbsp;↓</div>
+                                    {% elif hormones.testosterone > 8.41 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.testosterone }}&nbsp;&nbsp;↑</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >1.61-8.41</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">ng/ml</div>
+                                </div>
+                            {% endif %}
+
+                            {% if cortisol %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Cortisol</div>
+                                    {% if hormones.cortisol >= 201.31 and hormones.cortisol <= 536.54 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.cortisol }}</div>
+                                    {% elif hormones.cortisol < 201.31 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.cortisol }}&nbsp;&nbsp;↓</div>
+                                    {% elif hormones.cortisol > 536.54 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.cortisol }}&nbsp;&nbsp;↑</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >201.31-536.54</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">nmol/L</div>
+                                </div>
+                            {% endif %}
+
+                            {% if vit_d %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Vit D</div>
+                                    {% if hormones.vit_d >= 30 and hormones.vit_d <= 100 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.vit_d }}</div>
+                                    {% elif hormones.vit_d < 30 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.vit_d }}&nbsp;&nbsp;↓</div>
+                                    {% elif hormones.vit_d > 100 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.vit_d }}&nbsp;&nbsp;↑</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >30-100</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">ng/ml</div>
+                                </div>
+                            {% endif %}
+
+                            {% if ferritin %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Ferritin</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ hormones.ferritin }}</div>
+                                    <div class="col-xs-4 forthNormalText" >M:30-400 / F:13-150</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">ng/ml</div>
+                                </div>
+                            {% endif %}
+
+                            {% if d_dimer %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">D Dimer</div>
+                                    {% if hormones.d_dimer >= 0 and hormones.d_dimer <= 0.5 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.d_dimer }}</div>
+                                    {% elif hormones.d_dimer < 0 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.d_dimer }}&nbsp;&nbsp;↓</div>
+                                    {% elif hormones.d_dimer > 0.5 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.d_dimer }}&nbsp;&nbsp;↑</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >0-0.5</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">mg/L</div>
+                                </div>
+                            {% endif %}
+
+                            {% if b_hcg %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">B Hcg</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ hormones.b_hcg }}</div>
+                                    <div class="col-xs-4 forthNormalText" >5</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">mIU/ml</div>
+                                </div>
+                            {% endif %}
+
+                            {% if troponin_i %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Troponin I</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ hormones.troponin_i }}</div>
+                                    <div class="col-xs-4 forthNormalText" >Up To 0.3</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">ng/ml</div>
+                                </div>
+                            {% endif %}
+
+                            {% if troponin_t %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Troponin T</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ hormones.troponin_t }}</div>
+                                    <div class="col-xs-4 forthNormalText" >Up To 0.1</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">ng/ml</div>
+                                </div>
+                            {% endif %}
+
+                            {% if amh %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Amh</div>
+                                    {% if hormones.amh >= 0.92 and hormones.amh <= 13.89 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.amh }}</div>
+                                    {% elif hormones.amh < 0.92 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.amh }}&nbsp;&nbsp;↓</div>
+                                    {% elif hormones.amh > 13.89 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.amh }}&nbsp;&nbsp;↑</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >0.92-13.89</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">ng/mL</div>
+                                </div>
+                            {% endif %}
+
+                            {% if psa %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Psa</div>
+                                    {% if hormones.psa >= 0 and hormones.psa <= 4 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.psa }}</div>
+                                    {% elif hormones.psa < 0 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.psa }}&nbsp;&nbsp;↓</div>
+                                    {% elif hormones.psa > 4 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.psa }}&nbsp;&nbsp;↑</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >0-4</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">ng/mL</div>
+                                </div>
+                            {% endif %}
+
+                            {% if cea %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Cea</div>
+                                    {% if hormones.cea >= 0 and hormones.cea <= 5 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.cea }}</div>
+                                    {% elif hormones.cea < 0 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.cea }}&nbsp;&nbsp;↓</div>
+                                    {% elif hormones.cea > 5 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.cea }}&nbsp;&nbsp;↑</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >0-5</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">ng/mL</div>
+                                </div>
+                            {% endif %}
+
+                            {% if afp %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Afp</div>
+                                    {% if hormones.afp >= 0 and hormones.afp <= 20 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.afp }}</div>
+                                    {% elif hormones.afp < 0 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.afp }}&nbsp;&nbsp;↓</div>
+                                    {% elif hormones.afp > 20 %}
+                                        <div class="col-xs-2 resultOfItem" >{{ hormones.afp }}&nbsp;&nbsp;↑</div>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <div class="col-xs-4 forthNormalText" >0-20</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">ng/mL</div>
+                                </div>
+                            {% endif %}
+
+                            {% if toxo_igg_igm %}
+                                <div class="modal-body" dir="ltr">
+                                    <div class="col-xs-4 nameOfItem">Toxo Igg Igm T</div>
+                                    <div class="col-xs-2 resultOfItem" >{{ hormones.toxo_igg_igm }}</div>
+                                    <div class="col-xs-4 forthNormalText" >&nbsp;</div>
+                                    <div class="col-xs-2 forthNormalText" style="text-align: center">&nbsp;</div>
+                                </div>
+                            {% endif %}
+
+                            <br>
+                            <hr style="border-color: brown"/>
+
+                        {% endif %}
+
+                    </div>
+
+{#                    <div class="modal-footer">#}
+{#                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>#}
+{#                        <button type="button" class="btn btn-primary">Print</button>#}
+{#                    </div>#}
+                </div>
+
+                <!--endprint1-->
+            </div>
+        </div>
+
+
+        <script>
+            function preview(oper){
+                if (oper < 10){
+                    bdhtml=window.document.body.innerHTML;//获取当前页的html代码
+                    sprnstr="<!--startprint"+oper+"-->";//设置打印开始区域
+                    eprnstr="<!--endprint"+oper+"-->";//设置打印结束区域
+                    prnhtml=bdhtml.substring(bdhtml.indexOf(sprnstr)+18); //从开始代码向后取html
+                    prnhtml=prnhtml.substring(0,prnhtml.indexOf(eprnstr));//从结束代码向前取html
+                    window.document.body.innerHTML=prnhtml;
+                    window.print();
+                    window.document.body.innerHTML=bdhtml;
+                } else {
+                    window.print();
+                }
+            }
+        </script>
+
+
+    {% elif user.language == 2 %}
+
+
+    {% endif %}
+
+
+
+
+{% endblock home %}
+
+
+
+
+
+

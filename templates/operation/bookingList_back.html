@@ -1,0 +1,163 @@
+{% extends "home/base_operation.html" %}
+
+{% block home %}
+
+    <style>
+
+        td{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        th{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+
+        }
+
+    </style>
+
+
+    {% if user.language == 1 %}
+
+        <div class="card-header" align="center">
+
+            <h2 class="thirdBigTitle">
+                <form action="{% url 'dateSearchBooking' %}" method="post">
+                    {% csrf_token %}
+                        <label>
+                            <input type="date" class="form-control" name="start" required>
+                        </label>
+
+                        <label>
+                            <input type="submit" class="btn btn-info forthNormalText" value="إرسال">
+                        </label>
+                </form>
+            </h2>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered">
+                    <thead>
+                        <tr class="thirdBigTitle">
+                            <td style="color: red; font-size: 18px"> ساعة&nbsp;&nbsp;/ {{ dates }}</td>
+                            <td>9</td>
+                            <td>10</td>
+                            <td>11</td>
+                            <td>12</td>
+                            <td>13</td>
+                            <td>14</td>
+                            <td>15</td>
+                            <td>16</td>
+                            <td>17</td>
+                            <td>18</td>
+                        </tr>
+                    </thead>
+
+                    <tbody class="smallText">
+                        {% for timeTable in timeTables %}
+                            <tr>
+                                <td rowspan="2">{{ timeTable.doctor }}</td>
+                                {% for booking in timeTable.bookingoperation_set.all %}
+                                    <td colspan="{{ booking.timeOfOperation }}" style="color: brown">{{ booking.patient.basicInfo }}</td>
+                                {% endfor %}
+                            </tr>
+
+                            <tr>
+
+                                {% for booking in timeTable.bookingoperation_set.all %}
+                                    <td colspan="{{ booking.timeOfOperation }}" style="color: blueviolet">{{ booking.name }}</td>
+                                {% endfor %}
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+    {% elif user.language == 2 %}
+
+        <div class="card-header" align="center">
+
+            <h2 class="thirdBigTitle">
+                <form action="{% url 'dateSearchBooking' %}" method="post">
+                    {% csrf_token %}
+                        <label>
+                            <input type="date" class="form-control" name="start" required>
+                        </label>
+
+                        <label>
+                            <input type="submit" class="btn btn-info forthNormalText" value="إرسال">
+                        </label>
+                </form>
+            </h2>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered">
+                    <thead>
+                        <tr class="thirdBigTitle">
+                            <td style="color: red; font-size: 18px"> ساعة&nbsp;&nbsp;/ {{ dates }}</td>
+                            <td>9</td>
+                            <td>10</td>
+                            <td>11</td>
+                            <td>12</td>
+                            <td>13</td>
+                            <td>14</td>
+                            <td>15</td>
+                            <td>16</td>
+                            <td>17</td>
+                            <td>18</td>
+                        </tr>
+                    </thead>
+
+                    <tbody class="smallText">
+                        {% for timeTable in timeTables %}
+                            <tr>
+                                <td rowspan="2">{{ timeTable.doctor }}</td>
+                                {% for booking in timeTable.bookingoperation_set.all %}
+                                    <td colspan="{{ booking.timeOfOperation }}" style="color: brown">{{ booking.patient.basicInfo }}</td>
+                                {% endfor %}
+                            </tr>
+
+                            <tr>
+
+                                {% for booking in timeTable.bookingoperation_set.all %}
+                                    <td colspan="{{ booking.timeOfOperation }}" style="color: blueviolet">{{ booking.name }}</td>
+                                {% endfor %}
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+    {% endif %}
+
+
+
+
+
+{% endblock home %}
+
+
+
+
+
+

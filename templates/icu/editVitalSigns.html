@@ -1,0 +1,214 @@
+{% extends "home/base_hospitalized.html" %}
+
+{% block home %}
+
+    {{ block.super }}
+
+    <style>
+
+        td{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        th{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+
+        }
+
+        .inputVitalSigns{
+            box-sizing: border-box;
+            width: 70%;
+        }
+
+    </style>
+
+
+    <div class="card-body">
+        <div class="table-responsive">
+
+            {% if user.language == 1 %}
+
+                <table class="table table-bordered">
+                    <tr>
+                        <th class="forthBigMenu">اسم المريض</th>
+                        <td class="forthNormalText">{{ patient.basicInfo.name}}</td>
+                        <th class="forthBigMenu">العمر</th>
+                        <td class="forthNormalText">{{ patient.basicInfo.age}}</td>
+                        <th class="forthBigMenu">الجنس</th>
+                        <td class="forthNormalText">{{ patient.basicInfo.sex }}</td>
+
+                    </tr>
+
+                </table>
+
+                <h2 class="firstBigTitle" align="center">تعديل العلامة الحيوية</h2><br>
+
+                <table class="table table-bordered">
+
+                    <tr>
+                        <td colspan="12" style="text-align: left">
+                            <a href="/viewVitalSigns/{{patient_id}}"><input type="submit" class="btn btn-info forthNormalText" value="العلامة الحيوية"></a>
+                            <a href="{% url 'graphics' patient_id patient.patientID %}"><input type="button" class="btn btn-info forthNormalText" value="العلامات الحيوية مخطط"></a>
+                        </td>
+                    </tr>
+
+                    <form method="POST" action="">
+                        {% csrf_token %}
+                        <tr align="center" valign="middle" class="forthBigMenu">
+                            <th>Pulse</th>
+                            <th>SYS</th>
+                            <th>DYS</th>
+                            <th>Spo2</th>
+                            <th>Temperature</th>
+                        </tr>
+                        <tr>
+                            <td><input class="inputVitalSigns"  type="number" name="pulse" size="6" value="{{ vitalSigns.pulse }}"></td>
+                            <td><input class="inputVitalSigns"  type="number" name="bloodPressureMax" size="6" value="{{ vitalSigns.bloodPressureMax }}"></td>
+                            <td><input class="inputVitalSigns"  type="number" name="bloodPressureMin" size="6" value="{{ vitalSigns.bloodPressureMin }}"></td>
+                            <td><input class="inputVitalSigns"  type="number" name="spo2" size="6" value="{{ vitalSigns.spo2 }}"></td>
+                            <td><input class="inputVitalSigns"  type="number" name="temperature" size="6" step = 0.1 value="{{ vitalSigns.temperature }}"></td>
+                        </tr>
+                        <tr class="forthBigMenu">
+                            <th>Breathing Rate</th>
+                            <th>Urine Hourly</th>
+                            <th>Oxygen</th>
+                            <th>Glucose</th>
+                            <th>Frequency</th>
+                        </tr>
+                        <tr>
+                            <td ><input class="inputVitalSigns"  type="number" name="breathingRate" size="6" value="{{ vitalSigns.breathingRate }}"></td>
+                            <td ><input class="inputVitalSigns"  type="number" name="urineOutput" size="6" step = 0.1 value="{{ vitalSigns.urineOutput }}"></td>
+                            <td ><input class="inputVitalSigns"  type="text" name="oxygen" size="20" value="{{ vitalSigns.oxygen }}"></td>
+                            <td ><input class="inputVitalSigns"  type="number" name="glucose" size="6" step = 0.1 value="{{ vitalSigns.glucose }}"></td>
+                            <td ><input class="inputVitalSigns"  type="number" name="frequency" size="6" value="{{ vitalSigns.frequency }}"></td>
+                        </tr>
+                        <tr align="center" valign="middle" class="forthBigMenu">
+                            <th>Mode</th>
+                            <th>VT</th>
+                            <th>Fio2(%)</th>
+                            <th>PSV(cm)</th>
+                            <th>Peep(cm)</th>
+                        </tr>
+                        <tr>
+                            <td><input class="inputVitalSigns"  type="text" name="mode"  size="19" value="{{ vitalSigns.mode }}"></td>
+                            <td><input class="inputVitalSigns"  type="number" name="vt" size="6" value="{{ vitalSigns.vt }}"></td>
+                            <td><input class="inputVitalSigns"  type="number" name="fio2" size="6" value="{{ vitalSigns.fio2 }}"></td>
+                            <td><input class="inputVitalSigns"  type="number" name="psv" size="6" value="{{ vitalSigns.psv }}"></td>
+                            <td><input class="inputVitalSigns"  type="number" name="peep" size="6" step = 0.1 value="{{ vitalSigns.peep }}"></td>
+                        </tr>
+                        <tr>
+                            <th class="forthBigMenu">التاريخ</th>
+                            <td ><label>
+                                <input type="datetime-local" name="date" style="width: 175px" value="{{ vitalSigns.date }}" required>
+                            </label></td>
+                            <td colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" align="center"><input type="submit" class="btn btn-info forthNormalText" value="إرسال"></td>
+                        </tr>
+                    </form>
+                </table>
+
+            {% elif user.language == 2 %}
+
+                <table class="table table-bordered">
+                    <tr>
+                        <th class="forthBigMenu">Name</th>
+                        <td class="forthNormalText">{{patient.basicInfo.name}}</td>
+                        <th class="forthBigMenu">Age</th>
+                        <td class="forthNormalText">{{patient.basicInfo.age}}</td>
+                        <th class="forthBigMenu">Blood Group</th>
+                        <td class="forthNormalText">{{patient.basicInfo.bloodGroup}}</td>
+
+                    </tr>
+
+                </table>
+
+                <h2 class="firstBigTitle" align="center">Edit Vital Signs</h2><br>
+
+                <table class="table table-bordered">
+
+                    <tr>
+                        <td colspan="12" style="text-align: left">
+                            <a href="/viewVitalSigns/{{patient_id}}"><input type="submit" class="btn btn-info" value="View Vital Signs"></a>
+                            <a href="{% url 'graphics' patient_id patient.patientID %}"><input type="button" class="btn btn-info" value="View Graphics"></a>
+                        </td>
+                    </tr>
+
+                    <form method="POST" action="">
+                        {% csrf_token %}
+                        <tr align="center" valign="middle" class="forthBigMenu">
+                            <th>Pulse</th>
+                            <th>SYS</th>
+                            <th>DYS</th>
+                            <th>Spo2</th>
+                            <th>Temperature</th>
+                        </tr>
+                        <tr>
+                            <td><input class="inputVitalSigns"  type="number" name="pulse" size="6" value="{{ vitalSigns.pulse }}"></td>
+                            <td><input class="inputVitalSigns"  type="number" name="bloodPressureMax" size="6" value="{{ vitalSigns.bloodPressureMax }}"></td>
+                            <td><input class="inputVitalSigns"  type="number" name="bloodPressureMin" size="6" value="{{ vitalSigns.bloodPressureMin }}"></td>
+                            <td><input class="inputVitalSigns"  type="number" name="spo2" size="6" value="{{ vitalSigns.spo2 }}"></td>
+                            <td><input class="inputVitalSigns"  type="number" name="temperature" size="6" step = 0.1 value="{{ vitalSigns.temperature }}"></td>
+                        </tr>
+                        <tr class="forthBigMenu">
+                            <th>Breathing Rate</th>
+                            <th>Urine Hourly</th>
+                            <th>Oxygen</th>
+                            <th>Glucose</th>
+                            <th>Frequency</th>
+                        </tr>
+                        <tr>
+                            <td ><input class="inputVitalSigns"  type="number" name="breathingRate" size="6" value="{{ vitalSigns.breathingRate }}"></td>
+                            <td ><input class="inputVitalSigns"  type="number" name="urineOutput" size="6" step = 0.1 value="{{ vitalSigns.urineOutput }}"></td>
+                            <td ><input class="inputVitalSigns"  type="text" name="oxygen" size="20" value="{{ vitalSigns.oxygen }}"></td>
+                            <td ><input class="inputVitalSigns"  type="number" name="glucose" size="6" step = 0.1 value="{{ vitalSigns.glucose }}"></td>
+                            <td ><input class="inputVitalSigns"  type="number" name="frequency" size="6" value="{{ vitalSigns.frequency }}"></td>
+                        </tr>
+                        <tr align="center" valign="middle" class="forthBigMenu">
+                            <th>Mode</th>
+                            <th>VT</th>
+                            <th>Fio2(%)</th>
+                            <th>PSV(cm)</th>
+                            <th>Peep(cm)</th>
+                        </tr>
+                        <tr>
+                            <td><input class="inputVitalSigns"  type="text" name="mode"  size="19" value="{{ vitalSigns.mode }}"></td>
+                            <td><input class="inputVitalSigns"  type="number" name="vt" size="6" value="{{ vitalSigns.vt }}"></td>
+                            <td><input class="inputVitalSigns"  type="number" name="fio2" size="6" value="{{ vitalSigns.fio2 }}"></td>
+                            <td><input class="inputVitalSigns"  type="number" name="psv" size="6" value="{{ vitalSigns.psv }}"></td>
+                            <td><input class="inputVitalSigns"  type="number" name="peep" size="6" step = 0.1 value="{{ vitalSigns.peep }}"></td>
+                        </tr>
+                        <tr>
+                            <th class="forthBigMenu">Date</th>
+                            <td ><label>
+                                <input type="datetime-local" name="date" style="width: 175px" value="{{ vitalSigns.date }}" required>
+                            </label></td>
+                            <td colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" align="center"><input type="submit" class="btn btn-info" value="submit"></td>
+                        </tr>
+                    </form>
+                </table>
+
+            {% endif %}
+
+
+
+        </div>
+    </div>
+
+
+
+{% endblock home %}
+
+
+
+
+
+

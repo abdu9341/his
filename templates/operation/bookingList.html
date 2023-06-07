@@ -1,0 +1,275 @@
+{% extends "home/base_operation.html" %}
+
+{% block home %}
+
+    <style>
+
+        td{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        th{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+
+        }
+
+    </style>
+
+
+    {% if user.language == 1 %}
+
+        <div class="card-header" align="center">
+
+            <h2 class="thirdBigTitle">
+                <form action="{% url 'dateSearchBookingList' %}" method="post">
+                    {% csrf_token %}
+                        <label>
+                            <input type="date" class="form-control" name="start" required>
+                        </label>
+
+                        <label>
+                            <input type="submit" class="btn btn-info forthNormalText" value="إرسال">
+                        </label>
+                </form>
+            </h2>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered">
+                    <thead>
+                        <tr class="thirdBigTitle">
+                            <td style="color: red; font-size: 18px"> ترتيب&nbsp;&nbsp;/ {{ dates }}</td>
+                            <td>1</td>
+                            <td>2</td>
+                            <td>3</td>
+                            <td>4</td>
+                            <td>5</td>
+                            <td>6</td>
+                            <td>7</td>
+                            <td>8</td>
+                            <td>9</td>
+                            <td>10</td>
+                        </tr>
+                    </thead>
+
+                    <tbody class="forthNormalText">
+                        {% for timeTable in timeTables %}
+                            <tr>
+                                <td rowspan="2">{{ timeTable.doctor }}</td>
+                                {% for booking in bookings %}
+                                    {% if booking.timeTable == timeTable %}
+                                        <td colspan="{{ booking.timeOfOperation }}" style="color: brown">
+                                            <a href="#" type="button" class="btn btn-info" data-toggle="modal" data-target="#check{{ booking.id }}">
+                                                {{ booking.patient.basicInfo }}
+                                            </a>
+                                        </td>
+                                    {% endif %}
+
+                                    <!-- Check -->
+                                    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="wardLabel" id="check{{ booking.id }}">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                    <h4 class="modal-title thirdBigMenu" id="gridSystemModalLabel">معلومات المريض</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="row smallText">
+
+                                                        <div class="col-md-3" style="color: #AE4C4C">اسم المريض</div>
+                                                        <div class="col-md-3">{{ booking.patient.basicInfo }}</div>
+                                                        <div class="col-md-3" style="color: #AE4C4C">العمر</div>
+                                                        <div class="col-md-3" style="color: #205072">{{ booking.patient.basicInfo.age }}</div>
+
+                                                        <div class="col-md-12" style="color: #205072"><hr></div>
+
+                                                        <div class="col-md-3" style="color: #AE4C4C">الجنس</div>
+                                                        <div class="col-md-3" style="color: #205072">{{ booking.patient.basicInfo.sex }}</div>
+                                                        <div class="col-md-3" style="color: #AE4C4C">الحالة العائلية</div>
+                                                        <div class="col-md-3" style="color: #205072">{{ booking.patient.basicInfo.marriage }}</div>
+
+                                                        <div class="col-md-12" style="color: #205072"><hr></div>
+
+                                                        <div class="col-md-3" style="color: #AE4C4C">رقم هاتف</div>
+                                                        <div class="col-md-3" style="color: #205072">{{ booking.patient.basicInfo.phone }}</div>
+                                                        <div class="col-md-3" style="color: #AE4C4C">السكن</div>
+                                                        <div class="col-md-3" style="color: #205072">{{ booking.patient.basicInfo.address }}</div>
+
+                                                        <div class="col-md-12" style="color: #205072"><hr></div>
+
+                                                        <div class="col-md-3" style="color: #AE4C4C">قسم القبول</div>
+                                                        <div class="col-md-3" style="color: #205072">
+                                                            {% for department in patient.department.all %}
+                                                                {{ department.arabic_name }}
+                                                            {% endfor %}
+                                                        </div>
+                                                        <div class="col-md-3" style="color: #AE4C4C">رقم المريض</div>
+                                                        <div class="col-md-3" style="color: #205072">{{ booking.patient.patientID }}</div>
+
+                                                        <div class="col-md-12" style="color: #205072"><hr></div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                {% endfor %}
+                            </tr>
+
+                            <tr>
+
+                                {% for booking in bookings %}
+                                    {% if booking.timeTable == timeTable %}
+                                        <td colspan="{{ booking.timeOfOperation }}" style="color: blueviolet">{{ booking.name }}</td>
+                                    {% endif %}
+                                {% endfor %}
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+    {% elif user.language == 2 %}
+
+        <div class="card-header" align="center">
+
+            <h2 class="thirdBigTitle">
+                <form action="{% url 'dateSearchBookingList' %}" method="post">
+                    {% csrf_token %}
+                        <label>
+                            <input type="date" class="form-control" name="start" required>
+                        </label>
+
+                        <label>
+                            <input type="submit" class="btn btn-info forthNormalText" value="إرسال">
+                        </label>
+                </form>
+            </h2>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered">
+                    <thead>
+                        <tr class="thirdBigTitle">
+                            <td style="color: red; font-size: 18px"> ترتيب&nbsp;&nbsp;/ {{ dates }}</td>
+                            <td>1</td>
+                            <td>2</td>
+                            <td>3</td>
+                            <td>4</td>
+                            <td>5</td>
+                            <td>6</td>
+                            <td>7</td>
+{#                            <td>16</td>#}
+{#                            <td>17</td>#}
+{#                            <td>18</td>#}
+                        </tr>
+                    </thead>
+
+                    <tbody class="smallText">
+                        {% for timeTable in timeTables %}
+                            <tr>
+                                <td rowspan="2">{{ timeTable.doctor }}</td>
+                                {% for booking in bookings %}
+                                    {% if booking.timeTable == timeTable %}
+                                        <td colspan="{{ booking.timeOfOperation }}" style="color: brown">
+                                            <a href="#" type="button" class="btn btn-info" data-toggle="modal" data-target="#check{{ booking.id }}">
+                                                {{ booking.patient.basicInfo }}
+                                            </a>
+                                        </td>
+                                    {% endif %}
+
+                                    <!-- Check -->
+                                    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="wardLabel" id="check{{ booking.id }}">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                    <h4 class="modal-title thirdBigMenu" id="gridSystemModalLabel">Patient Detail</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="row smallText">
+
+                                                        <div class="col-md-3" style="color: #AE4C4C">Name</div>
+                                                        <div class="col-md-3">{{ booking.patient.basicInfo }}</div>
+                                                        <div class="col-md-3" style="color: #AE4C4C">Age</div>
+                                                        <div class="col-md-3" style="color: #205072">{{ booking.patient.basicInfo.age }}</div>
+
+                                                        <div class="col-md-12" style="color: #205072"><hr></div>
+
+                                                        <div class="col-md-3" style="color: #AE4C4C">Gender</div>
+                                                        <div class="col-md-3" style="color: #205072">{{ booking.patient.basicInfo.sex }}</div>
+                                                        <div class="col-md-3" style="color: #AE4C4C">Marriage</div>
+                                                        <div class="col-md-3" style="color: #205072">{{ booking.patient.basicInfo.marriage }}</div>
+
+                                                        <div class="col-md-12" style="color: #205072"><hr></div>
+
+                                                        <div class="col-md-3" style="color: #AE4C4C">Phone</div>
+                                                        <div class="col-md-3" style="color: #205072">{{ booking.patient.basicInfo.phone }}</div>
+                                                        <div class="col-md-3" style="color: #AE4C4C">Address</div>
+                                                        <div class="col-md-3" style="color: #205072">{{ booking.patient.basicInfo.address }}</div>
+
+                                                        <div class="col-md-12" style="color: #205072"><hr></div>
+
+                                                        <div class="col-md-3" style="color: #AE4C4C">Spaciality</div>
+                                                        <div class="col-md-3" style="color: #205072">{{ booking.patient.polyclinicDepartment }}</div>
+                                                        <div class="col-md-3" style="color: #AE4C4C">Patient ID</div>
+                                                        <div class="col-md-3" style="color: #205072">{{ booking.patient.patientID }}</div>
+
+                                                        <div class="col-md-12" style="color: #205072"><hr></div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                {% endfor %}
+                            </tr>
+
+                            <tr>
+
+                                {% for booking in bookings %}
+                                    {% if booking.timeTable == timeTable %}
+                                        <td colspan="{{ booking.timeOfOperation }}" style="color: blueviolet">{{ booking.name }}</td>
+                                    {% endif %}
+                                {% endfor %}
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+    {% endif %}
+
+
+
+
+
+{% endblock home %}
+
+
+
+
+
+

@@ -1,0 +1,201 @@
+{% extends "home/base_emergency.html" %}
+
+{% block home %}
+
+    <style type="text/css">
+        td{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+        th{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+    </style>
+
+
+    {% if user.language == 1 %}
+
+        <div class="card-header" align="center">
+            <h2 class="firstBigTitle"> اعادة قبول</h2>
+        </div>
+
+        <div class="card-body" align="center">
+
+            <div class="table-responsive">
+
+                <form action="" method="POST">
+                    {% csrf_token %}
+
+                        <table class="table">
+                            <tr >
+                                <th class="thirdBigMenu"><label for="name">اسم المريض</label></th>
+                                <td class="normalText">{{ patient.basicInfo.name }}</td>
+                                <td class="thirdBigMenu"><label for=age">العمر</label></td>
+                                <td class="normalText">{{ patient.basicInfo.age }}</td>
+                            </tr>
+
+                            <tr>
+                                <td class="thirdBigMenu"><label for="sex">الجنس</label></td>
+                                <td class="normalText">{{ patient.basicInfo.sex }}</td>
+                                <td class="thirdBigMenu"><label for="marriage">رقم المريض</label></td>
+                                <td class="normalText">{{ patient.patientID }}</td>
+
+                            </tr>
+
+                        </table >
+
+                        <table class="table">
+                            <tr class="thirdBigMenu">
+                                <th><label for="name">نوع  اسعاف</label></th>
+                                <td>
+                                    <label class="col-md-7 control-label btn btn-success" style="text-align: center;">
+                                        <input type="radio" name="types" value="1">&nbsp;&nbsp;الأخضر
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="col-md-7 control-label btn btn-yellow" style="text-align: center;">
+                                        <input type="radio" name="types" value="2">&nbsp;&nbsp;الأصفر
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="col-md-7 control-label btn btn-danger" style="text-align: center;">
+                                        <input type="radio" name="types" value="3">&nbsp;&nbsp;الأحمر
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="col-md-7 control-label btn btn-dark" style="text-align: center;">
+                                        <input type="radio" name="types" value="4">&nbsp;&nbsp;الأسود
+                                    </label>
+                                </td>
+                            </tr>
+
+                        </table >
+
+                        <table class="table" style="text-align: left;">
+
+                            <tr>
+                                <td class="thirdBigMenu"><label for="department">قسم القبول </label></td>
+                                {% for department in departments %}
+                                    {% if department.name == 'Surgery' or department.name == 'Internal Surgery' or department.name == 'Internal Cardiology' %}
+                                        <td class="normalText">
+                                            {{ department.arabic_name }}
+                                             <label for="radio">
+                                                <input type="checkbox" name="department" value="{{ department.id }}">
+                                             </label>
+                                        </td>
+                                    {% endif %}
+                                {% endfor %}
+                            </tr>
+
+                            <tr>
+                                <td style="text-align: center" colspan="4">
+                                    <button class="btn btn-info forthBigMenu" type="submit">إرسال</button>
+                                </td>
+                            </tr>
+
+                          </table>
+
+                        </form>
+
+                    </div>
+                  </div>
+
+    {% elif user.language == 2 %}
+
+        <div class="card-header" align="center">
+            <h2 class="firstBigTitle">Re-admission</h2>
+        </div>
+
+        <div class="card-body" align="center">
+
+            <div class="table-responsive">
+
+
+                <form action="" method="POST">
+                    {% csrf_token %}
+
+                        <table class="table">
+                            <tr >
+                                <th class="thirdBigMenu"><label for="name">Name</label></th>
+                                <td class="normalText">{{ patient.basicInfo.name }}</td>
+                                <td class="thirdBigMenu"><label for=age">Age</label></td>
+                                <td class="normalText">{{ patient.basicInfo.age }}</td>
+                            </tr>
+
+                            <tr>
+                                <td class="thirdBigMenu"><label for="sex">Gender</label></td>
+                                <td class="normalText">{{ patient.basicInfo.sex }}</td>
+                                <td class="thirdBigMenu"><label for="marriage">ID</label></td>
+                                <td class="normalText">{{ patient.patientID }}</td>
+
+                            </tr>
+
+                        </table >
+
+                        <table class="table">
+                            <tr>
+                                <th class="thirdBigMenu"><label for="name">Type Of Emergency</label></th>
+                                <td>
+                                    <label class="col-md-7 control-label btn btn-success" style="text-align: center;">
+                                        <input type="radio" name="types" value="1">&nbsp;&nbsp;Green
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="col-md-7 control-label btn btn-yellow" style="text-align: center;">
+                                        <input type="radio" name="types" value="2">&nbsp;&nbsp;Yellow
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="col-md-7 control-label btn btn-danger" style="text-align: center;">
+                                        <input type="radio" name="types" value="3">&nbsp;&nbsp;Red
+                                    </label>
+                                </td>
+                                <td>
+                                    <label class="col-md-7 control-label btn btn-dark" style="text-align: center;">
+                                        <input type="radio" name="types" value="4">&nbsp;&nbsp;Black
+                                    </label>
+                                </td>
+                            </tr>
+
+                        </table >
+
+                        <table class="table" style="text-align: left;">
+
+                            <tr>
+                                <td class="thirdBigMenu"><label for="department">Department</label></td>
+                                {% for department in departments %}
+                                    {% if department.name == 'Surgery' or department.name == 'Internal Surgery' or department.name == 'Internal Cardiology' %}
+                                        <td class="normalText">
+                                            {{ department.name }}
+                                             <label for="radio">
+                                                <input type="checkbox" name="department" value="{{ department.id }}">
+                                             </label>
+                                        </td>
+                                    {% endif %}
+                                {% endfor %}
+                            </tr>
+
+                            <tr>
+                                <td style="text-align: center" colspan="4">
+                                    <button class="btn btn-info" type="submit">Submit</button>
+                                </td>
+                            </tr>
+
+                          </table>
+
+                        </form>
+
+                    </div>
+                  </div>
+
+    {% endif %}
+
+
+
+
+
+{% endblock home %}
+

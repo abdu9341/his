@@ -1,0 +1,273 @@
+{% extends "home/base_polyclinic.html" %}
+
+{% block home %}
+
+
+
+    <style type="text/css">
+
+        td{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        th{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+
+    </style>
+
+
+    {% if user.language == 1 %}
+
+        <div class="card-header">
+
+            <table class="table" style="width:100%; table-layout:fixed;">
+
+                <tr>
+
+                    <form action="{% url 'searchPolyclinicPatient' %}" method="post">
+                        {% csrf_token %}
+                        <td><label>
+                            <input type="text" list="patientList" name="search" placeholder="بحث" class="form-control forthNormalText" style="width: 350px" required>
+                            <datalist id="patientList">
+
+                                {% for patient in search_patient %}
+                                    <option value="{{ patient.basicInfo.name }}">
+                                {% endfor %}
+
+                            </datalist>
+
+                        </label></td>
+                        <td><input type="submit" class="btn btn-info forthNormalText" value="بحث"></td>
+                    </form>
+
+
+                    <form action="{% url 'searchDatePolyclinicPatient' %}" method="post">
+                        {% csrf_token %}
+                            <td><label>
+                                <input type="datetime-local" class="form-control" name="start" required>
+                            </label></td>
+
+                            <td><label>
+                                <input type="datetime-local" class="form-control" name="end" required>
+                            </label></td>
+
+                            <td><label>
+                                <input type="submit" class="btn btn-info forthNormalText" value="إرسال">
+                            </label></td>
+                    </form>
+                </tr>
+
+            </table>
+
+        </div>
+
+
+        <div class="card-body">
+            <div class="table-responsive">
+
+                <table class="table" align="center">
+                    <thead >
+
+                        <tr class="forthBigMenu">
+                            <th>#</th>
+                            <th>اسم المريض</th>
+                            <th>رقم المريض</th>
+                            <th>العمر</th>
+                            <th>تاريخ القبول</th>
+                            <th>قسم القبول</th>
+                            <th>صوت</th>
+
+                        </tr>
+                    </thead>
+
+                    {% for patient in page %}
+
+                        <tr class="forthNormalText">
+                            <th>{{ forloop.counter }}</th>
+                            <th><a href="/basicInfoPolyclinic/{{ patient.id }}">{{ patient.basicInfo.name }}</a></th>
+                            <td>{{ patient.patientID }}</td>
+                            <td>{{ patient.basicInfo.age }}</td>
+                            <td>{{ patient.enterDate}}</td>
+                            <td>
+                                {% for department in patient.department.all %}
+                                    {{ department.arabic_name }}
+                                {% endfor %}
+                            </td>
+                            <td>
+                                {% if patient.haveSes %}
+                                    <a><i class="mdi mdi-18px mdi-volume-high"></i></a>
+                                {% else %}
+                                    <a><i class="mdi mdi-18px mdi-volume-off"></i></a>
+                                {% endif %}
+                            </td>
+                        </tr>
+
+                    {% endfor %}
+
+                    <tr><td colspan="7" style="text-align: center" class="message">{{ message }}</td></tr>
+
+                    <tr>
+                        <td colspan="7" align="center" style="font-size: larger">
+                            <ul class="pagination">
+                                {% if page.has_previous %}
+                                    <li class=""><a href="/polyclinicPatientList{{ page.previous_page_number }}"><span>«</span></a></li>
+                                {% endif %}
+
+                                {% for pindex in page.paginator.page_range %}
+                                    {% if pindex == page.number  %}
+                                        <li class="active"><span>{{ pindex }}</span></li>
+                                    {% elif pindex < 8 %}
+                                        <li><a href="/polyclinicPatientList{{ pindex }}">{{ pindex }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if page.has_next %}
+                                    <li><a href="/polyclinicPatientList{{ page.next_page_number }}">»</a></li>
+                                {% endif %}
+                            </ul>
+                        </td>
+                    </tr>
+
+                </table>
+
+            </div>
+        </div>
+
+    {% elif user.language == 2 %}
+
+        <div class="card-header">
+
+            <table class="table" style="width:100%; table-layout:fixed;">
+
+                <tr>
+
+                    <form action="{% url 'searchPolyclinicPatient' %}" method="post">
+                        {% csrf_token %}
+                        <td><label>
+                            <input type="text" list="patientList" name="search" id="inputText" placeholder="Search Patient" class="form-control menuSmall" style="width: 350px" required>
+                            <datalist id="patientList">
+
+                                {% for patient in search_patient %}
+                                    <option value="{{ patient.basicInfo.name }}">
+                                {% endfor %}
+
+                            </datalist>
+
+                        </label></td>
+                        <td><input type="submit" class="btn btn-info" value="Search"></td>
+                    </form>
+
+
+                    <form action="{% url 'searchDatePolyclinicPatient' %}" method="post">
+                        {% csrf_token %}
+                            <td><label>
+                                <input type="datetime-local" class="form-control" name="start" required>
+                            </label></td>
+
+                            <td><label>
+                                <input type="datetime-local" class="form-control" name="end" required>
+                            </label></td>
+
+                            <td><label>
+                                <input type="submit" class="btn btn-info " value="Submit">
+                            </label></td>
+                    </form>
+                </tr>
+
+            </table>
+
+        </div>
+
+
+        <div class="card-body">
+            <div class="table-responsive">
+
+                <table class="table" align="center">
+                    <thead >
+
+                        <tr class="forthBigMenu">
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Patient ID</th>
+                            <th>Age</th>
+                            <th>Enter Date</th>
+                            <th>Spaciality</th>
+                            <th>Voice</th>
+
+                        </tr>
+                    </thead>
+
+                    {% for patient in page %}
+
+                        <tr class="forthNormalText">
+                            <th>{{ forloop.counter }}</th>
+                            <th><a href="/basicInfoPolyclinic/{{ patient.id }}">{{ patient.basicInfo.name }}</a></th>
+                            <td>{{ patient.patientID }}</td>
+                            <td>{{ patient.basicInfo.age }}</td>
+                            <td>{{ patient.enterDate}}</td>
+                            <td>
+                                {% for department in patient.department.all %}
+                                    {{ department.name }}
+                                {% endfor %}
+                            </td>
+                            <td>
+                                {% if patient.haveSes %}
+                                    <a><i class="mdi mdi-18px mdi-volume-high"></i></a>
+                                {% else %}
+                                    <a><i class="mdi mdi-18px mdi-volume-off"></i></a>
+                                {% endif %}
+                            </td>
+                        </tr>
+
+                    {% endfor %}
+
+                    <tr><td colspan="7" style="text-align: center" class="message">{{ message }}</td></tr>
+
+                    <tr>
+                        <td colspan="7" align="center" style="font-size: larger">
+                            <ul class="pagination">
+                                {% if page.has_previous %}
+                                    <li class=""><a href="/polyclinicPatientList{{ page.previous_page_number }}"><span>«</span></a></li>
+                                {% endif %}
+
+                                {% for pindex in page.paginator.page_range %}
+                                    {% if pindex == page.number  %}
+                                        <li class="active"><span>{{ pindex }}</span></li>
+                                    {% elif pindex < 8 %}
+                                        <li><a href="/polyclinicPatientList{{ pindex }}">{{ pindex }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if page.has_next %}
+                                    <li><a href="/polyclinicPatientList{{ page.next_page_number }}">»</a></li>
+                                {% endif %}
+                            </ul>
+                        </td>
+                    </tr>
+
+                </table>
+
+            </div>
+        </div>
+
+    {% endif %}
+
+
+
+
+
+
+
+{% endblock home %}
+
+
+
+
+
+

@@ -1,0 +1,325 @@
+{% extends "home/base_emergency.html" %}
+
+{% block home %}
+
+
+    {% if user.language == 1 %}
+
+        <div class="card-header" align="center">
+
+            <h2 class="firstBigTitle">استمارة قبول مشفى </h2>
+
+        </div>
+
+
+        <div class="card-body">
+
+            {% if patient_exist %}
+
+                <div class="col-md-12">
+
+                    <h3 style="color: red">{{ message }} &nbsp;&nbsp;
+                        <a href="{% url 'viewBasicInfo' patient_exist.id patient_exist.patientID %}" style="font-family: Calibri">{{ patient_exist.basicInfo.name }}</a>
+                    </h3>
+
+                </div>
+
+            {% endif %}
+
+            <form class="form-horizontal" action="" method="post">
+                {% csrf_token %}
+
+                <div class="form-group has-info thirdBigTitle">
+
+                    <label class="col-md-2 control-label" style="color: darkblue; font-size: 18px">اسم المريض</label>
+                    <div class="col-md-3">
+                      <input class="form-control" type="text" name="name" value="{{ patient.basicInfo.name }}" maxlength="30" required dir="rtl">
+                    </div>
+
+                    <label class="col-md-2 control-label" for="example-age" style="color: darkblue; font-size: 18px">العمر</label>
+                    <div class="col-md-3">
+                      <input class="form-control" type="number" step="0.1" name="age" value="{{ patient.basicInfo.age }}" required>
+                    </div>
+
+                </div>
+
+                <div class="form-group has-info thirdBigTitle">
+
+                    <label class="col-md-2 control-label" for="example-sex" style="color: darkblue; font-size: 18px">الجنس</label>
+                    <div class="col-md-3">
+                        <select class="form-control" id="example-select" name="sex" required dir="rtl">
+                            {% for gender in genders %}
+                                {% if patient.basicInfo.sex == gender %}
+                                    <option selected value="{{gender}}">{{gender}}</option>
+                                {% else %}
+                                    <option value="{{gender}}">{{gender}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                </div>
+
+                <br>
+                <div class="form-group has-info thirdBigTitle">
+
+                    <label class="col-md-2 control-label" for="example-address" style="color: darkblue; font-size: 18px">نوع  اسعاف</label>
+                    <div class="col-md-1"></div>
+
+                    <div class="col-md-2">
+                        {% if patient.typeOfEmergency == 1 %}
+                            <label class="col-md-7 control-label btn btn-success" style="text-align: center;">
+                                <input type="radio" name="types" checked="checked" value="1">&nbsp;&nbsp;الأخضر
+                            </label>
+                        {% else %}
+                            <label class="col-md-7 control-label btn btn-success" style="text-align: center;">
+                                <input type="radio" name="types" value="1">&nbsp;&nbsp;الأخضر
+                            </label>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-2">
+                        {% if patient.typeOfEmergency == 2 %}
+                            <label class="col-md-7 control-label btn btn-yellow" style="text-align: center;">
+                                <input type="radio" name="types" checked="checked" value="2">&nbsp;&nbsp;الأصفر
+                            </label>
+                        {% else %}
+                            <label class="col-md-7 control-label btn btn-yellow" style="text-align: center;">
+                                <input type="radio" name="types" value="2">&nbsp;&nbsp;الأصفر
+                            </label>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-2">
+                        {% if patient.typeOfEmergency == 3 %}
+                            <label class="col-md-7 control-label btn btn-danger" style="text-align: center;">
+                                <input type="radio" name="types" checked="checked" value="3">&nbsp;&nbsp;الأحمر
+                            </label>
+                        {% else %}
+                            <label class="col-md-7 control-label btn btn-danger" style="text-align: center;">
+                                <input type="radio" name="types" value="3">&nbsp;&nbsp;الأحمر
+                            </label>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-2">
+                        {% if patient.typeOfEmergency == 4 %}
+                            <label class="col-md-7 control-label btn btn-dark" style="text-align: center;">
+                                <input type="radio" name="types" checked="checked" value="4">&nbsp;&nbsp;الأسود
+                            </label>
+                        {% else %}
+                            <label class="col-md-7 control-label btn btn-dark" style="text-align: center;">
+                                <input type="radio" name="types" value="4">&nbsp;&nbsp;الأسود
+                            </label>
+                        {% endif %}
+                    </div>
+
+                </div>
+
+                <div class="col-md-12"><hr></div>
+
+                <div class="form-group">
+
+                    <label class="col-md-2 control-label thirdBigTitle" for="example-select" style="color: darkblue; font-size: 18px">قسم القبول</label>
+
+                    {% for department in patient.department.all %}
+                        <label class="col-md-2 control-label" for="example-select" style="font-family: Calibri; font-size: 18px">{{ department.arabic_name }} &nbsp;&nbsp;&nbsp;</label>
+                    {% endfor %}
+
+                    <div class="col-md-12">
+
+                    </div>
+                    <br><br><br><br><br>
+
+                    <div class="col-md-2"></div>
+
+                     {% for department in departments %}
+
+                         {% if department.name == 'Surgery' or department.name == 'Internal Surgery' or department.name == 'Internal Cardiology' %}
+
+                             <div class="col-md-2" style="font-family: Calibri; font-size: 20px">
+                                 {{ department.arabic_name }}
+                                 <label for="radio">
+                                    <input type="checkbox" name="department" value="{{ department.id }}">
+                                 </label>
+                             </div>
+
+                         {% endif %}
+                     {% endfor %}
+
+                </div>
+                <br>
+                <div class="form-group">
+                    <div class="col-md-12 col-md-offset-5">
+                        <button class="btn btn-info forthBigMenu" type="submit">إرسال</button>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+
+    {% elif user.language == 2 %}
+
+        <div class="card-header" align="center">
+
+            <h2 class="firstBigTitle">استمارة قبول مشفى </h2>
+
+        </div>
+
+
+        <div class="card-body">
+
+            {% if patient_exist %}
+
+                <div class="col-md-12">
+
+                    <h3 style="color: red">{{ message }} &nbsp;&nbsp;
+                        <a href="{% url 'viewBasicInfo' patient_exist.id patient_exist.patientID %}" style="font-family: Calibri">{{ patient_exist.basicInfo.name }}</a>
+                    </h3>
+
+                </div>
+
+            {% endif %}
+
+            <form class="form-horizontal" action="" method="post">
+                {% csrf_token %}
+
+                <div class="form-group has-info">
+
+                    <label class="col-md-2 control-label" style="color: darkblue; font-size: 18px">Name</label>
+                    <div class="col-md-3">
+                      <input class="form-control" type="text" name="name" value="{{ patient.basicInfo.name }}" maxlength="30" required>
+                    </div>
+
+                    <label class="col-md-2 control-label" for="example-age" style="color: darkblue; font-size: 18px">Age</label>
+                    <div class="col-md-3">
+                      <input class="form-control" type="number" step="0.1" name="age" value="{{ patient.basicInfo.age }}" required>
+                    </div>
+
+                </div>
+
+                <div class="form-group has-info">
+
+                    <label class="col-md-2 control-label" for="example-sex" style="color: darkblue; font-size: 18px">Gender</label>
+                    <div class="col-md-3">
+                        <select class="form-control" id="example-select" name="sex" required>
+                            {% for gender in genders %}
+                                {% if patient.basicInfo.sex == gender %}
+                                    <option selected value="{{gender}}">{{gender}}</option>
+                                {% else %}
+                                    <option value="{{gender}}">{{gender}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                </div>
+
+                <br>
+                <div class="form-group has-info">
+
+                    <label class="col-md-2 control-label" for="example-address" style="color: darkblue; font-size: 18px">Type Of Emergency</label>
+                    <div class="col-md-1"></div>
+
+                    <div class="col-md-2">
+                        {% if patient.typeOfEmergency == 1 %}
+                            <label class="col-md-7 control-label btn btn-success" style="text-align: center;">
+                                <input type="radio" name="types" checked="checked" value="1">&nbsp;&nbsp;Green
+                            </label>
+                        {% else %}
+                            <label class="col-md-7 control-label btn btn-success" style="text-align: center;">
+                                <input type="radio" name="types" value="1">&nbsp;&nbsp;Green
+                            </label>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-2">
+                        {% if patient.typeOfEmergency == 2 %}
+                            <label class="col-md-7 control-label btn btn-yellow" style="text-align: center;">
+                                <input type="radio" name="types" checked="checked" value="2">&nbsp;&nbsp;Yellow
+                            </label>
+                        {% else %}
+                            <label class="col-md-7 control-label btn btn-yellow" style="text-align: center;">
+                                <input type="radio" name="types" value="2">&nbsp;&nbsp;Yellow
+                            </label>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-2">
+                        {% if patient.typeOfEmergency == 3 %}
+                            <label class="col-md-7 control-label btn btn-danger" style="text-align: center;">
+                                <input type="radio" name="types" checked="checked" value="3">&nbsp;&nbsp;Red
+                            </label>
+                        {% else %}
+                            <label class="col-md-7 control-label btn btn-danger" style="text-align: center;">
+                                <input type="radio" name="types" value="3">&nbsp;&nbsp;Red
+                            </label>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-2">
+                        {% if patient.typeOfEmergency == 4 %}
+                            <label class="col-md-7 control-label btn btn-dark" style="text-align: center;">
+                                <input type="radio" name="types" checked="checked" value="4">&nbsp;&nbsp;Black
+                            </label>
+                        {% else %}
+                            <label class="col-md-7 control-label btn btn-dark" style="text-align: center;">
+                                <input type="radio" name="types" value="4">&nbsp;&nbsp;Black
+                            </label>
+                        {% endif %}
+                    </div>
+
+                </div>
+
+                <div class="col-md-12"><hr></div>
+
+                <div class="form-group menuSmall">
+
+                    <label class="col-md-2 control-label" for="example-select" style="color: darkblue; font-size: 18px">Department : </label>
+
+                    {% for deparmtnet in patientDepartments %}
+                        <label class="col-md-2 control-label" for="example-select" style="font-family: Calibri; font-size: 20px">{{ deparmtnet.department.arabic_name }} &nbsp;&nbsp;&nbsp;</label>
+
+                    {% endfor %}
+
+                    <div class="col-md-12">
+
+                    </div>
+                    <br><br><br><br><br>
+
+                    <div class="col-md-2"></div>
+
+                     {% for department in departments %}
+
+                         {% if department.name == 'Surgery' or department.name == 'Internal Surgery' or department.name == 'Internal Cardiology' %}
+
+                             <div class="col-md-2" style="font-family: Calibri; font-size: 20px">
+                                 {{ department.arabic_name }}
+                                 <label for="radio">
+                                    <input type="checkbox" name="department" value="{{ department.id }}">
+                                 </label>
+                             </div>
+
+                         {% endif %}
+                     {% endfor %}
+
+                </div>
+                <br>
+                <div class="form-group">
+                    <div class="col-md-12 col-md-offset-5">
+                        <button class="btn btn-info" type="submit">Submit</button>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+
+    {% endif %}
+
+
+
+
+
+{% endblock home %}

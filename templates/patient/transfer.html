@@ -1,0 +1,154 @@
+{% extends "home/base_hospitalized.html" %}
+
+{% block home %}
+
+    {{ block.super }}
+
+    <style type="text/css">
+
+        td{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        th{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+
+        }
+    </style>
+
+
+    {% if user.language == 1 %}
+
+        <div class="card-body">
+            <div class="table-responsive">
+
+                <table class="table table-bordered">
+                    <tr>
+                        <th class="forthBigMenu">اسم المريض</th>
+                        <td class="forthNormalText">{{ patient.basicInfo.name}}</td>
+                        <th class="forthBigMenu">العمر</th>
+                        <td class="forthNormalText">{{ patient.basicInfo.age}}</td>
+                        <th class="forthBigMenu">الجنس</th>
+                        <td class="forthNormalText">{{ patient.basicInfo.sex }}</td>
+
+                    </tr>
+
+                </table>
+
+                <br>
+                    <table class="table">
+                        <form action="" method="POST">
+                            {% csrf_token %}
+
+                            <tr>
+                                <th class="forthBigMenu">جناح</th>
+                                <td colspan="2" class="forthNormalText">{{patient.sickroom.arabic_name}}</td>
+                                <th class="forthBigMenu">تحويل</th>
+
+                                <td class="has-info">
+                                    <select id="sickroom" name="sickroom" class="form-control forthNormalText" required>
+                                        <option></option>
+                                        {% for ward in wardObjs %}
+                                            {% if patient.sickroom.name == ward.name %}
+
+                                            {% else %}
+                                              <option value="{{ ward.id }}">{{ ward.arabic_name }}</option>
+                                            {% endif %}
+
+                                        {% endfor %}
+
+                                    </select>
+                                </td>
+
+                            </tr>
+
+                            <tr>
+                                <td colspan="5"><input type="submit" class="btn btn-info forthNormalText" value="قبول"></td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="5" style="color: blue; font-size: large">{{ message }}</td>
+                            </tr>
+
+                        </form>
+                    </table>
+
+
+            </div>
+        </div>
+
+    {% elif user.language == 2 %}
+
+        <div class="card-body">
+            <div class="table-responsive">
+
+                <table class="table table-bordered">
+                    <tr>
+                        <th class="forthBigMenu">Name</th>
+                        <td class="forthNormalText">{{patient.basicInfo.name}}</td>
+                        <th class="forthBigMenu">Age</th>
+                        <td class="forthNormalText">{{patient.basicInfo.age}}</td>
+                        <th class="forthBigMenu">Blood Group</th>
+                        <td class="forthNormalText">{{patient.basicInfo.bloodGroup}}</td>
+
+                    </tr>
+
+                </table>
+
+                <br>
+                    <table class="table">
+                        <form action="" method="POST">
+                            {% csrf_token %}
+
+                            <tr>
+                                <th class="forthBigMenu">Ward</th>
+                                <td class="forthNormalText">{{patient.sickroom}}</td>
+                                <th class="forthBigMenu">Transfer Ward</th>
+
+                                <td class="has-info">
+                                    <select id="sickroom" name="sickroom" class="form-control forthNormalText" required>
+                                        <option></option>
+                                        {% for ward in wardObjs %}
+                                            {% if patient.sickroom.name == ward.name %}
+
+                                            {% else %}
+                                              <option value="{{ ward.id }}">{{ ward.name }}</option>
+                                            {% endif %}
+
+                                        {% endfor %}
+
+                                    </select>
+                                </td>
+
+                          </tr>
+
+                          <tr>
+                              <td colspan="4"><input type="submit" class="btn btn-info" value="Transfer"></td>
+                          </tr>
+
+                          <tr>
+                              <td colspan="4" style="color: blue; font-size: large">{{ message }}</td>
+                          </tr>
+
+                        <tr>
+
+                        </tr>
+                        </form>
+                    </table>
+
+
+            </div>
+        </div>
+
+    {% endif %}
+
+
+
+
+
+
+{% endblock home %}

@@ -1,0 +1,294 @@
+{% extends "home/base_laboratory.html" %}
+
+{% block home %}
+
+    <style>
+
+        td{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        th{
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+
+        }
+
+    </style>
+
+
+    {% if user.language == 1 %}
+
+        <div class="card-header">
+
+            <a href="#" class="btn btn-info forthNormalText" data-toggle="modal" data-target="#addPatient" data-placement="right">
+                مريض جديد
+            </a>
+
+        </div>
+
+        <div class="card-header" align="center">
+
+            <h2 class="thirdBigTitle">
+                <form action="{% url 'dateSearchMoneyLaboratory' %}" method="post">
+                    {% csrf_token %}
+                        <label>
+                            <input type="date" class="form-control" name="start" required>
+                        </label>
+
+                        <label>
+                            <input type="date" class="form-control" name="end" required>
+                        </label>
+                        &nbsp;&nbsp;&nbsp;
+                        <label>
+                            <input type="submit" class="btn btn-info forthNormalText" value="إرسال">
+                        </label>
+
+                </form>
+
+            </h2>
+
+        </div>
+
+
+        <!-- new patient -->
+        <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addPatientLabel" id="addPatient">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title thirdBigMenu" id="gridSystemModalLabel">مريض جديد</h4>
+              </div>
+              <form action="{% url 'addMoneyLaboratoryPatient' %}" method="post" class="form-horizontal">
+                  {% csrf_token %}
+                  <div class="modal-body">
+                    <div class="row" dir="rtl">
+
+                        <div class="form-group has-info">
+                            <div class="col-md-1 col-xs-1 forthBigMenu"></div>
+                             <div class="col-md-3 col-xs-3 forthBigMenu">
+                                <label for="recipient-sex" class="control-label" style="color: darkblue">الجنس</label>
+                                <select class="form-control forthNormalText  has-info" id="recipient-sex" name="sex" required>
+                                    {% for gender in genders %}
+                                        <option value="{{gender}}">{{gender}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-md-2 col-xs-2 forthBigMenu" dir="ltr">
+                                <label for="recipient-age" class="control-label" style="color: darkblue">العمر</label>
+                                <input type="number" step="0.1" name="age" class="form-control" id="recipient-age" required>
+                            </div>
+
+
+                            <div class="col-md-5 col-xs-5 forthBigMenu">
+                                <label for="recipient-name" class="control-label" style="color: darkblue">اسم المريض</label>
+                                <input type="text" class="form-control" maxlength="30" name="name" id="recipient-name" required>
+                            </div>
+
+                        </div>
+
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="submit" class="btn btn-info smallText">إرسال</button>
+                  </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+
+                <table class="table" align="center">
+                    <thead >
+                        <tr class="forthBigMenu">
+                            <th>#</th>
+                            <th>اسم المريض</th>
+                            <th>العمر</th>
+                            <th>الجنس</th>
+                            <th>التاريخ</th>
+                            <th>عمل</th>
+                        </tr>
+                    </thead>
+
+                    {% for patient in patients %}
+
+                        <tr class="forthNormalText">
+                            <td>{{ forloop.counter }}</td>
+                            <th>{{ patient.basicInfo.name }}</th>
+                            <td>{{ patient.basicInfo.age }}</td>
+                            <td>{{ patient.basicInfo.sex }}</td>
+                            <td>{{ patient.enterDate }}</td>
+
+                            <td>
+                                <a href="{% url 'results' patient.id patient.patientID %}" title="تحقيق" data-toggle="tooltip" data-placement="left">
+                                    <i class="mdi mdi-comment-text-outline mdi-24px" style="color: #33cccc"></i>
+                                </a>
+                                &nbsp;&nbsp;&nbsp;
+                                <a href="{% url 'laboratory' patient.id patient.patientID %}" title="سجل" data-toggle="tooltip" data-placement="left">
+                                    <i class="mdi mdi-lead-pencil mdi-24px" style="color: #33cccc"></i>
+                                </a>
+                                &nbsp;&nbsp;&nbsp;
+{#                                <a href="" title="طباعة" data-toggle="modal" data-target=".bs-example-modal-lg{{ patient.id }}">#}
+{#                                    <i class="mdi mdi-printer mdi-24px" style="color: #33cccc"></i>#}
+{#                                </a>#}
+                                <a href="{% url 'displayMoneyLaboratoryPrint' patient.id patient.patientID %}" title="طباعة">
+                                    <i class="mdi mdi-printer mdi-24px" style="color: #33cccc"></i>
+                                </a>
+                            </td>
+                        </tr>
+
+                        <!-- Print -->
+                        <div class="modal fade bs-example-modal-lg{{ patient.id }}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                            <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <div class="modal-title" style="background-image: url(/static/images/logo.png); background-repeat: no-repeat">
+                                            <h3 class="secondBigMenu" dir="rtl">مخبر الشفاء الخيري</h3>
+                                            <h3 class="secondBigMenu" dir="rtl">للتحاليل الطبية</h3>
+                                        </div>
+                                    </div>
+
+                                    <div class="modal-body" dir="rtl">
+
+                                        <div class="col-md-2 col-xs-2 forthNormalText">{{ patient.patientID }}</div>
+                                        <div class="col-md-2 col-xs-2 forthBigMenu">رقم المريض :</div>
+
+                                        <div class="col-md-2 col-xs-2 forthNormalText">{{ patient.enterDate|date:"Y-m-d" }}</div>
+                                        <div class="col-md-2 col-xs-2 forthBigMenu">التاريخ :</div>
+
+                                        <div class="col-md-3 col-xs-3 forthNormalText">{{ patient.basicInfo.name }}</div>
+                                        <div class="col-md-1 col-xs-1 forthBigMenu">الاسم:</div>
+
+                                        <br>
+                                        <hr color="brown">
+
+        {#                                <hr color="darkblue">#}
+                                        {% if cbcObj %}
+                                            <div class="col-md-12 firstBigTitle" style="text-align: center; color: brown">CBC</div>
+
+                                            <div class="modal-body" dir="ltr">
+                                                <div class="col-md-4 forthNormalText">Tests<hr color="darkblue" style="margin-top: 1px"></div>
+                                                <div class="col-md-2 forthNormalText" style="text-align: center">Results<hr color="darkblue" style="margin-top: 1px"></div>
+                                                <div class="col-md-3 forthNormalText" style="text-align: center">Expected Values<hr color="darkblue" style="margin-top: 1px"></div>
+                                                <div class="col-md-3 forthNormalText" style="text-align: center">Units<hr color="darkblue" style="margin-top: 1px"></div>
+                                            </div>
+
+                                            <div class="modal-body" dir="ltr">
+                                                <div class="col-md-4 forthNormalText">Hemoglobin</div>
+                                                <div class="col-md-2 forthNormalText" style="text-align: center">11.5</div>
+                                                <div class="col-md-3 forthNormalText" style="text-align: center">10-13</div>
+                                                <div class="col-md-3 forthNormalText" style="text-align: center">mg/l</div>
+                                            </div>`
+                                        {% endif %}
+                                        <br><br><br><br>
+                                        {% if coagulationObj %}
+                                            <div class="col-md-12 firstBigTitle" style="text-align: center; color: brown">Coagulation</div>
+
+                                            <div class="modal-body" dir="ltr">
+                                                <div class="col-md-4 forthNormalText">Tests<hr color="darkblue" style="margin-top: 1px"></div>
+                                                <div class="col-md-2 forthNormalText" style="text-align: center">Results<hr color="darkblue" style="margin-top: 1px"></div>
+                                                <div class="col-md-3 forthNormalText" style="text-align: center">Expected Values<hr color="darkblue" style="margin-top: 1px"></div>
+                                                <div class="col-md-3 forthNormalText" style="text-align: center">Units<hr color="darkblue" style="margin-top: 1px"></div>
+                                            </div>
+
+                                            <div class="modal-body" dir="ltr">
+                                                <div class="col-md-4 forthNormalText">PT</div>
+                                                <div class="col-md-2 forthNormalText" style="text-align: center">13</div>
+                                                <div class="col-md-3 forthNormalText" style="text-align: center">10-15</div>
+                                                <div class="col-md-3 forthNormalText" style="text-align: center">mg/l</div>
+                                            </div>`
+                                        {% endif %}
+                                        <br><br><br><br><br><br><br>
+
+
+                                    </div>
+
+
+
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary">Print</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    {% endfor %}
+
+                </table>
+
+            </div>
+        </div>
+
+
+    {% elif user.language == 2 %}
+
+        <div class="card-header">
+            <h2 class="firstBigTitle">{{ wardObj.name }}</h2>
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+
+                <table class="table" align="center">
+                    <thead >
+                        <tr class="forthBigMenu">
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Patient ID</th>
+                            <th>Age</th>
+                            <th>Ward</th>
+                            <th colspan="2">Action</th>
+                        </tr>
+                    </thead>
+
+                    {% for patient in patients %}
+
+                        <tr class="forthNormalText">
+                            <td>{{ forloop.counter }}</td>
+                            <th>{{ patient.basicInfo.name }}</th>
+                            <td>{{ patient.patientID }}</td>
+                            <td>{{ patient.basicInfo.age }}</td>
+                            <td>{{ patient.sickroom }}</td>
+
+                            <td>
+                                <a href="{% url 'results' patient.id patient.patientID %}" title="Check" data-toggle="tooltip" data-placement="left">
+                                    <i class="mdi mdi-comment-text-outline mdi-24px" style="color: #33cccc"></i>
+                                </a>
+                            </td>
+
+                            <td>
+                                <a href="{% url 'laboratory' patient.id patient.patientID %}" title="Write Result" data-toggle="tooltip" data-placement="left">
+                                    <i class="mdi mdi-lead-pencil mdi-24px" style="color: #33cccc"></i>
+                                </a>
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </table>
+
+            </div>
+        </div>
+
+    {% endif %}
+
+
+
+
+
+
+{% endblock home %}
+
+
+
+
+
+
