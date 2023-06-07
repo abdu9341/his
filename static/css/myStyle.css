@@ -1,0 +1,150 @@
+.firstBigTitle{
+    font-family: Calibri;
+    font-size: xx-large;
+    font-weight: bold;
+    color: darkblue ;
+  
+}
+
+.secondBigTitle{
+    font-family: Calibri;
+    font-size: x-large;
+    font-weight: bold;
+    color: darkblue ;
+  
+}
+
+.thirdBigTitle{
+    font-family: Calibri;
+    font-size: larger;
+    font-weight: bold;
+    color: darkblue ;
+  
+}
+
+.forthBigTitle{
+    font-family: Calibri;
+    font-size: 18px;
+    font-weight: bold;
+    color: darkblue ;
+
+}
+
+.firstBigMenu{
+    font-family: Calibri;
+    font-size: 24px;
+    font-weight: bold;
+    color: darkblue ;
+  
+}
+
+.secondBigMenu{
+    font-family: Calibri;
+    font-size: 22px;
+    font-weight: bold;
+    color: darkblue ;
+  
+}
+
+.thirdBigMenu{
+    font-family: Calibri;
+    font-size: 20px;
+    font-weight: bold;
+    color: darkblue ;
+  
+}
+
+.forthBigMenu{
+    font-family: Calibri;
+    font-size: 18px;
+    font-weight: bold;
+    color: darkblue ;
+
+}
+
+.fifthMenu{
+    font-family: Calibri;
+    font-size: 16px;
+    font-weight: bolder;
+    color: darkblue ;
+
+}
+
+.smallMenu{
+    font-family: Calibri;
+    font-size: 17px;
+    font-weight: bold;
+    color: darkblue ;
+
+}
+
+.forthNormalText{
+    font-family: Calibri;
+    font-size: 18px;
+    color: black ;
+
+}
+
+.normalText{
+    font-family: Calibri;
+    font-size: 20px;
+    color: black ;
+
+}
+
+.smallText{
+    font-family: Calibri;
+    font-size: 17px;
+    color: #205072 ;
+
+}
+
+.message{
+    font-family: Calibri;
+    font-size: 22px;
+    font-weight: bold;
+    color: red ;
+    text-align: left;
+
+}
+
+
+.nameOfItem{
+    font-family: Calibri;
+    font-size: 18px;
+    color: black!important; ;
+    font-weight: bolder;
+}
+
+
+.resultOfItem{
+    font-family: Calibri;
+    font-size: 18px;
+    color: red!important; ;
+    font-weight: bolder;
+}
+
+
+.normal{
+  color: blue!important;
+}
+
+.low{
+/*color: #8F4586!important;*/
+    color: #FF00FF!important;
+}
+
+.high{
+color: red!important;
+}
+
+.blueColor{
+color: #205072!important;
+}
+
+.brownColor{
+color: #AE4C4C!important;
+}
+
+
+
